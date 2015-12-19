@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="vxSample">
+<head>
+    <title>VX GRID SAMPLE</title>
+    <link href="dist/min/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="resource/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
+    <link href="dist/min/css/vx-grid.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="lib/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/underscore-min.js"></script>
+    <script type="text/javascript" src="resource/jsoneditor/ace.js"></script>
+    <script type="text/javascript" src="resource/jsoneditor/FileSaver.js"></script>
+    <script type="text/javascript" src="resource/jsoneditor/jsoneditor.min.js"></script>
+    <script type="text/javascript" src="lib/angular.min.js"></script>
+    <script type="text/javascript" src="lib/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="lib/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="resource/jsoneditor/vx-grid.jsoneditor.directive.js"></script>
+    <script type="text/javascript" src="lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="dist/min/js/vx.grid.all.min.js"></script>
+    <script type="text/javascript" src="dist/js/default.js"></script>
+    <script type="text/javascript" src="dist/js/app.js"></script>
+</head>
+<body ng-controller="vxSampleController">
+    <div class="container" style="line-height:60px;">
+        <button class="btn btn-primary" ng-click="emptyData()"> Empty Data</button>
+        <button class="btn btn-primary" ng-click="reloadDataPage()">Reload Data Page</button>
+        <button class="btn btn-primary" ng-click="reloadDataVirtual()">Reload Data Virtual</button>
+        <button class="btn btn-primary" ng-click="consoleLogData()">Console Log Data</button>
+    </div>
+    <div class="vxSample container" style="height:calc(80vh - 60px);margin: 10vh auto;">
+        <vx-grid config="vxSampleConfig" scroll-parent="'.vxSample .vxTableContainer'"></vx-grid>
+    </div>
+</body>
+</html>

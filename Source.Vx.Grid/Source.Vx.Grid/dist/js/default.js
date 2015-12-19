@@ -1,0 +1,1 @@
+﻿angular.module('vxSample', ['vx.grid.modules']);

@@ -1,7 +1,10 @@
 ﻿# Vx Grid (1.0.1)
 
-####1.  An standalone native table plugin which uses the best of features provided by AngularJS. 
-####2.  List of supported features (1.0.1)
+####  An standalone native table plugin which uses the best of features provided by AngularJS. 
+
+#### <a href="http://vxgrid.azurewebsites.net/">Live Preview</a>
+
+####  List of supported features (1.0.1)
         a.  Sorting
         b.  Contextual Filtering
         c.  Fixed Header
@@ -80,3 +83,8 @@
         ----------------------------
         <CONFIG>.getVxCounts()                  <NO PARAMS>         RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
         <CONFIG>.getData()                      <NO PARAMS>         RETURNS CURRENT DATA STATE
+
+#####BUILT USING
+<a href="https://github.com/kamilkp/angular-vs-repeat">Angular Vs Repeat</a>
+<a href="https://github.com/oblador/angular-scroll">Angular Scroll</a>
+<a href="https://github.com/josdejong/jsoneditor/">JSON Editor</a>

@@ -20,6 +20,7 @@
         m.  Iniine Row Addition
         n.  Column Wrapping
         o.  Evente Based Actions
+        p.  Separate XS View - On widths < 768px, the columns merge to an 'Expand-Collapse' view.
 
 #####VX GRID CONFIG (BOUND TO 'config=') IN DIRECTIVE CALL
         -----------------------------------------------------------       

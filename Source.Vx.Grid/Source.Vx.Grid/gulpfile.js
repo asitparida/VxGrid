@@ -43,6 +43,13 @@ gulp.task('clean:concat:js', function (done) {
 });
 
 //Concat JS Files
+gulp.task('concat:js', function () {
+    return gulp.src('./js/*min.js')
+    .pipe(concat('vx.grid.all.min.js'))
+    .pipe(gulp.dest('./dist/min/js'));
+});
+
+//Concat JS Files
 gulp.task('default:js',['clean:concat:js','minify:html:js','minify:js'], function () {
     return gulp.src('./js/*min.js')
     .pipe(concat('vx.grid.all.min.js'))

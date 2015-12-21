@@ -53,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 vxTableContainer ms-datatable ang-dt zeroPadding scrollDupHeader" ng-class="{'scrollDupHeaderAdded' : posTop > 50, 'settingsMenuOpen': vxColSettings.menu, 'attrPaneOpen': vxConfig.showGridStats || vxConfig.showGridOptions}">
+            <div class="col-md-12 vxTableContainer ms-datatable ang-dt zeroPadding scrollDupHeader" ng-class="{'scrollDupHeaderAdded' : posTop > 50, 'settingsMenuOpen': vxColSettings.menu, 'attrPaneOpen': vxConfig.showGridStats || vxConfig.showGridOptions}" ng-if="vxColSettings.xsViewEnabled == false">
                 <div class='row marg0'>
                     <div class="col-xs-12 vxTableHolder pad0" ng-style="{'left': posLeft  + 'px'}">
                         <table class="vxTable">
@@ -144,7 +144,7 @@
                             </thead>
                             <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxColSettings.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.virtualization == true">
                                 <tr class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} vxBodyRow" ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxColSettings.predicate:vxColSettings.reverse))" ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]]}">
-                                    <td colspan="{{getNonHiddenColCount()}}" ng-show="row.fillEmptyElement == true" style="padding-left:15px;">No records to display ...</td>
+                                    <td colspan="{{getNonHiddenColCount()}}" ng-if="row.fillEmptyElement == true" style="padding-left:15px;">No records to display ...</td>
                                     <td class="vxBodyRowCell" ng-class="{'renderedDefn': header.renderDefn == true}" ng-repeat="header in vxConfig.columnDefConfigs" ng-style="{ 'width' : header.width + 'px' }" ng-if="header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
                                         <span ng-if="(header.renderDefn == false && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == false && header.inlineEditOnColumnEnabled == false)">{{row[header.id]}}</span>
                                         <div ng-if="(header.renderDefn == true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == true && header.inlineEditOnColumnEnabled == false)" vx-compile-clone-link="header.cellDefn"></div>
@@ -183,7 +183,7 @@
                             </tbody>
                             <tbody class="vxBody" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.virtualization == false">
                                 <tr class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} vxBodyRow" ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxColSettings.predicate:vxColSettings.reverse) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength )" ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]]}">
-                                    <td colspan="{{getNonHiddenColCount()}}" ng-show="row.fillEmptyElement == true" style="padding-left:15px;">No records to display ...</td>
+                                    <td colspan="{{getNonHiddenColCount()}}" ng-if="row.fillEmptyElement == true" style="padding-left:15px;">No records to display ...</td>
                                     <td class="vxBodyRowCell" ng-class="{'renderedDefn': header.renderDefn == true || (vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true) }" ng-repeat="header in vxConfig.columnDefConfigs" ng-style="{ 'width' : header.width + 'px' }" ng-if="header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
                                         <span ng-if="(header.renderDefn == false && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == false && header.inlineEditOnColumnEnabled == false)">{{row[header.id]}}</span>
                                         <div ng-if="(header.renderDefn == true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == true && header.inlineEditOnColumnEnabled == false)" vx-compile-clone-link="header.cellDefn"></div>

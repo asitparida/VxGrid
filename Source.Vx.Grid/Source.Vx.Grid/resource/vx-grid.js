@@ -165,7 +165,7 @@
                             /* ADDING CHECKBOX COLUMN DEFINITION */
                             var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('inlinediting') == 0 });
                             if (typeof col === 'undefined' || col == null || col == {}) {
-                                var _selColDefn = { id: 'inlinediting', columnName: 'Inline Editing', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, cellDefn: '<div class="vx-row-edit icon-container" tabindex="0" vx-key="vxColSettings.inlineEditState[VX_ROW_POINT] = true" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false"><i class="icon icon-edit"></i></div><div class="vx-row-edit icon-container" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true"><i class="icon icon-save"></i></div>', inlineEditOnColumnEnabled: false };
+                                var _selColDefn = { id: 'inlinediting', columnName: 'Edit', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, cellDefn: '<div class="vx-row-edit icon-container" tabindex="0" vx-key="vxColSettings.inlineEditState[VX_ROW_POINT] = true" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false"><i class="icon icon-edit"></i></div><div class="vx-row-edit icon-container" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true"><i class="icon icon-save"></i></div>', inlineEditOnColumnEnabled: false };
                                 $scope.vxConfig.columnDefConfigs.unshift(_selColDefn);
                             }
                             /* SEETING ALL ROW SELECTIONS TO FALSE */

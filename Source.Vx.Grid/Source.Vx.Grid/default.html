@@ -18,15 +18,52 @@
     <script type="text/javascript" src="dist/min/js/vx.grid.all.min.js"></script>
     <script type="text/javascript" src="dist/js/default.js"></script>
     <script type="text/javascript" src="dist/js/app.js"></script>
+    <style>
+        @media (max-width: 767px) {
+
+            .btn.sample {
+                line-height: 40px;
+                padding: 0 15px;
+                margin: 5px 5px 0 0;
+            }
+
+            .container.btns {
+                height: 100px;
+            }
+
+            .vxSample.container {
+                height: calc(100vh - 100px);
+                margin:0 auto;
+            }
+        }
+
+        @media (min-width: 768px) {
+
+            .btn.sample {
+                line-height: 40px;
+                padding: 0 15px;
+                margin: 10px 10px 0 0;
+            }
+
+            .container.btns {
+                height: 60px;
+            }
+
+            .vxSample.container {
+                height: calc(80vh - 60px);
+                margin: 10vh auto;
+            }
+        }
+    </style>
 </head>
 <body ng-controller="vxSampleController">
-    <div class="container" style="line-height:60px;">
-        <button class="btn btn-primary" ng-click="emptyData()"> Empty Data</button>
-        <button class="btn btn-primary" ng-click="reloadDataPage()">Reload Data Page</button>
-        <button class="btn btn-primary" ng-click="reloadDataVirtual()">Reload Data Virtual</button>
-        <button class="btn btn-primary" ng-click="consoleLogData()">Console Log Data</button>
+    <div class="container btns">
+        <button class="btn btn-primary sample" ng-click="emptyData()"> Empty Data</button>
+        <button class="btn btn-primary sample" ng-click="reloadDataPage()">Reload Data Page</button>
+        <button class="btn btn-primary sample" ng-click="reloadDataVirtual()">Reload Data Virtual</button>
+        <button class="btn btn-primary sample" ng-click="consoleLogData()">Console Log Data</button>
     </div>
-    <div class="vxSample container" style="height:calc(80vh - 60px);margin: 10vh auto;">
+    <div class="vxSample container" style="">
         <vx-grid config="vxSampleConfig" scroll-parent="'.vxSample .vxTableContainer'"></vx-grid>
     </div>
 </body>

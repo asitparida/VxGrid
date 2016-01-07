@@ -1,6 +1,29 @@
 ﻿angular.module('vxSample')
+.directive('sampleDatePicker', function () {
+    return {
+        scope: {
+            dt: '='
+        },
+        bindToController: true,
+        template: '<p class="input-group"><input type="date" class="form-control" uib-datepicker-popup ng-model="dtpicker.dt" is-open="dtpicker.opened" datepicker-options="dtpicker.dateOptions" ng-required="true" close-text="Close" /><span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="dtpicker.open($event)"><i class="glyphicon glyphicon-calendar"></i></button></span></p>',
+        replace: true,
+        controller: function () {
+            this.opened = false;
+            this.open = function ($event) {
+                this.opened = true;
+            }
+            this.dateOptions = {
+                formatYear: 'yy',
+                startingDay: 1
+            }
+            this.format = 'dd-MMMM-yyyy';
+        },
+        controllerAs: 'dtpicker'
+    };
+})
 .controller('vxSampleController', ["$scope", "$timeout", function ($scope, $timeout) {
     var self = this;
+    self.smapledt = new Date('01-02-2016');
     self.vxSampleData = [];
     self.showGrid = false;
     self.categories = [
@@ -666,11 +689,12 @@
             rec.index = k + '_' + j;
             rec.laborId = 'XXX-XXXX-XXXX' + '_' + rec.index;
             rec.category = _.sample(self.categories);
-            rec.customer = record.transferFromCustomer,
-        rec.engagement = _.sample(['Coho Vineyard', 'Fist Up Consultants']),
-        rec.assignment = record.transferFromAssignment,
-        rec.userAlias = _.sample(['asparida', 'prasadne', 'ruprawat']),
-        self.vxSampleData.push(rec);
+            rec.customer = record.transferFromCustomer;
+            rec.dt = _.sample([new Date('01-07-2015'), new Date('01-01-2015'), new Date('01-11-2015'), new Date('01-09-2015')]);
+            rec.engagement = _.sample(['Coho Vineyard', 'Fist Up Consultants']),
+            rec.assignment = record.transferFromAssignment,
+            rec.userAlias = _.sample(['asparida', 'prasadne', 'ruprawat']),
+            self.vxSampleData.push(rec);
         });
     });
 
@@ -717,7 +741,7 @@
             newRow: true
         },
         columnDefConfigs: [
-            { id: 'dt', columnName: 'Date', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, width: '120' },
+            { id: 'dt', columnName: 'Date', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, width: '160', headerDefn: '<span>Date</span>', cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
             { id: 'link', columnName: 'Link', renderDefn: true, width: '150', headerDefn: '<span>Link</span>', cellDefn: '<a style="padding-left:10px;" ng-href="{{VX_DATA_POINT}}" >{{VX_DATA_POINT}}</a>', inlineEditOnColumnEnabled: true, editDefn: '<input class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'customer', columnName: 'Customer', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, inlineEditOnColumnEnabled: true, editDefn: '<input class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: true, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
@@ -756,6 +780,7 @@
 
     self.consoleLogData = function () {
         console.log(self.vxSampleConfig.getData());
+        console.log(self.smapledt);
     }
 
     $scope.$on('vxGridRowSelectionChange', function (e, data) {

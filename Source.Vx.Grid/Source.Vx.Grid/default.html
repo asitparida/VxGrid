@@ -33,7 +33,7 @@
 
             .vxSample.container {
                 height: calc(100vh - 100px);
-                margin:0 auto;
+                margin: 0 auto;
             }
         }
 
@@ -54,17 +54,28 @@
                 margin: 10vh auto;
             }
         }
+
+        .selectStyleSampleA {
+            height: 36px;
+            width: 94%;
+            margin-left: 3%;
+        }
+
+        .sampleCell {
+            padding: 0 10px;
+        }
+
     </style>
 </head>
-<body ng-controller="vxSampleController">
+<body ng-controller="vxSampleController as sample">
     <div class="container btns">
-        <button class="btn btn-primary sample" ng-click="emptyData()"> Empty Data</button>
-        <button class="btn btn-primary sample" ng-click="reloadDataPage()">Reload Data Page</button>
-        <button class="btn btn-primary sample" ng-click="reloadDataVirtual()">Reload Data Virtual</button>
-        <button class="btn btn-primary sample" ng-click="consoleLogData()">Console Log Data</button>
+        <button class="btn btn-primary sample" ng-click="sample.emptyData()"> Empty Data</button>
+        <button class="btn btn-primary sample" ng-click="sample.reloadDataPage()">Reload Data Page</button>
+        <button class="btn btn-primary sample" ng-click="sample.reloadDataVirtual()">Reload Data Virtual</button>
+        <button class="btn btn-primary sample" ng-click="sample.consoleLogData()">Console Log Data</button>
     </div>
     <div class="vxSample container" style="">
-        <vx-grid config="vxSampleConfig" scroll-parent="'.vxSample .vxTableContainer'"></vx-grid>
+        <vx-grid config="sample.vxSampleConfig" scroll-parent="'.vxSample .vxTableContainer'"></vx-grid>
     </div>
 </body>
 </html>

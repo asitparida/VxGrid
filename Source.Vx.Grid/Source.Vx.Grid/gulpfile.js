@@ -30,35 +30,9 @@ var resolveMinifiedPath = function (path) {
     };
 }
 
-// Minify JS Files
-gulp.task('minify:js', function () {
-    gulp.src('Resource/*.js')
-    .pipe(minify())
-    .pipe(gulp.dest('js'))
-});
-
-// Clean the concated js directory
-gulp.task('clean:concat:js', function (done) {
-    del('dist/min/js/vx.grid.all.min.js', done);
-});
-
-//Concat JS Files
-gulp.task('concat:js', function () {
-    return gulp.src('./js/*min.js')
-    .pipe(concat('vx.grid.all.min.js'))
-    .pipe(gulp.dest('./dist/min/js'));
-});
-
-//Concat JS Files
-gulp.task('default:js',['clean:concat:js','minify:html:js','minify:js'], function () {
-    return gulp.src('./js/*min.js')
-    .pipe(concat('vx.grid.all.min.js'))
-    .pipe(gulp.dest('./dist/min/js'));
-});
-
 // Clean the distributable html directory
-gulp.task('minify:clean:html:js', function (done) {
-    del('Resource/vx-grid-templates.js', done);
+gulp.task('minify:clean:html:js', function () {
+    return del('Resource/vx-grid-templates.js');
 });
 
 gulp.task('minify:html:js',['minify:clean:html:js'], function () {
@@ -67,19 +41,37 @@ gulp.task('minify:html:js',['minify:clean:html:js'], function () {
 	.pipe(gulp.dest('Resource'));
 });
 
-//Watch task
-gulp.task('default:css', function () {
-    gulp.watch('scss/*.scss', ['minify:css']);
+// Minify JS Files
+gulp.task('minify:js', ['minify:html:js'], function () {
+    return gulp.src('Resource/*.js')
+    .pipe(minify())
+    .pipe(gulp.dest('js'))
+});
+
+// Clean the concated js directory
+gulp.task('clean:concat:js', function () {
+    return del('dist/min/js/vx.grid.all.min.js');
+});
+
+//Concat JS Files
+gulp.task('concat:js', ['clean:concat:js', 'minify:js'], function () {
+    return gulp.src('./js/*min.js')
+    .pipe(concat('vx.grid.all.min.js'))
+    .pipe(gulp.dest('./dist/min/js'));
+});
+
+//Watch JS task
+gulp.task('default:vxgrid:js', function () {
+    gulp.watch(['Resource/vx-grid.js', 'Resource/vx-grid-templates.html'], ['concat:js']);
 });
 
 // Clean the distributable css directory
-gulp.task('minify:clean:css', function (done) {
-    del('css/', done);
+gulp.task('minify:clean:css', function () {
+    return del('css/');
 });
 
 // Compile out sass files and minify it
 gulp.task('minify:css', ['minify:clean:css'], function () {
-
     var min = resolveMinifiedPath("./dist/min/css/vx-grid.min.css");
     return gulp.src('scss/*.scss')
         .pipe(plumber(errorHandler))
@@ -88,4 +80,9 @@ gulp.task('minify:css', ['minify:clean:css'], function () {
         .pipe(cssmin())
         .pipe(concat(min.file))
         .pipe(gulp.dest(min.path));
+});
+
+//Watch CSS task
+gulp.task('default:vxgrid:css', function () {
+    gulp.watch('scss/*.scss', ['minify:css']);
 });

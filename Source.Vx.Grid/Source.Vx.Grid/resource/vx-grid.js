@@ -225,6 +225,7 @@
                             { prop: 'headerDefn', defValue: '' },
                             { prop: 'cellDefn', defValue: '' },
                             { prop: 'inlineEditOnColumnEnabled', defValue: false },
+                            { prop: 'inlineEditRequiredColumn', defValue: false },
                             { prop: 'editDefn', defValue: null },
                             { prop: 'editDefnTemplate', defValue: null }
                         ];

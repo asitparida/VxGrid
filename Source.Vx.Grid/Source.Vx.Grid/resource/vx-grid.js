@@ -67,6 +67,7 @@
         ----------------------------
         <CONFIG>.getVxCounts()                  <NO PARAMS>         RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
         <CONFIG>.getData()                      <NO PARAMS>         RETURNS CURRENT DATA STATE
+        <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>    SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
     */
 
     /* CAPITALIZE FIRST LETTER - STRING PROTOTYPE*/
@@ -165,7 +166,7 @@
                         /* ADDING CHECKBOX COLUMN DEFINITION */
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('inlinediting') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
-                            var _selColDefn = { id: 'inlinediting', columnName: 'Edit', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, cellDefn: '<div class="vx-row-edit icon-container" tabindex="0" vx-key="vxColSettings.inlineEditState[VX_ROW_POINT] = true" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false"><i class="icon icon-edit"></i></div><div class="vx-row-edit icon-container" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true"><i class="icon icon-save"></i></div>', inlineEditOnColumnEnabled: false };
+                            var _selColDefn = { id: 'inlinediting', columnName: 'Edit', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, cellDefn: '<div class="vx-row-edit icon-container" tabindex="0" vx-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false"><i class="icon icon-edit"></i></div><div class="vx-row-edit icon-container" ng-attr-vxdisabled="{{vxConfig.invalidRows[row[vxColSettings.primaryId]]}}" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true"><i class="icon icon-save"></i></div>', inlineEditOnColumnEnabled: false };
                             $scope.vxConfig.columnDefConfigs.unshift(_selColDefn);
                         }
                         /* SEETING ALL ROW SELECTIONS TO FALSE */
@@ -225,7 +226,7 @@
                             { prop: 'headerDefn', defValue: '' },
                             { prop: 'cellDefn', defValue: '' },
                             { prop: 'inlineEditOnColumnEnabled', defValue: false },
-                            { prop: 'inlineEditRequiredColumn', defValue: false },
+                            { prop: 'inlineEditValidation', defValue: false },
                             { prop: 'editDefn', defValue: null },
                             { prop: 'editDefnTemplate', defValue: null }
                         ];
@@ -261,7 +262,6 @@
                             col.cellDefn = col.cellDefn.replaceAll("VX_CONFIG", "vxConfig")
                         }
                         if (col.inlineEditOnColumnEnabled == true) {
-                            console.log(col.editDefn);
                             if (col.editDefn == '' || col.editDefn == null)
                                 col.editDefn = '<input class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />';
                             col.editDefn = col.editDefn.replaceAll("VX_ROW_POINT", "row[vxColSettings.primaryId]");
@@ -269,7 +269,19 @@
                             col.editDefn = col.editDefn.replaceAll("VX_ROW", "row");
                             col.editDefn = col.editDefn.replaceAll("VX_CONFIG", "vxConfig")
                             $scope.vxColSettings.colWithInlineEdits.push(col.id);
-                            console.log(col.editDefn);
+
+                            if (col.inlineEditValidation == true) {
+                                $scope.vxConfig.invalidRows = {};
+                                $scope.vxConfig.invalidRowFields = {};
+                                _.each($scope.vxConfig.vxData, function (row, index) {
+                                    var rowId = row[$scope.vxColSettings.primaryId];
+                                    $scope.vxConfig.invalidRows[rowId] = false;
+                                    $scope.vxConfig.invalidRowFields[rowId] = {};
+                                });
+                                col.editDefn = col.editDefn.replaceAll("VX_INVALID_ROW", "vxConfig.invalidRows[row[vxColSettings.primaryId]] == true");
+                                col.editDefn = col.editDefn.replaceAll("VX_INVALID_FIELD_ROW", "vxConfig.invalidRowFields[row[vxColSettings.primaryId]]." + col.id + " == true");
+                            }
+
                         }
                     });
                     /* DEFAULT ORDER PRDIACTE TO PRIMARY */
@@ -332,6 +344,15 @@
                     /* ADD FUNCTION REFERENCE FOR DIRECT CALL*/
                     $scope.config.changeRowClass = $scope.changeRowClass;
                     $scope.$emit('vxGridSettingsBuilt', { 'id': $scope.vxConfig.id });
+                }
+
+                $scope.editRow = function (id) {
+                    $scope.vxColSettings.inlineEditState[id] = true;
+                }
+
+                $scope.config.setRowFieldValidation = function (id, field, valid) {
+                    $scope.vxConfig.invalidRows[id] = !valid;
+                    $scope.vxConfig.invalidRowFields[id][field] = !valid;
                 }
 
                 $scope.saveRow = function (id) {
@@ -1003,10 +1024,11 @@
             restrict: 'AEC',
             link: function ($scope, elem, attr) {
                 elem.on('click', function (e) {
-                    $scope.$apply(attr.vxKey);
+                    if (attr.vxdisabled != true)
+                        $scope.$apply(attr.vxKey);
                 });
                 elem.on('keyup', function (e) {
-                    if (e.keyCode == 13 || e.keyCode == 32)
+                    if ((e.keyCode == 13 || e.keyCode == 32) && attr.vxdisabled != true)
                         $scope.$apply(attr.vxKey);
                 });
             }

@@ -742,7 +742,7 @@
         },
         columnDefConfigs: [
             { id: 'dt', columnName: 'Date', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, width: '160', headerDefn: '<span>Date</span>', cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
-            { id: 'link', columnName: 'Link', renderDefn: true, width: '150', headerDefn: '<span>Link</span>', cellDefn: '<a style="padding-left:10px;" ng-href="{{VX_DATA_POINT}}" >{{VX_DATA_POINT}}</a>', inlineEditOnColumnEnabled: true, editDefn: '<input class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />', inlineEditRequiredColumn: true },
+            { id: 'link', columnName: 'Link', renderDefn: true, width: '150', headerDefn: '<span>Link</span>', cellDefn: '<a style="padding-left:10px;" ng-href="{{VX_DATA_POINT}}" >{{VX_DATA_POINT}}</a>', inlineEditOnColumnEnabled: true, editDefn: '<input class="vx-edit-input form-control" ng-model="VX_DATA_POINT" ng-class=\'{ "invalidField" : VX_INVALID_ROW && VX_INVALID_FIELD_ROW  }\' ng-change="VX_CONFIG.validateLinkField(VX_ROW_POINT, VX_DATA_POINT)" />', inlineEditValidation: true },
             { id: 'customer', columnName: 'Customer', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, inlineEditOnColumnEnabled: true, editDefn: '<input class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: true, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'assignment', columnName: 'Assignment', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true },
@@ -754,6 +754,14 @@
             { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, primary: true }
         ]
     };
+
+    self.vxSampleConfig.validateLinkField = function (id, data) {
+        var valid = true;
+        if (typeof data === 'undefined' || data == '' || data == {} || data.localeCompare('http://google.com') == 0)
+            valid = false;
+        self.vxSampleConfig.setRowFieldValidation(id, 'link', valid);
+    }
+
     console.log('length : ' + self.vxSampleData.length);
 
     $scope.$on('vsRepeatInnerCollectionUpdated', function () {

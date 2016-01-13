@@ -203,7 +203,8 @@
                         { prop: 'data', defValue: [] },
                         { prop: 'vxFilteredData', defValue: [] },
                         { prop: 'xsRowTitleTemplate', defValue: '<div class="xsRowTemplate">{{row[vxColSettings.primaryId]}}</div>' },
-                        { prop: 'inlineAddRowEnabled', defValue: false }
+                        { prop: 'inlineAddRowEnabled', defValue: false },
+                        { prop: 'inlineEditSyncEnabled', defValue: false }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
@@ -269,6 +270,9 @@
                             col.editDefn = col.editDefn.replaceAll("VX_ROW", "row");
                             col.editDefn = col.editDefn.replaceAll("VX_CONFIG", "vxConfig")
                             $scope.vxColSettings.colWithInlineEdits.push(col.id);
+                            if (col.editDefn.indexOf('vx-keep-watch') != -1) {
+                                col.editDefn = col.editDefn.replaceAll("vx-keep-watch", "vx-keep-watch-row-id=\"{{row[vxColSettings.primaryId]}}\" vx-keep-watch-field=\"" + col.id + "\" vx-keep-watch");
+                            }
 
                             if (col.inlineEditValidation == true) {
                                 $scope.vxConfig.invalidRows = {};
@@ -347,15 +351,50 @@
                 }
 
                 $scope.editRow = function (id) {
+                    if ($scope.vxConfig.inlineEditSyncEnabled == true) {
+                        if ($scope.vxColSettings.multiSelected.length > 0) {
+                            var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(id) == 0 });
+                            if (typeof exists !== 'undefined' && exists != null && exists.length > 0) {
+                                _.each($scope.vxColSettings.multiSelected, function (uid) {
+                                    $scope.vxColSettings.inlineEditState[uid] = true;
+                                });
+                            }
+                        }
+                    }
                     $scope.vxColSettings.inlineEditState[id] = true;
                 }
 
+                $scope.$on('vxInlineEditFieldChange', function (e, data) {
+                    if ($scope.vxConfig.inlineEditSyncEnabled == true) {
+                        var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(data.rowId) == 0 });
+                        if (typeof exists !== 'undefined' && exists != null && exists.length > 0) {
+                            _.each($scope.vxColSettings.multiSelected, function (uid) {
+                                var cRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId] == uid; })
+                                if (typeof cRow !== 'undefined' && cRow != null && $scope.vxColSettings.inlineEditState[uid] == true) {
+                                    cRow[data.field] = data.value;
+                                }
+                            });
+                        }
+                    }
+                })
+
                 $scope.config.setRowFieldValidation = function (id, field, valid) {
+                    if ($scope.vxConfig.inlineEditSyncEnabled == true) {
+                        var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(id) == 0 });
+                        if (typeof exists !== 'undefined' && exists != null && exists.length > 0) {
+                            _.each($scope.vxColSettings.multiSelected, function (uid) {
+                                $scope.vxConfig.invalidRows[uid] = !valid;
+                                $scope.vxConfig.invalidRowFields[uid][field] = !valid;
+                            });
+                        }
+                    }
+
                     $scope.vxConfig.invalidRows[id] = !valid;
                     $scope.vxConfig.invalidRowFields[id][field] = !valid;
+
                 }
 
-                $scope.saveRow = function (id) {
+                $scope.savingRows = function (id) {
                     var cRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId] == id; })
                     if (typeof cRow !== 'undefined' && cRow.newRow == true) {
                         delete cRow.newRow;
@@ -379,6 +418,23 @@
                             $scope.vxColSettings.inlineEditState[id] = false;
                         }
                     }
+                }
+
+                $scope.saveRow = function (id) {
+                    var saved = false;
+                    if ($scope.vxConfig.inlineEditSyncEnabled == true) {
+                        var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(id) == 0 });
+                        if (typeof exists !== 'undefined' && exists != null && exists.length > 0) {
+                            _.each($scope.vxColSettings.multiSelected, function (uid) {
+                                $scope.savingRows(uid);
+                                saved = true;
+                            });
+                        }
+                    }
+                    if (!saved) {
+                        $scope.savingRows(id);
+                    }
+
                 }
 
                 $scope.addNewRow = function () {
@@ -1030,6 +1086,21 @@
                 elem.on('keyup', function (e) {
                     if ((e.keyCode == 13 || e.keyCode == 32) && attr.vxdisabled != true)
                         $scope.$apply(attr.vxKey);
+                });
+            }
+        };
+    })
+    .directive("vxKeepWatch", function () {
+        return {
+            restrict: 'AEC',
+            link: function ($scope, elem, attr) {
+                var field = attr.vxKeepWatch;
+                var init = false;
+                $scope.$watch(attr[field], function (newValue) {
+                    if (init)
+                        $scope.$emit('vxInlineEditFieldChange', { 'field': attr.vxKeepWatchField, 'value': newValue, 'rowId': attr.vxKeepWatchRowId });
+                    else
+                        init = true;
                 });
             }
         };

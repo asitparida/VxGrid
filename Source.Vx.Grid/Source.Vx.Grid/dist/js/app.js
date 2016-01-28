@@ -684,7 +684,7 @@
     ];
 
     _.each(original, function (record, k) {
-        _.each(_.range(10), function (i, j) {
+        _.each(_.range(5), function (i, j) {
             var rec = angular.copy(record);
             rec.index = k + '_' + j;
             rec.laborId = 'XXX-XXXX-XXXX' + '_' + rec.index;
@@ -701,7 +701,7 @@
     self.vxSampleConfig = {
         enableDropdownsInHeader: true,
         ddSort: true,
-        ddGroup: false,
+        ddGroup: true,
         defaultGrouping: { enabled: false, column: 2, columnName: 'customer' },
         groupedSelectionEnabled: true,
         columnFilteringEnabled: true,
@@ -717,7 +717,7 @@
         data: self.vxSampleData,
         vxFilteredData: [],
         showTable: false,
-        virtualization: false,
+        virtualization: true,
         pageLength: 50,
         inlineAddRowEnabled: true,
         categories: self.categories,
@@ -745,7 +745,7 @@
             { id: 'dt', columnName: 'Date', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, width: '160', headerDefn: '<span>Date</span>', cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
             { id: 'link', columnName: 'Link', renderDefn: true, width: '150', headerDefn: '<span>Link</span>', cellDefn: '<a style="padding-left:10px;" ng-href="{{VX_DATA_POINT}}" >{{VX_DATA_POINT}}</a>', inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" ng-class=\'{ "invalidField" : VX_INVALID_ROW && VX_INVALID_FIELD_ROW  }\' ng-change="VX_CONFIG.validateLinkField(VX_ROW_POINT, VX_DATA_POINT)" />', inlineEditValidation: true },
             { id: 'customer', columnName: 'Customer', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
-            { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: true, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
+            { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: true, ddFilters: true, dropDownEnabled: true, hidden: false, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'assignment', columnName: 'Assignment', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true },
             { id: 'category', columnName: 'Category', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, cellDefn: '<span class="sampleCell">{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" vx-keep-watch="ngModel" ng-options="item.name for item in VX_CONFIG.categories" ng-model="VX_DATA_POINT"></select>', inlineEditOnColumnEnabled: true },
             { id: 'userAlias', columnName: 'User', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true },

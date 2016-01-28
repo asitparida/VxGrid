@@ -141,7 +141,8 @@
                         'searchToken': '',
                         'latchExcess': 10,
                         'inlineEditState': {},
-                        'colWithInlineEdits': []
+                        'colWithInlineEdits': [],
+                        'groupKeys': {}
                     };
                     if ($scope.getWindowDimensions().w < 768) {
                         $scope.vxColSettings.xsViewEnabled = true;
@@ -514,22 +515,25 @@
                                             }));
                                             uniqed = _.reject(uniqed, function (item) { return typeof item === 'undefined' || item == {} });
                                             _.each(uniqed.sort(), function (item) {
-                                                var key = 'col_' + _colDefn.id + '_key_';
-                                                var type = 'string';
-                                                if (item == null) {
-                                                    key = key + 'null';
-                                                }
-                                                else {
-                                                    if (item == null)
-                                                        key = key + 'null';
-                                                    else if (typeof item != 'object') {
-                                                        key = key + item.replace(/\s+/g, '_');
-                                                    }
-                                                    else {
-                                                        key = key + JSON.stringify(item).replace(/\s+/g, '_');
-                                                        type = 'object'
-                                                    }
-                                                }
+                                                var retKey = getKeyedUnique(item, _colDefn.id, 'col');
+                                                //var key = 'col_' + _colDefn.id + '_key_';
+                                                //var type = 'string';
+                                                //if (item == null) {
+                                                //    key = key + 'null';
+                                                //}
+                                                //else {
+                                                //    if (item == null)
+                                                //        key = key + 'null';
+                                                //    else if (typeof item != 'object') {
+                                                //        key = key + item.replace(/\s+/g, '_');
+                                                //    }
+                                                //    else {
+                                                //        key = key + JSON.stringify(item).replace(/\s+/g, '_');
+                                                //        type = 'object'
+                                                //    }
+                                                //}
+                                                var key = retKey.key;
+                                                var type = retKey.type;
                                                 var name = (item == '' || item == ' ' ? '< blank >' : item);
                                                 name = item == null ? ' < null >' : name;
                                                 var pair = { 'key': key, 'label': item, 'name': name, 'col': _colDefn.id, 'type': type, disabled: false, action: 'filter' };
@@ -555,11 +559,34 @@
                                         }
                                     }
                                     $scope.vxColSettings.dropdDownLoaded[_colDefn.id] = true;
+                                    console.log($scope.vxColSettings);
                                 }, 500);
                             }
                         }
                     }
                 }
+
+                function getKeyedUnique(item, id, phrase) {
+                    var key = phrase + '_' + id + '_key_';
+                    var type = 'string';
+                    if (item == null) {
+                        key = key + 'null';
+                    }
+                    else {
+                        if (item == null)
+                            key = key + 'null';
+                        else if (typeof item != 'object') {
+                            key = key + item.replace(/\s+/g, '_');
+                        }
+                        else {
+                            key = key + JSON.stringify(item).replace(/\s+/g, '_');
+                            type = 'object';
+                        }
+                    }
+                    return { 'key': key, 'type': type };
+                }
+
+
                 $scope.sortClick = function (header) {
                     var _colDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare(header.id) == 0 });
                     if (typeof _colDefn !== 'undefined' && _colDefn != null) {
@@ -576,22 +603,25 @@
                 }
                 $scope.groupClick = function (header) {
                     $scope.clearFilters();
-                    $scope.removeGroupings();
+                    //$scope.removeGroupings();
                     if ($scope.vxColSettings.groupByColActivated[header.id] != true) {
                         $scope.vxColSettings.predicate = null;
                         var collection = [];
                         var groupByProp = header.id;
                         var groupColName = header.columnName;
                         var groupPropValues = _.uniq(_.pluck($scope.vxConfig.vxData, groupByProp));
+                        var groups = _.groupBy(_.sortBy($scope.vxConfig.vxData, groupByProp), groupByProp);
+                        $scope.vxColSettings.groupKeys[groupByProp] = [];
                         _.each(groupPropValues, function (value) {
-                            var group = _.filter($scope.vxConfig.vxData, function (i) { return i[groupByProp].localeCompare(value) == 0 });
-                            if (group.length > 0) {
-                                var groupId = 'groupcol_' + groupByProp + '_key_' + value.replace(/\s+/g, '_');
-                                $scope.vxColSettings.groupPredicate[groupId] = false;
-                                var rowDefn = { 'type': 'groupRow', 'colName': groupColName, 'col': groupByProp, 'value': value, 'groupId': groupId, 'cellDefn': '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="VX_ROW_POINT" ng-change="groupSelectionChanged(row)" /></div>' };
+                            var key = (getKeyedUnique(value, groupByProp, 'groupcol')).key;
+                            $scope.vxColSettings.groupKeys[groupByProp].push(key);
+                            if (groups[value].length > 0) {
+                                $scope.vxColSettings.groupPredicate[key] = false;
+                                var rowDefn = { 'type': 'groupRow', 'colName': groupColName, 'col': groupByProp, 'value': value, 'groupId': key, 'cellDefn': '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="VX_ROW_POINT" ng-change="groupSelectionChanged(row)" /></div>' };
                                 rowDefn.cellDefn = rowDefn.cellDefn.replaceAll("VX_ROW_POINT", "vxColSettings.groupPredicate[row.groupId]");
                                 collection.push(rowDefn);
-                                collection = _.union(collection, group);
+                                console.log({ 'id': groupColName, 'value': value, 'length': groups[value].length });
+                                collection = _.union(collection, groups[value]);
                             }
                         });
                         $scope.vxConfig.vxData = collection;
@@ -629,9 +659,10 @@
                 $scope.groupSelectionChanged = function (group) {
                     $scope.emitArray = [];
                     var toggledTo = $scope.vxColSettings.groupPredicate[group.groupId];
-                    _.each(_.filter($scope.vxConfig.vxFilteredData, function (row) {
+                    var rows = _.filter($scope.vxConfig.vxFilteredData, function (row) {
                         return row.type != 'groupRow' && row[group.col].localeCompare(group.value) == 0
-                    }), function (row) {
+                    });
+                    _.each(rows, function (row) {
                         if ($scope.vxColSettings.multiSelColDependent == false || ($scope.vxColSettings.multiSelColDependent == true && row[$scope.vxConfig.multiSelectionDependentCol] == false)) {
                             var pid = row[$scope.vxColSettings.primaryId];
                             if ($scope.vxColSettings.rowSelected[pid] != toggledTo) {
@@ -641,7 +672,7 @@
                                 if (toggledTo)
                                     $scope.vxColSettings.multiSelected.push(pid);
                                 else
-                                    $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (rs) { return rs.localeCompare(pid) != 0 });
+                                    $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (rs) { return rs.localeCompare(pid) == 0 });
                             }
                         }
                     });
@@ -758,12 +789,19 @@
                     $scope.emitArray = [];
                     _.each($scope.vxColSettings.multiSelected, function (pid) {
                         $scope.vxColSettings.rowSelected[pid] = false;
-                        var row = _.find($scope.vxConfig.vxData, function (r) { return r[$scope.vxColSettings.primaryId].localeCompare(pid) == 0 });
+                        var row = _.find($scope.vxConfig.vxData, function (r) { return r.type != 'groupRow' && r[$scope.vxColSettings.primaryId].localeCompare(pid) == 0 });
                         if (typeof row !== 'undefined' && row != null) {
                             var result = { 'key': row[$scope.vxConfig.onSelectionReturnCol], 'value': $scope.vxColSettings.rowSelected[pid], '_pKey': pid };
                             $scope.emitArray.push(result);
                         }
                         $scope.vxColSettings.multiSelected = [];
+                        _.each($scope.vxConfig.columnDefConfigs, function (header) {
+                            if ($scope.vxColSettings.dropDownGroup[header.id] == true && $scope.vxColSettings.groupByColActivated[header.id] == true) {
+                                _.each($scope.vxColSettings.groupKeys[header.id], function (key) {
+                                    $scope.vxColSettings.groupPredicate[key] = false;
+                                });
+                            }
+                        })
                     });
                     $scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
                 }

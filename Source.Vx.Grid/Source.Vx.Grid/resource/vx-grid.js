@@ -67,6 +67,7 @@
         ----------------------------
         <CONFIG>.getVxCounts()                  <NO PARAMS>         RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
         <CONFIG>.getData()                      <NO PARAMS>         RETURNS CURRENT DATA STATE
+        <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>    SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
     */
 
     /* CAPITALIZE FIRST LETTER - STRING PROTOTYPE*/
@@ -140,7 +141,8 @@
                         'searchToken': '',
                         'latchExcess': 10,
                         'inlineEditState': {},
-                        'colWithInlineEdits': []
+                        'colWithInlineEdits': [],
+                        'groupKeys': {}
                     };
                     if ($scope.getWindowDimensions().w < 768) {
                         $scope.vxColSettings.xsViewEnabled = true;
@@ -165,7 +167,7 @@
                         /* ADDING CHECKBOX COLUMN DEFINITION */
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('inlinediting') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
-                            var _selColDefn = { id: 'inlinediting', columnName: 'Edit', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, cellDefn: '<div class="vx-row-edit icon-container" tabindex="0" vx-key="vxColSettings.inlineEditState[VX_ROW_POINT] = true" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false"><i class="icon icon-edit"></i></div><div class="vx-row-edit icon-container" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true"><i class="icon icon-save"></i></div>', inlineEditOnColumnEnabled: false };
+                            var _selColDefn = { id: 'inlinediting', columnName: 'Edit', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, cellDefn: '<div class="vx-row-edit icon-container" tabindex="0" vx-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false"><i class="icon icon-edit"></i></div><div class="vx-row-edit icon-container" ng-attr-vxdisabled="{{vxConfig.invalidRows[row[vxColSettings.primaryId]]}}" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true"><i class="icon icon-save"></i></div>', inlineEditOnColumnEnabled: false };
                             $scope.vxConfig.columnDefConfigs.unshift(_selColDefn);
                         }
                         /* SEETING ALL ROW SELECTIONS TO FALSE */
@@ -202,7 +204,8 @@
                         { prop: 'data', defValue: [] },
                         { prop: 'vxFilteredData', defValue: [] },
                         { prop: 'xsRowTitleTemplate', defValue: '<div class="xsRowTemplate">{{row[vxColSettings.primaryId]}}</div>' },
-                        { prop: 'inlineAddRowEnabled', defValue: false }
+                        { prop: 'inlineAddRowEnabled', defValue: false },
+                        { prop: 'inlineEditSyncEnabled', defValue: false }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
@@ -225,7 +228,7 @@
                             { prop: 'headerDefn', defValue: '' },
                             { prop: 'cellDefn', defValue: '' },
                             { prop: 'inlineEditOnColumnEnabled', defValue: false },
-                            { prop: 'inlineEditRequiredColumn', defValue: false },
+                            { prop: 'inlineEditValidation', defValue: false },
                             { prop: 'editDefn', defValue: null },
                             { prop: 'editDefnTemplate', defValue: null }
                         ];
@@ -261,7 +264,6 @@
                             col.cellDefn = col.cellDefn.replaceAll("VX_CONFIG", "vxConfig")
                         }
                         if (col.inlineEditOnColumnEnabled == true) {
-                            console.log(col.editDefn);
                             if (col.editDefn == '' || col.editDefn == null)
                                 col.editDefn = '<input class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />';
                             col.editDefn = col.editDefn.replaceAll("VX_ROW_POINT", "row[vxColSettings.primaryId]");
@@ -269,7 +271,22 @@
                             col.editDefn = col.editDefn.replaceAll("VX_ROW", "row");
                             col.editDefn = col.editDefn.replaceAll("VX_CONFIG", "vxConfig")
                             $scope.vxColSettings.colWithInlineEdits.push(col.id);
-                            console.log(col.editDefn);
+                            if (col.editDefn.indexOf('vx-keep-watch') != -1) {
+                                col.editDefn = col.editDefn.replaceAll("vx-keep-watch", "vx-keep-watch-row-id=\"{{row[vxColSettings.primaryId]}}\" vx-keep-watch-field=\"" + col.id + "\" vx-keep-watch");
+                            }
+
+                            if (col.inlineEditValidation == true) {
+                                $scope.vxConfig.invalidRows = {};
+                                $scope.vxConfig.invalidRowFields = {};
+                                _.each($scope.vxConfig.vxData, function (row, index) {
+                                    var rowId = row[$scope.vxColSettings.primaryId];
+                                    $scope.vxConfig.invalidRows[rowId] = false;
+                                    $scope.vxConfig.invalidRowFields[rowId] = {};
+                                });
+                                col.editDefn = col.editDefn.replaceAll("VX_INVALID_ROW", "vxConfig.invalidRows[row[vxColSettings.primaryId]] == true");
+                                col.editDefn = col.editDefn.replaceAll("VX_INVALID_FIELD_ROW", "vxConfig.invalidRowFields[row[vxColSettings.primaryId]]." + col.id + " == true");
+                            }
+
                         }
                     });
                     /* DEFAULT ORDER PRDIACTE TO PRIMARY */
@@ -334,7 +351,51 @@
                     $scope.$emit('vxGridSettingsBuilt', { 'id': $scope.vxConfig.id });
                 }
 
-                $scope.saveRow = function (id) {
+                $scope.editRow = function (id) {
+                    if ($scope.vxConfig.inlineEditSyncEnabled == true) {
+                        if ($scope.vxColSettings.multiSelected.length > 0) {
+                            var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(id) == 0 });
+                            if (typeof exists !== 'undefined' && exists != null && exists.length > 0) {
+                                _.each($scope.vxColSettings.multiSelected, function (uid) {
+                                    $scope.vxColSettings.inlineEditState[uid] = true;
+                                });
+                            }
+                        }
+                    }
+                    $scope.vxColSettings.inlineEditState[id] = true;
+                }
+
+                $scope.$on('vxInlineEditFieldChange', function (e, data) {
+                    if ($scope.vxConfig.inlineEditSyncEnabled == true) {
+                        var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(data.rowId) == 0 });
+                        if (typeof exists !== 'undefined' && exists != null && exists.length > 0) {
+                            _.each($scope.vxColSettings.multiSelected, function (uid) {
+                                var cRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId] == uid; })
+                                if (typeof cRow !== 'undefined' && cRow != null && $scope.vxColSettings.inlineEditState[uid] == true) {
+                                    cRow[data.field] = data.value;
+                                }
+                            });
+                        }
+                    }
+                })
+
+                $scope.config.setRowFieldValidation = function (id, field, valid) {
+                    if ($scope.vxConfig.inlineEditSyncEnabled == true) {
+                        var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(id) == 0 });
+                        if (typeof exists !== 'undefined' && exists != null && exists.length > 0) {
+                            _.each($scope.vxColSettings.multiSelected, function (uid) {
+                                $scope.vxConfig.invalidRows[uid] = !valid;
+                                $scope.vxConfig.invalidRowFields[uid][field] = !valid;
+                            });
+                        }
+                    }
+
+                    $scope.vxConfig.invalidRows[id] = !valid;
+                    $scope.vxConfig.invalidRowFields[id][field] = !valid;
+
+                }
+
+                $scope.savingRows = function (id) {
                     var cRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId] == id; })
                     if (typeof cRow !== 'undefined' && cRow.newRow == true) {
                         delete cRow.newRow;
@@ -358,6 +419,23 @@
                             $scope.vxColSettings.inlineEditState[id] = false;
                         }
                     }
+                }
+
+                $scope.saveRow = function (id) {
+                    var saved = false;
+                    if ($scope.vxConfig.inlineEditSyncEnabled == true) {
+                        var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(id) == 0 });
+                        if (typeof exists !== 'undefined' && exists != null && exists.length > 0) {
+                            _.each($scope.vxColSettings.multiSelected, function (uid) {
+                                $scope.savingRows(uid);
+                                saved = true;
+                            });
+                        }
+                    }
+                    if (!saved) {
+                        $scope.savingRows(id);
+                    }
+
                 }
 
                 $scope.addNewRow = function () {
@@ -437,22 +515,25 @@
                                             }));
                                             uniqed = _.reject(uniqed, function (item) { return typeof item === 'undefined' || item == {} });
                                             _.each(uniqed.sort(), function (item) {
-                                                var key = 'col_' + _colDefn.id + '_key_';
-                                                var type = 'string';
-                                                if (item == null) {
-                                                    key = key + 'null';
-                                                }
-                                                else {
-                                                    if (item == null)
-                                                        key = key + 'null';
-                                                    else if (typeof item != 'object') {
-                                                        key = key + item.replace(/\s+/g, '_');
-                                                    }
-                                                    else {
-                                                        key = key + JSON.stringify(item).replace(/\s+/g, '_');
-                                                        type = 'object'
-                                                    }
-                                                }
+                                                var retKey = getKeyedUnique(item, _colDefn.id, 'col');
+                                                //var key = 'col_' + _colDefn.id + '_key_';
+                                                //var type = 'string';
+                                                //if (item == null) {
+                                                //    key = key + 'null';
+                                                //}
+                                                //else {
+                                                //    if (item == null)
+                                                //        key = key + 'null';
+                                                //    else if (typeof item != 'object') {
+                                                //        key = key + item.replace(/\s+/g, '_');
+                                                //    }
+                                                //    else {
+                                                //        key = key + JSON.stringify(item).replace(/\s+/g, '_');
+                                                //        type = 'object'
+                                                //    }
+                                                //}
+                                                var key = retKey.key;
+                                                var type = retKey.type;
                                                 var name = (item == '' || item == ' ' ? '< blank >' : item);
                                                 name = item == null ? ' < null >' : name;
                                                 var pair = { 'key': key, 'label': item, 'name': name, 'col': _colDefn.id, 'type': type, disabled: false, action: 'filter' };
@@ -478,11 +559,34 @@
                                         }
                                     }
                                     $scope.vxColSettings.dropdDownLoaded[_colDefn.id] = true;
+                                    console.log($scope.vxColSettings);
                                 }, 500);
                             }
                         }
                     }
                 }
+
+                function getKeyedUnique(item, id, phrase) {
+                    var key = phrase + '_' + id + '_key_';
+                    var type = 'string';
+                    if (item == null) {
+                        key = key + 'null';
+                    }
+                    else {
+                        if (item == null)
+                            key = key + 'null';
+                        else if (typeof item != 'object') {
+                            key = key + item.replace(/\s+/g, '_');
+                        }
+                        else {
+                            key = key + JSON.stringify(item).replace(/\s+/g, '_');
+                            type = 'object';
+                        }
+                    }
+                    return { 'key': key, 'type': type };
+                }
+
+
                 $scope.sortClick = function (header) {
                     var _colDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare(header.id) == 0 });
                     if (typeof _colDefn !== 'undefined' && _colDefn != null) {
@@ -499,22 +603,25 @@
                 }
                 $scope.groupClick = function (header) {
                     $scope.clearFilters();
-                    $scope.removeGroupings();
+                    //$scope.removeGroupings();
                     if ($scope.vxColSettings.groupByColActivated[header.id] != true) {
                         $scope.vxColSettings.predicate = null;
                         var collection = [];
                         var groupByProp = header.id;
                         var groupColName = header.columnName;
                         var groupPropValues = _.uniq(_.pluck($scope.vxConfig.vxData, groupByProp));
+                        var groups = _.groupBy(_.sortBy($scope.vxConfig.vxData, groupByProp), groupByProp);
+                        $scope.vxColSettings.groupKeys[groupByProp] = [];
                         _.each(groupPropValues, function (value) {
-                            var group = _.filter($scope.vxConfig.vxData, function (i) { return i[groupByProp].localeCompare(value) == 0 });
-                            if (group.length > 0) {
-                                var groupId = 'groupcol_' + groupByProp + '_key_' + value.replace(/\s+/g, '_');
-                                $scope.vxColSettings.groupPredicate[groupId] = false;
-                                var rowDefn = { 'type': 'groupRow', 'colName': groupColName, 'col': groupByProp, 'value': value, 'groupId': groupId, 'cellDefn': '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="VX_ROW_POINT" ng-change="groupSelectionChanged(row)" /></div>' };
+                            var key = (getKeyedUnique(value, groupByProp, 'groupcol')).key;
+                            $scope.vxColSettings.groupKeys[groupByProp].push(key);
+                            if (groups[value].length > 0) {
+                                $scope.vxColSettings.groupPredicate[key] = false;
+                                var rowDefn = { 'type': 'groupRow', 'colName': groupColName, 'col': groupByProp, 'value': value, 'groupId': key, 'cellDefn': '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="VX_ROW_POINT" ng-change="groupSelectionChanged(row)" /></div>' };
                                 rowDefn.cellDefn = rowDefn.cellDefn.replaceAll("VX_ROW_POINT", "vxColSettings.groupPredicate[row.groupId]");
                                 collection.push(rowDefn);
-                                collection = _.union(collection, group);
+                                console.log({ 'id': groupColName, 'value': value, 'length': groups[value].length });
+                                collection = _.union(collection, groups[value]);
                             }
                         });
                         $scope.vxConfig.vxData = collection;
@@ -552,9 +659,10 @@
                 $scope.groupSelectionChanged = function (group) {
                     $scope.emitArray = [];
                     var toggledTo = $scope.vxColSettings.groupPredicate[group.groupId];
-                    _.each(_.filter($scope.vxConfig.vxFilteredData, function (row) {
+                    var rows = _.filter($scope.vxConfig.vxFilteredData, function (row) {
                         return row.type != 'groupRow' && row[group.col].localeCompare(group.value) == 0
-                    }), function (row) {
+                    });
+                    _.each(rows, function (row) {
                         if ($scope.vxColSettings.multiSelColDependent == false || ($scope.vxColSettings.multiSelColDependent == true && row[$scope.vxConfig.multiSelectionDependentCol] == false)) {
                             var pid = row[$scope.vxColSettings.primaryId];
                             if ($scope.vxColSettings.rowSelected[pid] != toggledTo) {
@@ -564,7 +672,7 @@
                                 if (toggledTo)
                                     $scope.vxColSettings.multiSelected.push(pid);
                                 else
-                                    $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (rs) { return rs.localeCompare(pid) != 0 });
+                                    $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (rs) { return rs.localeCompare(pid) == 0 });
                             }
                         }
                     });
@@ -681,12 +789,19 @@
                     $scope.emitArray = [];
                     _.each($scope.vxColSettings.multiSelected, function (pid) {
                         $scope.vxColSettings.rowSelected[pid] = false;
-                        var row = _.find($scope.vxConfig.vxData, function (r) { return r[$scope.vxColSettings.primaryId].localeCompare(pid) == 0 });
+                        var row = _.find($scope.vxConfig.vxData, function (r) { return r.type != 'groupRow' && r[$scope.vxColSettings.primaryId].localeCompare(pid) == 0 });
                         if (typeof row !== 'undefined' && row != null) {
                             var result = { 'key': row[$scope.vxConfig.onSelectionReturnCol], 'value': $scope.vxColSettings.rowSelected[pid], '_pKey': pid };
                             $scope.emitArray.push(result);
                         }
                         $scope.vxColSettings.multiSelected = [];
+                        _.each($scope.vxConfig.columnDefConfigs, function (header) {
+                            if ($scope.vxColSettings.dropDownGroup[header.id] == true && $scope.vxColSettings.groupByColActivated[header.id] == true) {
+                                _.each($scope.vxColSettings.groupKeys[header.id], function (key) {
+                                    $scope.vxColSettings.groupPredicate[key] = false;
+                                });
+                            }
+                        })
                     });
                     $scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
                 }
@@ -1003,11 +1118,27 @@
             restrict: 'AEC',
             link: function ($scope, elem, attr) {
                 elem.on('click', function (e) {
-                    $scope.$apply(attr.vxKey);
+                    if (attr.vxdisabled != true)
+                        $scope.$apply(attr.vxKey);
                 });
                 elem.on('keyup', function (e) {
-                    if (e.keyCode == 13 || e.keyCode == 32)
+                    if ((e.keyCode == 13 || e.keyCode == 32) && attr.vxdisabled != true)
                         $scope.$apply(attr.vxKey);
+                });
+            }
+        };
+    })
+    .directive("vxKeepWatch", function () {
+        return {
+            restrict: 'AEC',
+            link: function ($scope, elem, attr) {
+                var field = attr.vxKeepWatch;
+                var init = false;
+                $scope.$watch(attr[field], function (newValue) {
+                    if (init)
+                        $scope.$emit('vxInlineEditFieldChange', { 'field': attr.vxKeepWatchField, 'value': newValue, 'rowId': attr.vxKeepWatchRowId });
+                    else
+                        init = true;
                 });
             }
         };

@@ -408,7 +408,6 @@
                     width: calc(100% - 10px);
                     margin-left: 5px;
                     padding: 0 4px;
-                    border-color: #A0A0A0;
                     border-radius: 0;
                 }
 
@@ -416,7 +415,6 @@
                     height: 100%;
                     width: calc(100% - 10px);
                     margin-left: 5px;
-                    border-color: #A0A0A0;
                     padding: 0 4px;
                     border-radius: 0;
                 }
@@ -638,6 +636,11 @@
         width: 100%;
         text-align: center;
         border: none;
+
+        &[vxdisabled = true] {
+            opacity: 0.50;
+            cursor: not-allowed;
+        }
 
         .icon {
             width: 24px;
@@ -1032,6 +1035,9 @@
             }
 
             &.sorter {
+
+                cursor:pointer;
+
                 .sortIndicator {
                     float: right;
                     font-size: small;
@@ -1069,6 +1075,10 @@
             }
 
             &.filter {
+
+                .filter-toggle{
+                    cursor:pointer;
+                }
                 .filterCheckBox {
                     float: left;
                     position: relative;

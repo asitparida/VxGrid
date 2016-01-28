@@ -1,4 +1,4 @@
-﻿# Vx Grid (1.0.1)
+﻿# Vx Grid (1.0.2)
 
 ####  An standalone native table plugin which uses the best of features provided by AngularJS. 
 

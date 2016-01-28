@@ -1035,6 +1035,9 @@
             }
 
             &.sorter {
+
+                cursor:pointer;
+
                 .sortIndicator {
                     float: right;
                     font-size: small;
@@ -1072,6 +1075,10 @@
             }
 
             &.filter {
+
+                .filter-toggle{
+                    cursor:pointer;
+                }
                 .filterCheckBox {
                     float: left;
                     position: relative;

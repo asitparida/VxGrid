@@ -71,10 +71,16 @@
                                                 <li tabindex="0" role="presentation" class="loader" ng-if="vxColSettings.dropdDownLoaded[header.id] == false">
                                                     <img class="dropDownLoader" src="/resource/loaderWhite36.GIF" alt="dropdown addition in progress" />
                                                 </li>
-                                                <li tabindex="0" role="presentation" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownSort[header.id] == true" ng-click="sortClick(header)">
+                                                <li tabindex="0" role="presentation" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownSort[header.id] == true" vx-key="sortClick(header)">
                                                     <span class="sortIndicator" ng-show="vxColSettings.reverse == false && vxColSettings.predicate == header.id"><i class="icon icon-up white"></i></span><span class="sortIndicator" ng-show="vxColSettings.reverse == true && vxColSettings.predicate == header.id"><i class="icon icon-down white"></i></span>Sort
                                                 </li>
-                                                <li tabindex="0" role="presentation" class="filterClear" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && vxColSettings.colFilterPairs[header.id].length > 0" ng-class="{ 'disabled': vxColSettings.colFiltersActivated[header.id] == false}" ng-click="filterClearClick(header)">
+                                                <li tabindex="0" role="presentation" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownGroup[header.id] == true && vxColSettings.groupByColActivated[header.id] == false" vx-key="groupClick(header)">
+                                                    <span>Group</span>
+                                                </li>
+                                                <li tabindex="0" role="presentation" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownGroup[header.id] == true && vxColSettings.groupByColActivated[header.id] == true" vx-key="unGroupClick(header)">
+                                                    <span>Ungroup</span>
+                                                </li>
+                                                <li tabindex="0" role="presentation" class="filterClear" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && vxColSettings.colFilterPairs[header.id].length > 0" ng-class="{ 'disabled': vxColSettings.colFiltersActivated[header.id] == false}" vx-key="filterClearClick(header)">
                                                     <span class="indicator"><i class="icon icon-filter white"></i></span>Clear All Filters
                                                 </li>
                                                 <li role="presentation" class="filter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && filter.disabled == false" ng-repeat="filter in vxColSettings.colFilterPairs[header.id]">
@@ -109,10 +115,16 @@
                                                 <li tabindex="0" role="presentation" class="loader" ng-if="vxColSettings.dropdDownLoaded[header.id] == false">
                                                     <img class="dropDownLoader" src="/resource/loaderWhite36.GIF" alt="dropdown addition in progress" />
                                                 </li>
-                                                <li tabindex="0" role="presentation" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownSort[header.id] == true" ng-click="sortClick(header)">
+                                                <li tabindex="0" role="presentation" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownSort[header.id] == true" vx-key="sortClick(header)">
                                                     <span class="sortIndicator" ng-show="vxColSettings.reverse == false && vxColSettings.predicate == header.id"><i class="icon icon-up white"></i></span><span class="sortIndicator" ng-show="vxColSettings.reverse == true && vxColSettings.predicate == header.id"><i class="icon icon-down white"></i></span>Sort
                                                 </li>
-                                                <li tabindex="0" role="presentation" class="filterClear" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && vxColSettings.colFilterPairs[header.id].length > 0" ng-class="{ 'disabled': vxColSettings.colFiltersActivated[header.id] == false}" ng-click="filterClearClick(header)">
+                                                <li tabindex="0" role="presentation" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownGroup[header.id] == true && vxColSettings.groupByColActivated[header.id] != true" vx-key="groupClick(header)">
+                                                    <span>Group</span>
+                                                </li>
+                                                <li tabindex="0" role="presentation" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownGroup[header.id] == true && vxColSettings.groupByColActivated[header.id] == true" vx-key="unGroupClick(header)">
+                                                    <span>Ungroup</span>
+                                                </li>
+                                                <li tabindex="0" role="presentation" class="filterClear" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && vxColSettings.colFilterPairs[header.id].length > 0" ng-class="{ 'disabled': vxColSettings.colFiltersActivated[header.id] == false}" vx-key="filterClearClick(header)">
                                                     <span class="indicator"><i class="icon icon-filter white"></i></span>Clear All Filters
                                                 </li>
                                                 <li role="presentation" class="filter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && filter.disabled == false" ng-repeat="filter in vxColSettings.colFilterPairs[header.id]">

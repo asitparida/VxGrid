@@ -21,8 +21,10 @@
 		<CONFIG>.virtualization					<SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE VIRTUALIZATION AND ENABLE PAGINATION
 		<CONFIG>.pageLength						<SUPPORTED : Y>    :   <NUMBER>	   SET PAGINATION LENGTH AND DEFUALTS TO 20
         <CONFIG>.inlineEditingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE EDITING OPTION
+        <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE DELETING OPTION
         <CONFIG>.inlineAddRowEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING ADDING ROW
         <CONFIG>.newRowTemplate			        <SUPPORTED : Y>    :   <STRING>    SET TO NEW TEMPLATE
+        <CONFIG>.jsonEditorEnabled			    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE JSON EDITOR
         
         VX GRID COLUMN CONFIG (BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs') IN DIRECTIVE DEFINTION
         -----------------------------------------------------------------------------------------------------
@@ -52,6 +54,8 @@
         'vxCompletelyRenderedSelectAllEnabled'      <OUT>   EVENT ON VX GRID COMPLETE RENDERED AND SELECT ALL ENABLED - ONLY ON  <CONFIG>.selectAllOnRenderAll SET TO TRUE
         'vxGridSettingsChanged'                     <OUT>   EVENT ON VX GRID SETTINGS CHANGED
         'vxGridSettingsBuilt'                       <OUT>   EVENT ON VX GRID COL SETTINGS BUILT
+        'vxGridRowsDeleted'                         <OUT>   EVENT ON VX GRID ROWS DELETION
+        'vxGridRowSaved'                            <OUT>   EVENT ON VX GRID ROW SAVING
         'vxGridChangeRowClass'                      <IN>    ON EVENT, ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
         'vxGridResetRowClass'                       <IN>    ON EVENT, RESETS ALL CLASS NAMES ADDED AS PART OF 'vxGridChangeRowClass'
         'vxGridDisableRowSelection'                 <IN>    ON EVENT, ENABLES/DISABLES ROW SELECTION - ACCEPTS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value': <BOOLEAN>}
@@ -205,7 +209,9 @@
                         { prop: 'vxFilteredData', defValue: [] },
                         { prop: 'xsRowTitleTemplate', defValue: '<div class="xsRowTemplate">{{row[vxColSettings.primaryId]}}</div>' },
                         { prop: 'inlineAddRowEnabled', defValue: false },
-                        { prop: 'inlineEditSyncEnabled', defValue: false }
+                        { prop: 'inlineEditSyncEnabled', defValue: false },
+                        { prop: 'inlineDeletingEnabled', defValue: false },
+                        { prop: 'jsonEditorEnabled', defValue: false }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
@@ -365,6 +371,16 @@
                     $scope.vxColSettings.inlineEditState[id] = true;
                 }
 
+                $scope.editInProgressCount = function () {
+                    var count = 0;
+                    if (typeof $scope.vxColSettings.inlineEditState !== 'undefined' && $scope.vxColSettings.inlineEditState != null) {
+                        for (var arg in $scope.vxColSettings.inlineEditState) {
+                            count = $scope.vxColSettings.inlineEditState[arg] == true ? count + 1 : count;
+                        }
+                    }
+                    return count;
+                }
+
                 $scope.$on('vxInlineEditFieldChange', function (e, data) {
                     if ($scope.vxConfig.inlineEditSyncEnabled == true) {
                         var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(data.rowId) == 0 });
@@ -409,6 +425,7 @@
                             $scope.vxConfig.data.unshift(cRow);
                         }
                         $scope.vxColSettings.inlineEditState[id] = false;
+                        $scope.$emit('vxGridRowSaved', { 'id': $scope.vxConfig.id, 'data': cRow });
                     }
                     else {
                         var oRow = _.find($scope.vxConfig.data, function (row) { return row[$scope.vxColSettings.primaryId] == id; })
@@ -417,6 +434,7 @@
                                 oRow[head] = cRow[head];
                             });
                             $scope.vxColSettings.inlineEditState[id] = false;
+                            $scope.$emit('vxGridRowSaved', { 'id': $scope.vxConfig.id, 'data': cRow });
                         }
                     }
                 }
@@ -435,7 +453,36 @@
                     if (!saved) {
                         $scope.savingRows(id);
                     }
+                }
 
+                $scope.revertEdits = function () {
+                    if (typeof $scope.vxColSettings.multiSelected !== 'undefined' && $scope.vxColSettings.multiSelected != null & $scope.vxColSettings.multiSelected.length > 0) {
+                        _.each($scope.vxColSettings.multiSelected, function (uid) {
+                            $scope.revertEditForRow(uid);
+                        });
+                    }
+                }
+
+                $scope.revertEditForRow = function (id) {
+                    var cRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId] == id; });
+                    console.log(cRow);
+                    if (typeof cRow !== 'undefined' && cRow.newRow == true) {
+                        $scope.vxColSettings.inlineEditState[id] = false;
+                        $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId].localeCompare(id) == 0 });
+                        $scope.$emit('vxGridRowEditRevert', { 'id': $scope.vxConfig.id, 'data': cRow });
+                    }
+                    else {
+                        var oRow = _.find($scope.vxConfig.data, function (row) { return row[$scope.vxColSettings.primaryId] == id; })
+                        if (typeof cRow !== 'undefined' && typeof oRow !== 'undefined') {
+                            _.each($scope.vxColSettings.colWithInlineEdits, function (head) {
+                                cRow[head] = oRow[head];
+                            });
+                            $scope.vxColSettings.inlineEditState[id] = false;
+                            $scope.$emit('vxGridRowEditRevert', { 'id': $scope.vxConfig.id, 'data': oRow });
+                        }
+                    }
+                    console.log(oRow);
+                    console.log(cRow);
                 }
 
                 $scope.addNewRow = function () {
@@ -445,6 +492,17 @@
                     newRow['newRow'] = true;
                     $scope.vxColSettings.inlineEditState[_newGuid] = true;
                     $scope.vxConfig.vxData.unshift(newRow);
+                }
+
+                $scope.deleteRows = function () {
+                    if (typeof $scope.vxColSettings.multiSelected !== 'undefined' && $scope.vxColSettings.multiSelected != null & $scope.vxColSettings.multiSelected.length > 0) {
+                        $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) { return _.contains($scope.vxColSettings.multiSelected, row[$scope.vxColSettings.primaryId]) == true });
+                        $scope.$emit('vxGridRowsDeleted', { 'id': $scope.vxConfig.id, 'data': $scope.vxColSettings.multiSelected });
+                        _.each($scope.vxColSettings.multiSelected, function (id) {
+                            $scope.vxColSettings.inlineEditState[id] = false;
+                        });
+                        $scope.vxColSettings.multiSelected = [];
+                    }
                 }
 
                 $scope.activatePage = function (page) {
@@ -516,22 +574,6 @@
                                             uniqed = _.reject(uniqed, function (item) { return typeof item === 'undefined' || item == {} });
                                             _.each(uniqed.sort(), function (item) {
                                                 var retKey = getKeyedUnique(item, _colDefn.id, 'col');
-                                                //var key = 'col_' + _colDefn.id + '_key_';
-                                                //var type = 'string';
-                                                //if (item == null) {
-                                                //    key = key + 'null';
-                                                //}
-                                                //else {
-                                                //    if (item == null)
-                                                //        key = key + 'null';
-                                                //    else if (typeof item != 'object') {
-                                                //        key = key + item.replace(/\s+/g, '_');
-                                                //    }
-                                                //    else {
-                                                //        key = key + JSON.stringify(item).replace(/\s+/g, '_');
-                                                //        type = 'object'
-                                                //    }
-                                                //}
                                                 var key = retKey.key;
                                                 var type = retKey.type;
                                                 var name = (item == '' || item == ' ' ? '< blank >' : item);
@@ -1039,7 +1081,7 @@
                 $scope.$watchCollection('config.data', function (n) {
                     if (n.length == 0)
                         n = [{ 'fillEmptyElement': true }];
-                    $scope.config.vxData = n;
+                    $scope.config.vxData = angular.copy(n);
                     $scope.resetVxInstance();
                 });
 

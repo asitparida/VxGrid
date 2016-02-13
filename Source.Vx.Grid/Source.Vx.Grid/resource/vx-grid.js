@@ -9,6 +9,7 @@
         -----------------------------------------------------------       
         <CONFIG>.enableDropdownsInHeader        <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE DROPDOWNS ON C0LUMNS, ELSE DEFAULT SORT ON HEADER CLICK
         <CONFIG>.selectionEnabled               <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE ROW SELECTION
+        <CONFIG>.allRowsSelectionEnabled        <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE ALL ROWS SELECTION
         <CONFIG>.multiSelectionEnabled          <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE MULTI ROW SELECTION - DEPENDENT ON 
         <CONFIG>.showGridStats                  <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE ROW SELECTION
         <CONFIG>.showGridOptions                <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE ROW SELECTION
@@ -146,7 +147,9 @@
                         'latchExcess': 10,
                         'inlineEditState': {},
                         'colWithInlineEdits': [],
-                        'groupKeys': {}
+                        'groupKeys': {},
+                        'allRowSelected': false,
+                        'allRowSelectionDisabled': false
                     };
                     if ($scope.getWindowDimensions().w < 768) {
                         $scope.vxColSettings.xsViewEnabled = true;
@@ -185,7 +188,11 @@
                         /* ADDING CHECKBOX COLUMN DEFINITION */
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('checkbox') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
-                            var _selColDefn = { id: 'checkbox', columnName: 'Row Selection', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" /></div>' };
+                            var _selColDefn = {
+                                id: 'checkbox', columnName: 'Row Selection', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
+                                headerDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" /></div>',
+                                cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" /></div>'
+                            };
                             $scope.vxConfig.columnDefConfigs.unshift(_selColDefn);
                         }
                         /* SEETING ALL ROW SELECTIONS TO FALSE */
@@ -211,7 +218,8 @@
                         { prop: 'inlineAddRowEnabled', defValue: false },
                         { prop: 'inlineEditSyncEnabled', defValue: false },
                         { prop: 'inlineDeletingEnabled', defValue: false },
-                        { prop: 'jsonEditorEnabled', defValue: false }
+                        { prop: 'jsonEditorEnabled', defValue: false },
+                        { prop: 'allRowsSelectionEnabled', defValue: false }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
@@ -719,8 +727,27 @@
                         }
                     });
                     $scope.$emit('vxGridRowSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
-
                 }
+
+                $scope.allRowSelectionChanged = function () {
+                    var toggleTo = $scope.vxColSettings.allRowSelected;
+                    if (toggleTo == true) {
+                        _.each($scope.vxConfig.vxData, function (row) {
+                            var pid = row[$scope.vxColSettings.primaryId];
+                            if ($scope.vxColSettings.rowSelected[pid] == false && toggleTo == true) {
+                                $scope.vxColSettings.rowSelected[pid] = true;
+                                $scope.vxColSettings.multiSelected.push(pid);
+                            }
+                        });
+                    }
+                    else if (toggleTo == false) {
+                        _.each($scope.vxColSettings.multiSelected, function (id) {
+                            $scope.vxColSettings.rowSelected[id] = false;
+                        });
+                        $scope.vxColSettings.multiSelected = [];
+                    }
+                }
+
                 $scope.rowSelectionChanged = function (row) {
                     var pid = row[$scope.vxColSettings.primaryId];
                     var result = { 'key': row[$scope.vxConfig.onSelectionReturnCol], 'value': $scope.vxColSettings.rowSelected[pid], '_pKey': pid };

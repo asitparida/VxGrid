@@ -817,7 +817,9 @@
 }
 
 .vxTable {
-    .vxBody .vx-row-select {
+
+    .vxBody .vx-row-select ,
+    .vxHead .vx-row-select{
         text-align: center;
 
         input[type="checkbox"] {

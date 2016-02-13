@@ -707,6 +707,7 @@
         columnFilteringEnabled: true,
         groupedColumnHidingEnabled: false,
         selectionEnabled: true,
+        allRowsSelectionEnabled: true,
         multiSelectionEnabled: true,
         multiSelectionDependentCol: null,
         onSelectionReturnCol: 'laborId',

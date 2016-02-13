@@ -1,17 +1,17 @@
 ﻿<script id="file-content" type="text/javascript">
-(function () {
-    "use strict";
-    
-    var vxGridTemplates = <%= templates %>;
+    (function () {
+        "use strict";
 
-    angular.module('vx.grid.modules')
-     .run(["$templateCache", function ($templateCache) {
-         $templateCache.put("template/vx-grid/vx-grid-json-editor-modal.html", vxGridTemplates.vxGridJsonEditorModal);
-         $templateCache.put("template/vx-grid/vx-grid-manage-columns-modal.html", vxGridTemplates.vxGridManageColumnsModal);
-         $templateCache.put("template/vx-grid/vx-grid.html", vxGridTemplates.vxGridTableStructure);
-     }])
-})();   
-</script> 
+        var vxGridTemplates = <%= templates %>;
+
+        angular.module('vx.grid.modules')
+         .run(["$templateCache", function ($templateCache) {
+             $templateCache.put("template/vx-grid/vx-grid-json-editor-modal.html", vxGridTemplates.vxGridJsonEditorModal);
+             $templateCache.put("template/vx-grid/vx-grid-manage-columns-modal.html", vxGridTemplates.vxGridManageColumnsModal);
+             $templateCache.put("template/vx-grid/vx-grid.html", vxGridTemplates.vxGridTableStructure);
+         }])
+    })();
+</script>
 <div id="templates">
     <div id="vxGridTableStructure">
         <div class="vxH100 vx-grid-inner" ng-class="{ 'vxXsViewEnabled' : vxColSettings.xsViewEnabled == true}">
@@ -26,7 +26,7 @@
                         <label class="statValue" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}">{{vxColSettings.multiSelected.length | vxNumberFixedLen:2}}</label>
                     </div>
                     <div class="col-md-8 vxTableOperations pull-right zeroPaddingRight" ng-if="vxConfig.showGridOptions">
-                        <div class="icon-container pull-right" title="JSON Editor" role="button" tabindex="0" ng-class="{'active' : vxColSettings.menu }" vx-key="openJsonEditor()">
+                        <div class="icon-container pull-right" title="JSON Editor" role="button" tabindex="0" ng-class="{'active' : vxColSettings.menu }" vx-key="openJsonEditor()" ng-if="vxConfig.jsonEditorEnabled">
                             <i class="icon icon-edit"></i>
                         </div>
                         <div class="icon-container pull-right" role="button" tabindex="0" ng-class="{'active' : vxColSettings.menu }" vx-key="openManageColumns()">
@@ -44,7 +44,13 @@
                         <div class="icon-container pull-right" role="button" tabindex="{{vxColSettings.selectAllEnabled == false && vxConfig.multiSelectionEnabled == true ? -1 : 0}}" ng-class="{ 'disabled' :vxColSettings.selectAllEnabled == false && vxConfig.multiSelectionEnabled == true}" vx-key="selectAllFiltered()">
                             <i class="icon icon-openwith"></i>
                         </div>
-                        <div class="icon-container pull-right" role="button" tabindex="0" ng-if="vxConfig.inlineAddRowEnabled == true" vx-key="addNewRow()">
+                        <div class="icon-container pull-right" role="button" tabindex="0" ng-if="vxConfig.inlineEditingEnabled == true && vxConfig.inlineDeletingEnabled == true && vxColSettings.multiSelected.length > 0" vx-key="deleteRows()">
+                            <i class="icon icon-trash"></i>
+                        </div>
+                        <div class="icon-container pull-right" role="button" tabindex="{{editInProgressCount() == 0 ? -1 : 0}}" ng-if="vxConfig.inlineEditingEnabled == true && editInProgressCount() > 0" ng-class="{ 'disabled' : editInProgressCount() == 0}" vx-key="revertEdits()">
+                            <i class="icon icon-revert"></i>
+                        </div>
+                        <div class="icon-container pull-right" role="button" tabindex="0" ng-if="vxConfig.inlineEditingEnabled == true && vxConfig.inlineAddRowEnabled == true" vx-key="addNewRow()">
                             <i class="icon icon-add"></i>
                         </div>
                         <div class="search-container pull-right input-group">
@@ -270,7 +276,7 @@
                                     <p class="helpText">Select a column use the left and right arrows to change column visibility.</p>
                                     <div class="col-xs-12 colItem" tabindex="{{header.locked == false ? 0 : -1}}" ng-repeat="header in copyForWidthVisChange" ng-class="{ 'locked': header.locked, 'selected': header.id == headerSelected.id}" vx-key="selectHeader(header)" ng-if="header.hidden == true">
                                         <div class="col-xs-2 col-sm-2 col-md-1">
-                                            <label class="colLabel xl" ng-if="header.visbilityLocked == true"><i class="icon icon-blockedLegacy" tooltip="Visbility Locked" ></i></label>
+                                            <label class="colLabel xl" ng-if="header.visbilityLocked == true"><i class="icon icon-blockedLegacy" tooltip="Visbility Locked"></i></label>
                                         </div>
                                         <label class="col-xs-10 col-sm-10 col-md-10 colName">{{header.columnName}}</label>
                                         <div class="clearfix"></div>

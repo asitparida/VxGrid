@@ -818,8 +818,8 @@
 
 .vxTable {
 
-    .vxBody .vx-row-select ,
-    .vxHead .vx-row-select{
+    .vxBody .vx-row-select,
+    .vxHead .vx-row-select {
         text-align: center;
 
         input[type="checkbox"] {
@@ -918,7 +918,7 @@
 
                 line-height: 48px;
 
-                button.dropdown-toggle {
+                .dropdown-toggle {
                     background: none;
                     color: #fff;
                     border: none;
@@ -926,6 +926,7 @@
                     text-align: left;
                     margin: 0;
                     padding: 0 15px;
+                    line-height: 48px;
                     height: 48px;
                     box-shadow: none;
                     border-radius: 0;
@@ -954,7 +955,7 @@
                     }
                 }
 
-                &.open button.dropdown-toggle {
+                &.open .dropdown-toggle {
                     background: #23527c;
                 }
 
@@ -1006,6 +1007,7 @@
 
         ul.dropdown-menu li {
             &.filter {
+
                 input[type="checkbox"] {
                     margin-right: 15px;
                     vertical-align: top;
@@ -1019,6 +1021,41 @@
                     word-break: break-all;
                     margin-bottom: 0;
                     text-transform: none;
+                }
+            }
+
+            &.filter-search {
+                input[type="search"] {
+                    line-height: 36px;
+                    padding: 0 10px;
+                    font-style: italic;
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    width: 100%;
+                    color: rgba(255,255,255,0.80);
+                    background: none;
+                    border: 1px solid rgba(255,255,255, 0.60);
+
+                    &:focus,
+                    &:active {
+                        font-style: normal;
+                        color: rgba(255,255,255,1);
+                    }
+
+                    &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+                        color: rgba(255,255,255,0.80);
+                    }
+
+                    &::-moz-placeholder { /* Firefox 19+ */
+                         color: rgba(255,255,255,0.80);
+                    }
+
+                    &:-ms-input-placeholder { /* IE 10+ */
+                        color: rgba(255,255,255,0.80);
+                    }
+
+                    &:-moz-placeholder { /* Firefox 18- */
+                        color: rgba(255,255,255,0.80);
+                    }
                 }
             }
 

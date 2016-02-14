@@ -32,7 +32,8 @@
         <COLUMN>.dropDownEnabled                <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE COLUMN DROPDOWN
         <COLUMN>.ddSort                         <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ADD SORT OPTION TO COLUMN DROPDOWN
         <COLUMN>.ddFilters                      <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ADD FILTERS TO COLUMN DROPDOWN
-        <COLUMN>.ddGroup                        <SUPPORTED : N>    :   <BOOLEAN>   SET TO TRUE TO ADD GROUP OPTION TO COLUMN DROPDOWN
+        <COLUMN>.ddFiltersWithSearch            <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ADD FILTERS SEARCH OPTION
+        <COLUMN>.ddGroup                        <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ADD GROUP OPTION TO COLUMN DROPDOWN
         <COLUMN>.hidden                         <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO HIDE COLUMN ON DEFAULT
         <COLUMN>.xsHidden                       <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO HIDE COLUMN ON DEFAULT ON XS RESOLUTION
         <COLUMN>.locked                         <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO FIX COLUMN VISIBILITY, COLUMN ORDER, COLUMN WIDTH
@@ -149,7 +150,8 @@
                         'colWithInlineEdits': [],
                         'groupKeys': {},
                         'allRowSelected': false,
-                        'allRowSelectionDisabled': false
+                        'allRowSelectionDisabled': false,
+                        'filterSearchToken': {}
                     };
                     if ($scope.getWindowDimensions().w < 768) {
                         $scope.vxColSettings.xsViewEnabled = true;
@@ -233,6 +235,7 @@
                             { prop: 'ddSort', defValue: false },
                             { prop: 'ddGroup', defValue: false },
                             { prop: 'ddFilters', defValue: false },
+                            { prop: 'ddFiltersWithSearch', defValue: false },
                             { prop: 'dropDownEnabled', defValue: false },
                             { prop: 'hidden', defValue: false },
                             { prop: 'xsHidden', defValue: false },
@@ -473,7 +476,6 @@
 
                 $scope.revertEditForRow = function (id) {
                     var cRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId] == id; });
-                    console.log(cRow);
                     if (typeof cRow !== 'undefined' && cRow.newRow == true) {
                         $scope.vxColSettings.inlineEditState[id] = false;
                         $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId].localeCompare(id) == 0 });
@@ -489,8 +491,6 @@
                             $scope.$emit('vxGridRowEditRevert', { 'id': $scope.vxConfig.id, 'data': oRow });
                         }
                     }
-                    console.log(oRow);
-                    console.log(cRow);
                 }
 
                 $scope.addNewRow = function () {
@@ -535,7 +535,18 @@
                 $scope.isValidHeaderName = function (header, name) {
                     return header.renderDefn == false && typeof name !== 'undefined' && name != null && name != '';
                 }
-                $scope.headerClick = function (header) {
+                $scope.headerClick = function (header, e) {
+
+                    var proceed = true;
+                    var target = $(e.target);
+                    if (typeof target !== 'undefined' && target != null & target.length > 0) {
+                        var ulTarget = target.closest('ul.dropdown-menu');
+                        if (typeof ulTarget !== 'undefined' && ulTarget != null & ulTarget.length > 0)
+                            proceed = false;
+                    }
+                    if (proceed == false)
+                        return;
+
                     _.each($scope.vxConfig.columnDefConfigs, function (col) { if (col.id.localeCompare(header.id) != 0) $scope.vxColSettings.dropdDownOpen[col.id] = false; })
                     var _colDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare(header.id) == 0 });
                     if (typeof _colDefn !== 'undefined' && _colDefn != null) {
@@ -588,9 +599,9 @@
                                                 name = item == null ? ' < null >' : name;
                                                 var pair = { 'key': key, 'label': item, 'name': name, 'col': _colDefn.id, 'type': type, disabled: false, action: 'filter' };
                                                 $scope.vxColSettings.colFilterPairs[_colDefn.id].push(pair);
-                                                console.log(pair);
                                                 $scope.vxColSettings.colFiltersStatus[key] = false;
                                             });
+                                            $scope.vxColSettings.filterSearchToken[_colDefn.id] = '';
                                             $scope.vxColSettings.colFiltersActivated[_colDefn.id] = false;
                                         }
                                         /* SET NON INTERSECTED FILTERS TO DISABLE TRUE*/
@@ -609,7 +620,6 @@
                                         }
                                     }
                                     $scope.vxColSettings.dropdDownLoaded[_colDefn.id] = true;
-                                    console.log($scope.vxColSettings);
                                 }, 500);
                             }
                         }
@@ -670,7 +680,6 @@
                                 var rowDefn = { 'type': 'groupRow', 'colName': groupColName, 'col': groupByProp, 'value': value, 'groupId': key, 'cellDefn': '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="VX_ROW_POINT" ng-change="groupSelectionChanged(row)" /></div>' };
                                 rowDefn.cellDefn = rowDefn.cellDefn.replaceAll("VX_ROW_POINT", "vxColSettings.groupPredicate[row.groupId]");
                                 collection.push(rowDefn);
-                                console.log({ 'id': groupColName, 'value': value, 'length': groups[value].length });
                                 collection = _.union(collection, groups[value]);
                             }
                         });
@@ -1223,8 +1232,6 @@
                     var unionedMatches = [];
                     _.each(matches, function (match) {
                         unionedMatches = _.union(unionedMatches, _.filter(copyOfItems, function (item) {
-                            console.log(item[match.col].toString().trim());
-                            console.log(match.label);
                             if (typeof match.label !== 'undefined' && match.label != null && match.label != {} && typeof item[match.col] !== 'undefined' && item[match.col] != null && item[match.col] != {}) {
                                 if (match.type == 'object')
                                     return JSON.stringify(item[match.col]).localeCompare(JSON.stringify(match.label)) == 0;

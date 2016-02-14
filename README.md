@@ -113,20 +113,20 @@ BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs' IN DIRECTIVE DEFINTION
 ##Screenshots
 
 #####Vx Grid intialized with DOM Virtualization
-<img src="Source.Vx.Grid\Source.Vx.Grid\images\1.png " />
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\1.PNG " />
 #####Row Selection, Multi Selection, Row Deletion
-<img src="Source.Vx.Grid\Source.Vx.Grid\images\2.png " />
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\2.PNG " />
 #####Row Editing, Multi Row Editing, Row Changes Reverting
-<img src="Source.Vx.Grid\Source.Vx.Grid\images\3.png " />
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\3.PNG " />
 #####Column Dropdown With Sorting, Filters
-<img src="Source.Vx.Grid\Source.Vx.Grid\images\4.png " />
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\4.PNG " />
 #####Column Dropdown With Sorting, Filters With Search Option
-<img src="Source.Vx.Grid\Source.Vx.Grid\images\5.png " />
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\5.PNG " />
 #####New Row Addition
-<img src="Source.Vx.Grid\Source.Vx.Grid\images\6.png " />
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\6.PNG " />
 #####Pagination Instead of DOM Virtualization
-<img src="Source.Vx.Grid\Source.Vx.Grid\images\7.png " />
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\7.PNG " />
 #####Settings Modal with Column Hiding, Column Width Changing & Column Order Changing
-<img src="Source.Vx.Grid\Source.Vx.Grid\images\9.png " />
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\9.PNG " />
 #####XS Resolution View
-<img src="Source.Vx.Grid\Source.Vx.Grid\images\10.png " />
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\10.PNG " />

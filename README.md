@@ -1,31 +1,46 @@
 ﻿# Vx Grid (1.0.2)
 
-####  An standalone native table plugin which uses the best of features provided by AngularJS. 
+An standalone native table plugin which uses the best of features provided by AngularJS. 
 
-#### <a href="http://vxgrid.azurewebsites.net/">Live Preview</a>
+##Demo
 
-####  List of supported features (1.0.1)
-        a.  Sorting
-        b.  Contextual Filtering
-        c.  Fixed Header
-        d.  Pagination
-        e.  Virtualization
-        f.  Column Hiding
-        g.  Column Width Changing
-        h.  Single Row Selection
-        i.  Multi Row Selection
-        j.  Callbacks
-        k.  Inline Row Editing
-        l.  Inline Multi Row Editing
-        m.  Iniine Row Addition
-        n.  Column Wrapping
-        o.  Evente Based Actions
-        p.  Separate XS View - On widths < 768px, the columns merge to an 'Expand-Collapse' view.
+Sample Preview @ <a href="http://vxgrid.azurewebsites.net/">http://vxgrid.azurewebsites.net</a>
 
-#####VX GRID CONFIG (BOUND TO 'config=') IN DIRECTIVE CALL
-        -----------------------------------------------------------       
+
+##List of supported features (1.0.2)
+<ol>
+    <li>Sorting</li>
+    <li>Contextual Filtering</li>
+    <li>Filters with Search</li>
+    <li>Fixed Header</li>
+    <li>Pagination</li>
+    <li>Virtualization</li>
+    <li>Column Hiding</li>
+    <li>Column Width Changing</li>
+    <li>Single Row Selection</li>
+    <li>Multi Row Selection</li>
+    <li>All Row Selection</li>
+    <li>Callbacks</li>
+    <li>Inline Row Editing</li>
+    <li>Inline Multi Row Editing</li>
+    <li>Iniine Row Addition</li>
+    <li>Inline Row Changes Revert</li>
+    <li>Row Deletion</li>
+    <li>Column Wrapping</li>
+    <li>Events Based Actions</li>
+    <li>JSON Data Editor</li>
+    <li>Modal Settings Window</li>
+    <li>Row Validation</li>
+    <li>Separate XS View - On widths < 768px, the columns merge to an 'Expand-Collapse' view.</li>
+</ol>  
+
+##VX GRID Config 
+BOUND TO 'config=' IN DIRECTIVE CALL
+           
+        
         <CONFIG>.enableDropdownsInHeader        <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE DROPDOWNS ON C0LUMNS, ELSE DEFAULT SORT ON HEADER CLICK
         <CONFIG>.selectionEnabled               <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE ROW SELECTION
+        <CONFIG>.allRowsSelectionEnabled        <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE ALL ROWS SELECTION
         <CONFIG>.multiSelectionEnabled          <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE MULTI ROW SELECTION - DEPENDENT ON 
         <CONFIG>.showGridStats                  <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE ROW SELECTION
         <CONFIG>.showGridOptions                <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE ROW SELECTION
@@ -35,32 +50,36 @@
         <CONFIG>.showTable                      <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE SELECT ONLY WHEN ALL ROWS ARE RENDERED
         <CONFIG>.data                           <SUPPORTED : Y>    :   <ARRAY>
         <CONFIG>.xsRowTitleTemplate             <SUPPORTED : Y>    :   <STRING>    SET TO XS ONLY TEMPLATE - DEFAULTS TO PRIMARY COLUMN HEADER
-		<CONFIG>.virtualization					<SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE VIRTUALIZATION AND ENABLE PAGINATION
-		<CONFIG>.pageLength						<SUPPORTED : Y>    :   <NUMBER>	   SET PAGINATION LENGTH AND DEFUALTS TO 20
+        <CONFIG>.virtualization					<SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE VIRTUALIZATION AND ENABLE PAGINATION
+        <CONFIG>.pageLength						<SUPPORTED : Y>    :   <NUMBER>	   SET PAGINATION LENGTH AND DEFUALTS TO 20
         <CONFIG>.inlineEditingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE EDITING OPTION
+        <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE DELETING OPTION
         <CONFIG>.inlineAddRowEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING ADDING ROW
         <CONFIG>.newRowTemplate			        <SUPPORTED : Y>    :   <STRING>    SET TO NEW TEMPLATE
+        <CONFIG>.jsonEditorEnabled			    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE JSON EDITOR
 
-#####VX GRID COLUMN CONFIG (BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs') IN DIRECTIVE DEFINTION
-        -----------------------------------------------------------------------------------------------------
-        <COLUMN>.dropDownEnabled                <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE COLUMN DROPDOWN
-        <COLUMN>.ddSort                         <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ADD SORT OPTION TO COLUMN DROPDOWN
-        <COLUMN>.ddFilters                      <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ADD FILTERS TO COLUMN DROPDOWN
-        <COLUMN>.ddGroup                        <SUPPORTED : N>    :   <BOOLEAN>   SET TO TRUE TO ADD GROUP OPTION TO COLUMN DROPDOWN
-        <COLUMN>.hidden                         <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO HIDE COLUMN ON DEFAULT
-        <COLUMN>.xsHidden                       <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO HIDE COLUMN ON DEFAULT ON XS RESOLUTION
-        <COLUMN>.locked                         <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO FIX COLUMN VISIBILITY, COLUMN ORDER, COLUMN WIDTH
-        <COLUMN>.primary                        <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE THIS COLUMN AS PRIMARY
-        <COLUMN>.width                          <SUPPORTED : Y>    :   <STRING>    SET WIDTH FOR COLUMN - DEFUALT '200'
-        <COLUMN>.renderDefn                     <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE ENABLE CUSTOM TEMEPLATE
-        <COLUMN>.headerDefn                     <SUPPORTED : N>    :   <STRING>    SET CUSTOM HEADER TEMPLATE
-        <COLUMN>.cellDefn                       <SUPPORTED : Y>    :   <STRING>    SET CUSTOM CELL TEMPLATE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY
-        <COLUMN>.inlineEditOnColumnEnabled      <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE COLUMN INLINE EDITING
-        <COLUMN>.editDefn                       <SUPPORTED : Y>    :   <STRING>    SET CUSTOM CELL TEMPLATE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY
-        <COLUMN>.editDefnTemplate               <SUPPORTED : Y>    :   <STRING>    SET EDIT TEMPLATE TYPE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY - SUPPORTED TYPES - 'INPUT', 'TEXTAREA'
+##VX GRID Column Config 
+BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs' IN DIRECTIVE DEFINTION
+        
+         <COLUMN>.dropDownEnabled                <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE COLUMN DROPDOWN
+         <COLUMN>.ddSort                         <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ADD SORT OPTION TO COLUMN DROPDOWN
+         <COLUMN>.ddFilters                      <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ADD FILTERS TO COLUMN DROPDOWN
+         <COLUMN>.ddFiltersWithSearch            <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ADD FILTERS SEARCH OPTION
+         <COLUMN>.ddGroup                        <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ADD GROUP OPTION TO COLUMN DROPDOWN
+         <COLUMN>.hidden                         <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO HIDE COLUMN ON DEFAULT
+         <COLUMN>.xsHidden                       <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO HIDE COLUMN ON DEFAULT ON XS RESOLUTION
+         <COLUMN>.locked                         <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO FIX COLUMN VISIBILITY, COLUMN ORDER, COLUMN WIDTH
+         <COLUMN>.primary                        <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE THIS COLUMN AS PRIMARY
+         <COLUMN>.width                          <SUPPORTED : Y>    :   <STRING>    SET WIDTH FOR COLUMN - DEFUALT '200'
+         <COLUMN>.renderDefn                     <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE ENABLE CUSTOM TEMEPLATE
+         <COLUMN>.headerDefn                     <SUPPORTED : N>    :   <STRING>    SET CUSTOM HEADER TEMPLATE
+         <COLUMN>.cellDefn                       <SUPPORTED : Y>    :   <STRING>    SET CUSTOM CELL TEMPLATE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY
+         <COLUMN>.inlineEditOnColumnEnabled      <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE COLUMN INLINE EDITING
+         <COLUMN>.editDefn                       <SUPPORTED : Y>    :   <STRING>    SET CUSTOM CELL TEMPLATE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY
+         <COLUMN>.editDefnTemplate               <SUPPORTED : Y>    :   <STRING>    SET EDIT TEMPLATE TYPE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY - SUPPORTED TYPES - 'INPUT', 'TEXTAREA'
 
-#####VX GRID EVENTS
-        ----------------------
+##VX GRID EVENTS
+
         'vxGridRowSelectionChange'                  <OUT>   EVENT ON ROW SELECTION CHANGE EMITING DATA :   {'key': <ROW_VALUE_'onSelectionReturnCol'>, 'value': <BOOLEAN_NEW_SELECTION_STATE>, '_pKey': <PRIMARY_ID_VXGRID> }
         'vxGridRowMultiSelectionChange'             <OUT>   EVENT ON MULTIROW SELECTION CHANGE EMITING DATA COLLECTION OF :   {'key': <ROW_VALUE_'onSelectionReturnCol'>, 'value': <BOOLEAN_NEW_SELECTION_STATE>, '_pKey': <PRIMARY_ID_VXGRID> }
         'vxPartiallyRendered'                       <OUT>   EVENT ON VX GRID PARTIAL RENDERED
@@ -80,12 +99,34 @@
         'vxGridClearSelection',                     <IN>    ON EVENT, CLEARS SELECTION OF ALL ROWS
         'vxGridRevealWrapToggle'                    <IN>    ON EVENT, TOGGLES WRAP ON COLUMNS
 
-#####VX GRID CONFIG EXTENSIONS
+##VX GRID Config Extensions
         ----------------------------
         <CONFIG>.getVxCounts()                  <NO PARAMS>         RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
         <CONFIG>.getData()                      <NO PARAMS>         RETURNS CURRENT DATA STATE
+        <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>    SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
 
-#####BUILT USING
+##Built Using
 <a href="https://github.com/kamilkp/angular-vs-repeat">Angular Vs Repeat</a>
 <a href="https://github.com/oblador/angular-scroll">Angular Scroll</a>
 <a href="https://github.com/josdejong/jsoneditor/">JSON Editor</a>
+
+##Screenshots
+
+#####Vx Grid intialized with DOM Virtualization
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\1.png " />
+#####Row Selection, Multi Selection, Row Deletion
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\2.png " />
+#####Row Editing, Multi Row Editing, Row Changes Reverting
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\3.png " />
+#####Column Dropdown With Sorting, Filters
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\4.png " />
+#####Column Dropdown With Sorting, Filters With Search Option
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\5.png " />
+#####New Row Addition
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\6.png " />
+#####Pagination Instead of DOM Virtualization
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\7.png " />
+#####Settings Modal with Column Hiding, Column Width Changing & Column Order Changing
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\9.png " />
+#####XS Resolution View
+<img src="Source.Vx.Grid\Source.Vx.Grid\images\10.png " />

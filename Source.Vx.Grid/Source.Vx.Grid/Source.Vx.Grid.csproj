@@ -67,6 +67,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="images\1.PNG" />
+    <Content Include="images\10.PNG" />
+    <Content Include="images\11.PNG" />
+    <Content Include="images\2.PNG" />
+    <Content Include="images\3.PNG" />
+    <Content Include="images\4.PNG" />
+    <Content Include="images\5.PNG" />
+    <Content Include="images\6.PNG" />
+    <Content Include="images\7.PNG" />
+    <Content Include="images\8.PNG" />
+    <Content Include="images\9.PNG" />
     <Content Include="packages.config" />
     <Content Include="package.json" />
     <Content Include="resource\jsoneditor\jsoneditor.map" />

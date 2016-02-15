@@ -1191,21 +1191,38 @@
             })
         }
     }])
-    .directive("vxKey", function () {
+    .directive("vxKey", ['$rootScope', '$parse', function ($rootScope, $parse) {
         return {
             restrict: 'AEC',
-            link: function ($scope, elem, attr) {
-                elem.on('click', function (e) {
-                    if (attr.vxdisabled != true)
-                        $scope.$apply(attr.vxKey);
-                });
-                elem.on('keyup', function (e) {
-                    if ((e.keyCode == 13 || e.keyCode == 32) && attr.vxdisabled != true)
-                        $scope.$apply(attr.vxKey);
-                });
+            compile: function ($element, attr) {
+                var fn = $parse(attr['vxKey']);
+                return function vxKeyHandler(scope, element) {
+                    element.on('click', function (e) {
+                        if (attr.vxDisabled == true || attr.ngDisabled)
+                            return;
+                        vxKeyHandlerCallback(e)
+                    });
+                    element.on('keyup', function (e) {
+                        if (attr.vxDisabled == true || attr.ngDisabled)
+                            return;
+                        if (e.keyCode == 13 || e.keyCode == 32) {
+                            vxKeyHandlerCallback(e);
+                        }
+                    });
+                    function vxKeyHandlerCallback(e) {
+                        var callback = function () {
+                            fn(scope, { $event: e });
+                        };
+                        if ($rootScope.$$phase) {
+                            scope.$evalAsync(callback);
+                        } else {
+                            scope.$apply(callback);
+                        }
+                    }
+                }
             }
         };
-    })
+    }])
     .directive("vxKeepWatch", function () {
         return {
             restrict: 'AEC',

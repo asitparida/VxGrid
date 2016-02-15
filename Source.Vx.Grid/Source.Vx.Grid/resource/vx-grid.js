@@ -539,6 +539,7 @@
 
                     var proceed = true;
                     var target = $(e.target);
+                    console.log(e);
                     if (typeof target !== 'undefined' && target != null & target.length > 0) {
                         var ulTarget = target.closest('ul.dropdown-menu');
                         if (typeof ulTarget !== 'undefined' && ulTarget != null & ulTarget.length > 0)
@@ -1191,21 +1192,42 @@
             })
         }
     }])
-    .directive("vxKey", function () {
+    .directive("vxKey", ['$rootScope', '$parse', function ($rootScope, $parse) {
         return {
             restrict: 'AEC',
-            link: function ($scope, elem, attr) {
-                elem.on('click', function (e) {
-                    if (attr.vxdisabled != true)
-                        $scope.$apply(attr.vxKey);
-                });
-                elem.on('keyup', function (e) {
-                    if ((e.keyCode == 13 || e.keyCode == 32) && attr.vxdisabled != true)
-                        $scope.$apply(attr.vxKey);
-                });
+            compile: function ($element, attr) {
+                var fn = $parse(attr['vxKey']);
+                return function vxKeyHandler(scope, element) {
+                    element.on('click', function (e) {
+                        var callback = function () {
+                            fn(scope, { $event: e });
+                        };
+                        if (attr.vxDisabled == true)
+                            return;
+                        if ($rootScope.$$phase) {
+                            scope.$evalAsync(callback);
+                        } else {
+                            scope.$apply(callback);
+                        }
+                    });
+                    element.on('keyup', function (e) {
+                        if (attr.vxDisabled == true)
+                            return;
+                        if (e.keyCode == 13 || e.keyCode == 32) {
+                            var callback = function () {
+                                fn(scope, { $event: e });
+                            };
+                            if ($rootScope.$$phase) {
+                                scope.$evalAsync(callback);
+                            } else {
+                                scope.$apply(callback);
+                            }
+                        }
+                    });
+                }
             }
         };
-    })
+    }])
     .directive("vxKeepWatch", function () {
         return {
             restrict: 'AEC',

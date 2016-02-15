@@ -65,7 +65,7 @@
                         <table class="vxTable">
                             <thead class="vxHead">
                                 <tr class="vxHeadRow">
-                                    <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" ng-click="headerClick(header, $event)" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" tabindex="-1" click-outside="outsideHeaderClick(header)" ng-attr-id="vxHead_{{$index}}" ng-style="{ 'width' : header.width + 'px' }" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false">
+                                    <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" vx-key="headerClick(header, $event)" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" tabindex="-1" click-outside="outsideHeaderClick(header)" ng-attr-id="vxHead_{{$index}}" ng-style="{ 'width' : header.width + 'px' }" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false">
                                         <span class="noDdTitle" ng-if="isValidHeaderName(header, header.columnName) && vxColSettings.dropdDownEnabled[header.id] == false">{{header.columnName}}</span>
                                         <div class="dropdown" data-container="body" ng-if="vxColSettings.dropdDownEnabled[header.id] == true" ng-class="{ 'open' : vxColSettings.dropdDownOpen[header.id] == true}">
                                             <button class="btn btn-default dropdown-toggle" type="button" ng-attr-id="ddMenu_{{header.id}}" aria-expanded="true" tabindex="-1">
@@ -111,7 +111,7 @@
                         <table class="vxTable">
                             <thead class="vxHead">
                                 <tr class="vxHeadRow">
-                                    <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" ng-click="headerClick(header, $event)" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" tabindex="0" click-outside="outsideHeaderClick(header)" ng-attr-id="vxHead_{{$index}}" ng-style="{ 'width' : header.width + 'px' }" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false">
+                                    <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" vx-key="headerClick(header, $event)" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" tabindex="0" click-outside="outsideHeaderClick(header)" ng-attr-id="vxHead_{{$index}}" ng-style="{ 'width' : header.width + 'px' }" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false">
                                         <span class="noDdTitle" ng-if="isValidHeaderName(header, header.columnName) && vxColSettings.dropdDownEnabled[header.id] == false && posTop < 50">{{header.columnName}}</span>
                                         <span class="noDdTitle" ng-if="posTop > 50">{{header.columnName}}</span>
                                         <div class="dropdown" data-container="body" ng-if="vxColSettings.dropdDownEnabled[header.id] == true && posTop < 50" ng-class="{ 'open' : vxColSettings.dropdDownOpen[header.id] == true}">
@@ -182,11 +182,11 @@
                                     </td>
                                     <td class="vxBodyRowCell xsCell" ng-if="vxColSettings.xsViewEnabled == true && !(row.fillEmptyElement == true)" ng-class="{ 'rowSelectionEnabled': vxConfig.selectionEnabled == true }">
                                         <div class="xsSelectionHolder" vx-compile-clone-link="vxConfig.columnDefConfigs[0].cellDefn" ng-if="vxConfig.selectionEnabled"></div>
-                                        <div class="xsRowTitleHolder" ng-click="row.xsViewDetails = !row.xsViewDetails">
+                                        <div class="xsRowTitleHolder" vx-key="row.xsViewDetails = !row.xsViewDetails">
                                             <span ng-if="vxColSettings.xsRowTitleTemplateAvailable == false">{{row[vxColSettings.primaryId]}}</span>
                                             <div ng-if="vxColSettings.xsRowTitleTemplateAvailable == true" vx-compile="vxConfig.xsRowTitleTemplate"></div>
                                         </div>
-                                        <div class="xsRowViewToggleHolder" ng-click="row.xsViewDetails = !row.xsViewDetails">
+                                        <div class="xsRowViewToggleHolder" vx-key="row.xsViewDetails = !row.xsViewDetails">
                                             <div class="icon-container">
                                                 <i class="icon icon-ScrollChevronUpLegacy" ng-show="row.xsViewDetails"></i>
                                                 <i class="icon icon-ScrollChevronDownLegacy" ng-show="!row.xsViewDetails"></i>
@@ -221,11 +221,11 @@
                                     </td>
                                     <td class="vxBodyRowCell xsCell" ng-if="vxColSettings.xsViewEnabled == true && !(row.fillEmptyElement == true)" ng-class="{ 'rowSelectionEnabled': vxConfig.selectionEnabled == true }">
                                         <div class="xsSelectionHolder" vx-compile-clone-link="vxConfig.columnDefConfigs[0].cellDefn" ng-if="vxConfig.selectionEnabled"></div>
-                                        <div class="xsRowTitleHolder" ng-click="row.xsViewDetails = !row.xsViewDetails">
+                                        <div class="xsRowTitleHolder" vx-key="row.xsViewDetails = !row.xsViewDetails">
                                             <span ng-if="vxColSettings.xsRowTitleTemplateAvailable == false">{{row[vxColSettings.primaryId]}}</span>
                                             <div ng-if="vxColSettings.xsRowTitleTemplateAvailable == true" vx-compile="vxConfig.xsRowTitleTemplate"></div>
                                         </div>
-                                        <div class="xsRowViewToggleHolder" ng-click="row.xsViewDetails = !row.xsViewDetails">
+                                        <div class="xsRowViewToggleHolder" vx-key="row.xsViewDetails = !row.xsViewDetails">
                                             <div class="icon-container">
                                                 <i class="icon icon-ScrollChevronUpLegacy" ng-show="row.xsViewDetails"></i>
                                                 <i class="icon icon-ScrollChevronDownLegacy" ng-show="!row.xsViewDetails"></i>
@@ -249,13 +249,13 @@
                 </div>
             </div>
             <div class="col-xs-12 vxTablePagination pad0" ng-if="vxColSettings.vxPageEnabled">
-                <div class="icon-container dirNumContainer" ng-click="activatePage(vxColSettings.activePage - 1)" ng-class="{ 'disabled' :vxColSettings.activePage == 0}">
+                <div class="icon-container dirNumContainer" vx-key="activatePage(vxColSettings.activePage - 1)" ng-class="{ 'disabled' :vxColSettings.activePage == 0}">
                     <i class="icon icon-previous"></i>
                 </div>
-                <div class="icon-container dirNumContainer" ng-click="activatePage(vxColSettings.activePage + 1)" ng-class="{ 'disabled' :vxColSettings.activePage == vxColSettings.pages.length - 1}">
+                <div class="icon-container dirNumContainer" vx-key="activatePage(vxColSettings.activePage + 1)" ng-class="{ 'disabled' :vxColSettings.activePage == vxColSettings.pages.length - 1}">
                     <i class="icon icon-next"></i>
                 </div>
-                <div class="icon-container pageNumContainer" ng-repeat="pageNum in vxColSettings.pages" ng-click="activatePage(pageNum)" ng-class="{'active' : pageNum == vxColSettings.activePage}">
+                <div class="icon-container pageNumContainer" ng-repeat="pageNum in vxColSettings.pages" vx-key="activatePage(pageNum)" ng-class="{'active' : pageNum == vxColSettings.activePage}">
                     <i class="icon">{{pageNum + 1}}</i>
                 </div>
             </div>
@@ -355,8 +355,8 @@
                     </div>
                 </div>
                 <div class="vxSettingsFooter">
-                    <button class="btn btn-primary vsTableButton active" ng-click="saveChangeInConfig()">Save</button>
-                    <button class="btn btn-primary vsTableButton" ng-click="cancelChangeInConfig()">Cancel</button>
+                    <button class="btn btn-primary vsTableButton active" vx-key="saveChangeInConfig()">Save</button>
+                    <button class="btn btn-primary vsTableButton" vx-key="cancelChangeInConfig()">Cancel</button>
                     <div class="infoBtns">
                         <span class="icon icon-blockedLegacy"></span>
                         <span class="infoLabel">Visbility Locked,</span>
@@ -386,8 +386,8 @@
                     </div>
                 </div>
                 <div class="vxSettingsFooter">
-                    <button class="btn btn-primary vsTableButton active" ng-click="saveChangeInConfig()">Save</button>
-                    <button class="btn btn-primary vsTableButton" ng-click="cancelChangeInConfig()">Cancel</button>
+                    <button class="btn btn-primary vsTableButton active" vx-key="saveChangeInConfig()">Save</button>
+                    <button class="btn btn-primary vsTableButton" vx-key="cancelChangeInConfig()">Cancel</button>
                 </div>
             </div>
         </div>

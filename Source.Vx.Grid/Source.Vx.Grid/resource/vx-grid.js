@@ -1197,6 +1197,13 @@
             compile: function ($element, attr) {
                 var fn = $parse(attr['vxKey']);
                 return function vxKeyHandler(scope, element) {
+                    if (!element.attr('role')) {
+                        element.attr('role', 'button');
+                    }
+
+                    if (!element.attr('tabindex')) {
+                        element.attr('tabindex', 0);
+                    }
                     element.on('click', function (e) {
                         if (attr.vxDisabled == true || attr.ngDisabled)
                             return;

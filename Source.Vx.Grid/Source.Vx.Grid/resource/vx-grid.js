@@ -1122,7 +1122,7 @@
                 });
 
                 $scope.$watchCollection('vxConfig.vxFilteredData', function (n) {
-                    if (n.length > 0) {
+                    if (n.length >= 0) {
                         /* PROCESS FOR PAGINATION IF VIRTUALIZATION IS FALSE */
                         if ($scope.vxConfig.virtualization == false) {
                             $scope.vxColSettings.pages = _.range(Math.ceil(n.length / parseInt($scope.vxConfig.pageLength)));
@@ -1197,6 +1197,13 @@
             compile: function ($element, attr) {
                 var fn = $parse(attr['vxKey']);
                 return function vxKeyHandler(scope, element) {
+                    if (!element.attr('role')) {
+                        element.attr('role', 'button');
+                    }
+
+                    if (!element.attr('tabindex')) {
+                        element.attr('tabindex', 0);
+                    }
                     element.on('click', function (e) {
                         if (attr.vxDisabled == true || attr.ngDisabled)
                             return;

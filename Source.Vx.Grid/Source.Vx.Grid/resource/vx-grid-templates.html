@@ -29,13 +29,13 @@
                         <div class="icon-container pull-right" title="JSON Editor" role="button" tabindex="0" ng-class="{'active' : vxColSettings.menu }" vx-key="openJsonEditor()" ng-if="vxConfig.jsonEditorEnabled">
                             <i class="icon icon-edit"></i>
                         </div>
-                        <div class="icon-container pull-right" role="button" tabindex="0" ng-class="{'active' : vxColSettings.menu }" vx-key="openManageColumns()">
+                        <div class="icon-container pull-right" ng-class="{'active' : vxColSettings.menu }" vx-key="openManageColumns()">
                             <i class="icon icon-repair"></i>
                         </div>
                         <div class="icon-container pull-right" role="button" tabindex="{{multiBoxFilters.length == 0 ? -1 : 0}}" ng-class="{ 'disabled' : multiBoxFilters.length == 0}" vx-key="clearFilters()">
                             <i class="icon icon-refresh"></i>
                         </div>
-                        <div class="icon-container pull-right" role="button" tabindex="0" ng-class="{'active' : vxColSettings.revealWrapRowData }" vx-key="revealWrapToggle()">
+                        <div class="icon-container pull-right" ng-class="{'active' : vxColSettings.revealWrapRowData }" vx-key="revealWrapToggle()">
                             <i class="icon icon-more"></i>
                         </div>
                         <div class="icon-container pull-right" role="button" tabindex="{{vxColSettings.multiSelected.length == 0 ? -1 : 0 }}" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" vx-key="clearSelection()">

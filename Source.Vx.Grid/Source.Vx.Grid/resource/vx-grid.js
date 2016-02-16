@@ -1122,7 +1122,7 @@
                 });
 
                 $scope.$watchCollection('vxConfig.vxFilteredData', function (n) {
-                    if (n.length > 0) {
+                    if (n.length >= 0) {
                         /* PROCESS FOR PAGINATION IF VIRTUALIZATION IS FALSE */
                         if ($scope.vxConfig.virtualization == false) {
                             $scope.vxColSettings.pages = _.range(Math.ceil(n.length / parseInt($scope.vxConfig.pageLength)));

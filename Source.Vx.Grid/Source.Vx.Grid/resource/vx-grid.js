@@ -750,10 +750,8 @@
                         });
                     }
                     else if (toggleTo == false) {
-                        _.each($scope.vxColSettings.multiSelected, function (id) {
-                            $scope.vxColSettings.rowSelected[id] = false;
-                        });
-                        $scope.vxColSettings.multiSelected = [];
+                        /* RESET GROUPS SELECTION */
+                        $scope.clearSelection();
                     }
                 }
 

@@ -811,4 +811,10 @@
         console.log(data);
     });
 
+    $scope.$on('vxGridRowAllSelectionChange', function (e, data) {
+        console.log('vxGridRowAllSelectionChange');
+        console.log(e);
+        console.log(data);
+    });
+
 }]);

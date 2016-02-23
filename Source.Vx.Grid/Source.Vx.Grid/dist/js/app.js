@@ -766,6 +766,10 @@
         self.vxSampleConfig.setRowFieldValidation(id, 'link', valid);
     }
 
+    self.openManageColumns = function () {
+        $scope.$broadcast('vxGridOpenManageColumns', { 'id': self.vxSampleConfig.id });
+    }
+
     console.log('length : ' + self.vxSampleData.length);
 
     $scope.$on('vsRepeatInnerCollectionUpdated', function () {

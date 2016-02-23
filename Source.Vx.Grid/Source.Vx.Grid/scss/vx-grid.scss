@@ -981,6 +981,15 @@
                 }
             }
 
+            &:last-child {
+                .dropdown {
+                    ul.dropdown-menu {
+                        right: -1px;
+                        left: auto;
+                    }
+                }
+            }
+
             span.noDdTitle {
                 font-family: inherit;
                 font-weight: 400;
@@ -1046,7 +1055,7 @@
                     }
 
                     &::-moz-placeholder { /* Firefox 19+ */
-                         color: rgba(255,255,255,0.80);
+                        color: rgba(255,255,255,0.80);
                     }
 
                     &:-ms-input-placeholder { /* IE 10+ */

@@ -363,6 +363,21 @@
                         return $scope.vxConfig.data;
                     }
 
+
+                    $scope.config.setRowFieldValidation = function (id, field, valid) {
+                        if ($scope.vxConfig.inlineEditSyncEnabled == true) {
+                            var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(id) == 0 });
+                            if (typeof exists !== 'undefined' && exists != null && exists.length > 0) {
+                                _.each($scope.vxColSettings.multiSelected, function (uid) {
+                                    $scope.vxConfig.invalidRows[uid] = !valid;
+                                    $scope.vxConfig.invalidRowFields[uid][field] = !valid;
+                                });
+                            }
+                        }
+                        $scope.vxConfig.invalidRows[id] = !valid;
+                        $scope.vxConfig.invalidRowFields[id][field] = !valid;
+                    }
+
                     /* ADD FUNCTION REFERENCE FOR DIRECT CALL*/
                     $scope.config.changeRowClass = $scope.changeRowClass;
                     $scope.$emit('vxGridSettingsBuilt', { 'id': $scope.vxConfig.id });
@@ -405,22 +420,6 @@
                         }
                     }
                 })
-
-                $scope.config.setRowFieldValidation = function (id, field, valid) {
-                    if ($scope.vxConfig.inlineEditSyncEnabled == true) {
-                        var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(id) == 0 });
-                        if (typeof exists !== 'undefined' && exists != null && exists.length > 0) {
-                            _.each($scope.vxColSettings.multiSelected, function (uid) {
-                                $scope.vxConfig.invalidRows[uid] = !valid;
-                                $scope.vxConfig.invalidRowFields[uid][field] = !valid;
-                            });
-                        }
-                    }
-
-                    $scope.vxConfig.invalidRows[id] = !valid;
-                    $scope.vxConfig.invalidRowFields[id][field] = !valid;
-
-                }
 
                 $scope.savingRows = function (id) {
                     var cRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId] == id; })

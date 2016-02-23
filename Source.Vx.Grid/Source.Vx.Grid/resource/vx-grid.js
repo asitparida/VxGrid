@@ -50,6 +50,7 @@
         ----------------------
         'vxGridRowSelectionChange'                  <OUT>   EVENT ON ROW SELECTION CHANGE EMITING DATA :   {'key': <ROW_VALUE_'onSelectionReturnCol'>, 'value': <BOOLEAN_NEW_SELECTION_STATE>, '_pKey': <PRIMARY_ID_VXGRID> }
         'vxGridRowMultiSelectionChange'             <OUT>   EVENT ON MULTIROW SELECTION CHANGE EMITING DATA COLLECTION OF :   {'key': <ROW_VALUE_'onSelectionReturnCol'>, 'value': <BOOLEAN_NEW_SELECTION_STATE>, '_pKey': <PRIMARY_ID_VXGRID> }
+        'vxGridRowAllSelectionChange'               <OUT>   EVENT ON ALL ROW SELECTION
         'vxPartiallyRendered'                       <OUT>   EVENT ON VX GRID PARTIAL RENDERED
         'vxCompletelyRendered'                      <OUT>   EVENT ON VX GRID COMPLETE RENDERED
         'vxPartiallyRenderedSelectAllDisabled'      <OUT>   EVENT ON VX GRID PARTIAL RENDERED AND SELECT ALL DISABLED - ONLY ON  <CONFIG>.selectAllOnRenderAll SET TO TRUE
@@ -734,7 +735,7 @@
                             }
                         }
                     });
-                    $scope.$emit('vxGridRowSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
+                    $scope.$emit('vxGridRwSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
                 }
 
                 $scope.allRowSelectionChanged = function () {
@@ -747,10 +748,20 @@
                                 $scope.vxColSettings.multiSelected.push(pid);
                             }
                         });
+                        _.each($scope.vxConfig.columnDefConfigs, function (header) {
+                            if ($scope.vxColSettings.dropDownGroup[header.id] == true && $scope.vxColSettings.groupByColActivated[header.id] == true) {
+                                _.each($scope.vxColSettings.groupKeys[header.id], function (key) {
+                                    $scope.vxColSettings.groupPredicate[key] = true;
+                                });
+                            }
+                        })
+                        $scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.vxColSettings.multiSelected });
+                        $scope.$emit('vxGridRowAllSelectionChange', { 'id': $scope.vxConfig.id, 'data': {'toggledTo':toggleTo, 'array': $scope.vxColSettings.multiSelected} });
                     }
                     else if (toggleTo == false) {
                         /* RESET GROUPS SELECTION */
                         $scope.clearSelection();
+                        $scope.$emit('vxGridRowAllSelectionChange', { 'id': $scope.vxConfig.id, 'data': { 'toggledTo': toggleTo, 'array': $scope.vxColSettings.multiSelected } });
                     }
                 }
 

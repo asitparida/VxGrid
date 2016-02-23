@@ -914,11 +914,6 @@
                     -ms-overflow-style: -ms-autohiding-scrollbar;
                     min-width: 300px;
                     width: 100%;
-
-                    &:last-child {
-                        right: -1px;
-                        left: auto;
-                    }
                 }
 
                 line-height: 48px;
@@ -982,6 +977,15 @@
                         vertical-align: top;
                         text-overflow: ellipsis;
                         overflow-x: hidden;
+                    }
+                }
+            }
+
+            &:last-child {
+                .dropdown {
+                    ul.dropdown-menu {
+                        right: -1px;
+                        left: auto;
                     }
                 }
             }

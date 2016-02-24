@@ -714,7 +714,8 @@
         inlineEditingEnabled: true,
         inlineDeletingEnabled: true,
         inlineEditSyncEnabled: true,
-        inlineSaveOverrideEnabled:true,
+        inlineSaveOverrideEnabled: true,
+        inlineDeleteOverrideEnabled: true,
         showGridStats: true,
         showGridOptions: true,
         data: self.vxSampleData,
@@ -773,6 +774,14 @@
             defer.resolve({ 'row': newrow, 'save': true });
         }, 8000);
         return defer.promise;        
+    }
+
+    self.vxSampleConfig.fnInlineDeleteOverride = function (rows) {
+        var defer = $q.defer();
+        $timeout(function () {
+            defer.resolve({ 'rows': _.initial(rows) });
+        }, 8000);
+        return defer.promise;
     }
 
     self.openManageColumns = function () {

@@ -25,7 +25,8 @@ Sample Preview @ <a href="http://vxgrid.azurewebsites.net/">http://vxgrid.azurew
     <li>Inline Multi Row Editing</li>
     <li>Iniine Row Addition</li>
     <li>Inline Row Changes Revert</li>
-	<li>Inline Row Saving Ovevrides</li>
+	<li>Inline Row Saving Overrides</li>
+    <li>Inline Row Delete Overrides</li>
     <li>Row Deletion</li>
     <li>Column Wrapping</li>
     <li>Events Based Actions</li>
@@ -126,8 +127,8 @@ BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs' IN DIRECTIVE DEFINTION
     }
 
 ##Wokring With Delete Override
-##### Set CONFIG.inlineSaveOverrideEnabled to true to enable row save overides. 
-##### Then we define 'fnInlineSaveOverride' as callback in form of a Angular promise. For example
+##### Set CONFIG.inlineDeleteOverrideEnabled to true to enable row save overides. 
+##### Then we define 'fnInlineDeleteOverride' as callback in form of a Angular promise. For example
      self.vxSampleConfig.fnInlineDeleteOverride = function (rows) {
         var defer = $q.defer();
         $timeout(function () {

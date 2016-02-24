@@ -116,13 +116,13 @@ BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs' IN DIRECTIVE DEFINTION
 ##Wokring With Overrides
 ### Set <CONFIG>.inlineSaveOverrideEnabled to true to enable row save overides. 
 ### Then we define 'fnInlineSaveOverride' as callback in form of a Angular promise. For example
-#### self.vxSampleConfig.fnInlineSaveOverride = function (newrow, oldrow) {
-####    var defer = $q.defer();
-####    $timeout(function () {
-####		defer.resolve({ 'row': newrow, 'save': true });
-####    }, 8000);
-####     return defer.promise;        
-####}
+###### self.vxSampleConfig.fnInlineSaveOverride = function (newrow, oldrow) {
+######    var defer = $q.defer();
+######    $timeout(function () {
+######		defer.resolve({ 'row': newrow, 'save': true });
+######    }, 8000);
+######     return defer.promise;        
+######}
 
 ##Screenshots
 

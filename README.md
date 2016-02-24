@@ -25,7 +25,8 @@ Sample Preview @ <a href="http://vxgrid.azurewebsites.net/">http://vxgrid.azurew
     <li>Inline Multi Row Editing</li>
     <li>Iniine Row Addition</li>
     <li>Inline Row Changes Revert</li>
-	<li>Inline Row Saving Ovevrides</li>
+	<li>Inline Row Saving Overrides</li>
+    <li>Inline Row Delete Overrides</li>
     <li>Row Deletion</li>
     <li>Column Wrapping</li>
     <li>Events Based Actions</li>
@@ -57,6 +58,7 @@ BOUND TO 'config=' IN DIRECTIVE CALL
         <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE DELETING OPTION
         <CONFIG>.inlineAddRowEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING ADDING ROW
 		<CONFIG>.inlineSaveOverrideEnabled		<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING SAVE ROW OVEVRRIDE
+        <CONFIG>.inlineDeleteOverrideEnabled	<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING SAVE DELETE OVEVRRIDE
         <CONFIG>.newRowTemplate			        <SUPPORTED : Y>    :   <STRING>    SET TO NEW TEMPLATE
         <CONFIG>.jsonEditorEnabled			    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE JSON EDITOR
 
@@ -113,16 +115,27 @@ BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs' IN DIRECTIVE DEFINTION
 <a href="https://github.com/oblador/angular-scroll">Angular Scroll</a>
 <a href="https://github.com/josdejong/jsoneditor/">JSON Editor</a>
 
-##Wokring With Overrides
-### Set <CONFIG>.inlineSaveOverrideEnabled to true to enable row save overides. 
-### Then we define 'fnInlineSaveOverride' as callback in form of a Angular promise. For example
-###### self.vxSampleConfig.fnInlineSaveOverride = function (newrow, oldrow) {
-######    var defer = $q.defer();
-######    $timeout(function () {
-######		defer.resolve({ 'row': newrow, 'save': true });
-######    }, 8000);
-######     return defer.promise;        
-######}
+##Wokring With Save Override
+##### Set CONFIG.inlineSaveOverrideEnabled to true to enable row save overides. 
+##### Then we define 'fnInlineSaveOverride' as callback in form of a Angular promise. For example
+     self.vxSampleConfig.fnInlineSaveOverride = function (newrow, oldrow) {
+        var defer = $q.defer();
+        $timeout(function () {
+    		defer.resolve({ 'row': newrow, 'save': true });
+        }, 8000);
+         return defer.promise;        
+    }
+
+##Wokring With Delete Override
+##### Set CONFIG.inlineDeleteOverrideEnabled to true to enable row save overides. 
+##### Then we define 'fnInlineDeleteOverride' as callback in form of a Angular promise. For example
+     self.vxSampleConfig.fnInlineDeleteOverride = function (rows) {
+        var defer = $q.defer();
+        $timeout(function () {
+            defer.resolve({ 'rows': _.initial(rows) }); // Mocking all rows except last one for deletion
+        }, 8000);
+        return defer.promise;
+    }
 
 ##Screenshots
 

@@ -25,6 +25,7 @@
         <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE DELETING OPTION
         <CONFIG>.inlineAddRowEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING ADDING ROW
         <CONFIG>.inlineSaveOverrideEnabled		<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING SAVE ROW OVEVRRIDE
+        <CONFIG>.inlineDeleteOverrideEnabled	<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING SAVE DELETE OVEVRRIDE
         <CONFIG>.newRowTemplate			        <SUPPORTED : Y>    :   <STRING>    SET TO NEW TEMPLATE
         <CONFIG>.jsonEditorEnabled			    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE JSON EDITOR
         
@@ -237,6 +238,7 @@
                         { prop: 'inlineEditSyncEnabled', defValue: false },
                         { prop: 'inlineDeletingEnabled', defValue: false },
                         { prop: 'inlineSaveOverrideEnabled', defValue: false },
+                        { prop: 'inlineDeleteOverrideEnabled', defValue: false },
                         { prop: 'jsonEditorEnabled', defValue: false },
                         { prop: 'allRowsSelectionEnabled', defValue: false }
                     ];
@@ -567,13 +569,44 @@
 
                 $scope.deleteRows = function () {
                     if (typeof $scope.vxColSettings.multiSelected !== 'undefined' && $scope.vxColSettings.multiSelected != null & $scope.vxColSettings.multiSelected.length > 0) {
-                        $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) { return _.contains($scope.vxColSettings.multiSelected, row[$scope.vxColSettings.primaryId]) == true });
-                        $scope.$emit('vxGridRowsDeleted', { 'id': $scope.vxConfig.id, 'data': $scope.vxColSettings.multiSelected });
-                        _.each($scope.vxColSettings.multiSelected, function (id) {
-                            $scope.vxColSettings.inlineEditState[id] = false;
-                            $scope.vxColSettings.rowSelected[id] = false;
-                        });
-                        $scope.vxColSettings.multiSelected = [];
+                        if ($scope.vxConfig.inlineDeleteOverrideEnabled == true) {
+                            _.each($scope.vxColSettings.multiSelected, function (id) {
+                                $scope.vxColSettings.saveInProgress[id] = true;
+                            });
+                            var defer = $q.defer();
+                            var rows = angular.copy(_.filter($scope.vxConfig.vxData, function (row) { return _.contains($scope.vxColSettings.multiSelected, row[$scope.vxColSettings.primaryId]) == true }));
+                            defer.promise.then(function (data) {
+                                if (data.rows.length > 0) {
+                                    var _processIDs = _.map(data.rows, function (row) { return row[$scope.vxColSettings.primaryId] });
+                                    $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) { return _.contains(_processIDs, row[$scope.vxColSettings.primaryId]) == true });
+                                    $scope.$emit('vxGridRowsDeleted', { 'id': $scope.vxConfig.id, 'data': _processIDs });
+                                    _.each(_processIDs, function (id) {
+                                        $scope.vxColSettings.inlineEditState[id] = false;
+                                        $scope.vxColSettings.rowSelected[id] = false;
+                                        $scope.vxColSettings.saveInProgress[id] = false;
+                                    });
+                                    $scope.vxColSettings.multiSelected = _.difference($scope.vxColSettings.multiSelected, _processIDs);
+                                }
+                            }, function (data) {
+                                /* FAILURE SAVE */
+                                console.log('Error : Save Failed');
+                                console.log(data);
+                            }).then(function () {
+                                _.each($scope.vxColSettings.multiSelected, function (id) {
+                                    $scope.vxColSettings.saveInProgress[id] = false;
+                                });
+                            });
+                            defer.resolve($scope.config.fnInlineDeleteOverride(rows));
+                        }
+                        else {
+                            $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) { return _.contains($scope.vxColSettings.multiSelected, row[$scope.vxColSettings.primaryId]) == true });
+                            $scope.$emit('vxGridRowsDeleted', { 'id': $scope.vxConfig.id, 'data': $scope.vxColSettings.multiSelected });
+                            _.each($scope.vxColSettings.multiSelected, function (id) {
+                                $scope.vxColSettings.inlineEditState[id] = false;
+                                $scope.vxColSettings.rowSelected[id] = false;
+                            });
+                            $scope.vxColSettings.multiSelected = [];
+                        }
                     }
                 }
 

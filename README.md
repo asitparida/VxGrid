@@ -25,6 +25,7 @@ Sample Preview @ <a href="http://vxgrid.azurewebsites.net/">http://vxgrid.azurew
     <li>Inline Multi Row Editing</li>
     <li>Iniine Row Addition</li>
     <li>Inline Row Changes Revert</li>
+	<li>Inline Row Saving Ovevrides</li>
     <li>Row Deletion</li>
     <li>Column Wrapping</li>
     <li>Events Based Actions</li>
@@ -55,6 +56,7 @@ BOUND TO 'config=' IN DIRECTIVE CALL
         <CONFIG>.inlineEditingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE EDITING OPTION
         <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE DELETING OPTION
         <CONFIG>.inlineAddRowEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING ADDING ROW
+		<CONFIG>.inlineSaveOverrideEnabled		<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING SAVE ROW OVEVRRIDE
         <CONFIG>.newRowTemplate			        <SUPPORTED : Y>    :   <STRING>    SET TO NEW TEMPLATE
         <CONFIG>.jsonEditorEnabled			    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE JSON EDITOR
 
@@ -110,6 +112,17 @@ BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs' IN DIRECTIVE DEFINTION
 <a href="https://github.com/kamilkp/angular-vs-repeat">Angular Vs Repeat</a>
 <a href="https://github.com/oblador/angular-scroll">Angular Scroll</a>
 <a href="https://github.com/josdejong/jsoneditor/">JSON Editor</a>
+
+##Wokring With Overrides
+### Set <CONFIG>.inlineSaveOverrideEnabled to true to enable row save overides. 
+### Then we define 'fnInlineSaveOverride' as callback in form of a Angular promise. For example
+#### self.vxSampleConfig.fnInlineSaveOverride = function (newrow, oldrow) {
+####    var defer = $q.defer();
+####    $timeout(function () {
+####		defer.resolve({ 'row': newrow, 'save': true });
+####    }, 8000);
+####     return defer.promise;        
+####}
 
 ##Screenshots
 

@@ -21,7 +21,7 @@
         controllerAs: 'dtpicker'
     };
 })
-.controller('vxSampleController', ["$scope", "$timeout", function ($scope, $timeout) {
+.controller('vxSampleController', ["$scope", "$timeout", "$q", function ($scope, $timeout, $q) {
     var self = this;
     self.smapledt = new Date('01-02-2016');
     self.vxSampleData = [];
@@ -714,6 +714,7 @@
         inlineEditingEnabled: true,
         inlineDeletingEnabled: true,
         inlineEditSyncEnabled: true,
+        inlineSaveOverrideEnabled:true,
         showGridStats: true,
         showGridOptions: true,
         data: self.vxSampleData,
@@ -764,6 +765,14 @@
         if (typeof data === 'undefined' || data == '' || data == {} || data.localeCompare('http://google.com') == 0)
             valid = false;
         self.vxSampleConfig.setRowFieldValidation(id, 'link', valid);
+    }
+
+    self.vxSampleConfig.fnInlineSaveOverride = function (newrow, oldrow) {
+        var defer = $q.defer();
+        $timeout(function () {
+            defer.resolve({ 'row': newrow, 'save': true });
+        }, 8000);
+        return defer.promise;        
     }
 
     self.openManageColumns = function () {

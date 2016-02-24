@@ -81,6 +81,7 @@
     <Content Include="packages.config" />
     <Content Include="package.json" />
     <Content Include="resource\jsoneditor\jsoneditor.map" />
+    <Content Include="resource\loaderBlue30.gif" />
     <Content Include="scss\vx-grid.scss" />
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.ttf" />

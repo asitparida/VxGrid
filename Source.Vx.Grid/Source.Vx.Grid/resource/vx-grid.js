@@ -527,7 +527,7 @@
                     if (typeof $scope.vxColSettings.multiSelected !== 'undefined' && $scope.vxColSettings.multiSelected != null & $scope.vxColSettings.multiSelected.length > 0) {
                         _.each($scope.vxColSettings.multiSelected, function (uid) {
                             $scope.revertEditForRow(uid);
-                            $scope.vxColSettings.rowSelected[id] = false;
+                            $scope.vxColSettings.rowSelected[uid] = false;
                         });
                         $scope.vxColSettings.multiSelected = [];
                     }
@@ -537,6 +537,8 @@
                     var cRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId] == id; });
                     if (typeof cRow !== 'undefined' && cRow.newRow == true) {
                         $scope.vxColSettings.inlineEditState[id] = false;
+                        $scope.vxColSettings.rowSelected[id] = false;
+                        $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (mid) { id.localeCompare(mid) == 0 });
                         $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId].localeCompare(id) == 0 });
                         $scope.$emit('vxGridRowEditRevert', { 'id': $scope.vxConfig.id, 'data': cRow });
                     }
@@ -547,6 +549,8 @@
                                 cRow[head] = oRow[head];
                             });
                             $scope.vxColSettings.inlineEditState[id] = false;
+                            $scope.vxColSettings.rowSelected[id] = false;
+                            $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (mid) { id.localeCompare(mid) == 0 });
                             $scope.$emit('vxGridRowEditRevert', { 'id': $scope.vxConfig.id, 'data': oRow });
                         }
                     }

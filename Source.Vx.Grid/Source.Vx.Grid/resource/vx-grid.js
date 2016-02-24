@@ -24,6 +24,7 @@
         <CONFIG>.inlineEditingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE EDITING OPTION
         <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE DELETING OPTION
         <CONFIG>.inlineAddRowEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING ADDING ROW
+        <CONFIG>.inlineSaveOverrideEnabled		<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING SAVE ROW OVEVRRIDE
         <CONFIG>.newRowTemplate			        <SUPPORTED : Y>    :   <STRING>    SET TO NEW TEMPLATE
         <CONFIG>.jsonEditorEnabled			    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE JSON EDITOR
         
@@ -104,7 +105,7 @@
                 config: '=',
                 scrollParent: '='
             },
-            controller: ["$scope", "$modal", "$sce", "$timeout", "$rootScope", "$window", "$filter", function ($scope, $modal, $sce, $timeout, $rootScope, $window, $filter) {
+            controller: ["$scope", "$modal", "$sce", "$timeout", "$rootScope", "$window", "$filter", "$q", function ($scope, $modal, $sce, $timeout, $rootScope, $window, $filter, $q) {
                 $scope.vxColSettings = {};
                 $scope.posLeft = 1;
                 $scope.posTop = 0;
@@ -152,7 +153,8 @@
                         'groupKeys': {},
                         'allRowSelected': false,
                         'allRowSelectionDisabled': false,
-                        'filterSearchToken': {}
+                        'filterSearchToken': {},
+                        'saveInProgress': {}
                     };
                     if ($scope.getWindowDimensions().w < 768) {
                         $scope.vxColSettings.xsViewEnabled = true;
@@ -177,7 +179,20 @@
                         /* ADDING CHECKBOX COLUMN DEFINITION */
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('inlinediting') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
-                            var _selColDefn = { id: 'inlinediting', columnName: 'Edit', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, cellDefn: '<div class="vx-row-edit icon-container" tabindex="0" vx-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false"><i class="icon icon-edit"></i></div><div class="vx-row-edit icon-container" ng-attr-vxdisabled="{{vxConfig.invalidRows[row[vxColSettings.primaryId]]}}" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true"><i class="icon icon-save"></i></div>', inlineEditOnColumnEnabled: false };
+                            var _selColDefn = {
+                                id: 'inlinediting', columnName: 'Edit', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
+                                cellDefn:
+                                    '<div class="vx-row-edit icon-container" tabindex="0" vx-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false" ng-if="vxColSettings.saveInProgress[VX_ROW_POINT] != true">'
+                                        + '<i class="icon icon-edit"></i>'
+                                  + '</div>'
+                                  + '<div class="vx-row-edit icon-container" ng-attr-vxdisabled="{{vxConfig.invalidRows[row[vxColSettings.primaryId]]}}" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true" ng-if="vxColSettings.saveInProgress[VX_ROW_POINT] != true">'
+                                    + '<i class="icon icon-save"></i>'
+                                  + '</div>'
+                                  + '<div class="vx-row-edit icon-container loader" tabindex="0" ng-if="vxColSettings.saveInProgress[VX_ROW_POINT] == true">'
+                                    + '<img class="loader-row" src="/resource/loaderBlue30.GIF"></i>'
+                                  + '</div>'
+                                , inlineEditOnColumnEnabled: false
+                            };
                             $scope.vxConfig.columnDefConfigs.unshift(_selColDefn);
                         }
                         /* SEETING ALL ROW SELECTIONS TO FALSE */
@@ -221,6 +236,7 @@
                         { prop: 'inlineAddRowEnabled', defValue: false },
                         { prop: 'inlineEditSyncEnabled', defValue: false },
                         { prop: 'inlineDeletingEnabled', defValue: false },
+                        { prop: 'inlineSaveOverrideEnabled', defValue: false },
                         { prop: 'jsonEditorEnabled', defValue: false },
                         { prop: 'allRowsSelectionEnabled', defValue: false }
                     ];
@@ -425,27 +441,68 @@
                 $scope.savingRows = function (id) {
                     var cRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId] == id; })
                     if (typeof cRow !== 'undefined' && cRow.newRow == true) {
-                        delete cRow.newRow;
-                        var oRow = _.find($scope.vxConfig.data, function (row) { return row[$scope.vxColSettings.primaryId] == id; })
-                        if (typeof oRow !== 'undefined') {
-                            _.each($scope.vxConfig.columnDefConfigs, function (col) {
-                                oRow[col.id] = cRow[col.id];
+                        if ($scope.vxConfig.inlineSaveOverrideEnabled == true) {
+                            $scope.vxColSettings.saveInProgress[id] = true;
+                            var defer = $q.defer();
+                            defer.promise.then(function (data) {
+                                if (typeof cRow.row !== 'undefined' && data.save == true) {
+                                    delete cRow.newRow;
+                                    _.each($scope.vxConfig.columnDefConfigs, function (col) {
+                                        cRow[col.id] = data.row[col.id];
+                                    });
+                                }
+                                else {
+                                    $scope.vxConfig.data.unshift(cRow);
+                                }
+                                $scope.vxColSettings.inlineEditState[id] = typeof data.save !== 'undefined' && data.save != null && data.save == true ? false : true;
+                                $scope.$emit('vxGridRowSave', { 'id': $scope.vxConfig.id, 'data': cRow, 'save': !$scope.vxColSettings.inlineEditState[id] });
+                                $scope.vxColSettings.saveInProgress[id] = false;
+                            }, function (data) {
+                                /* FAILURE SAVE */
+                                console.log('Error : Save Failed');
+                                console.log(data);
+                                $scope.vxColSettings.saveInProgress[id] = false;
+                                $scope.vxColSettings.inlineEditState[id] = true;
                             });
+                            defer.resolve($scope.config.fnInlineSaveOverride(cRow, null));
                         }
                         else {
-                            $scope.vxConfig.data.unshift(cRow);
+                            if (typeof oRow !== 'undefined') {
+                                _.each($scope.vxConfig.columnDefConfigs, function (col) {
+                                    oRow[col.id] = cRow[col.id];
+                                });
+                            }
+                            else {
+                                $scope.vxConfig.data.unshift(cRow);
+                            }
+                            $scope.vxColSettings.inlineEditState[id] = false;
+                            $scope.$emit('vxGridRowSaved', { 'id': $scope.vxConfig.id, 'data': cRow });
                         }
-                        $scope.vxColSettings.inlineEditState[id] = false;
-                        $scope.$emit('vxGridRowSaved', { 'id': $scope.vxConfig.id, 'data': cRow });
                     }
                     else {
                         var oRow = _.find($scope.vxConfig.data, function (row) { return row[$scope.vxColSettings.primaryId] == id; })
                         if (typeof cRow !== 'undefined' && typeof oRow !== 'undefined') {
-                            _.each($scope.vxColSettings.colWithInlineEdits, function (head) {
-                                oRow[head] = cRow[head];
-                            });
-                            $scope.vxColSettings.inlineEditState[id] = false;
-                            $scope.$emit('vxGridRowSaved', { 'id': $scope.vxConfig.id, 'data': cRow });
+                            if ($scope.vxConfig.inlineSaveOverrideEnabled == true) {
+                                $scope.vxColSettings.saveInProgress[id] = true;
+                                var defer = $q.defer();
+                                defer.promise.then(function (data) {
+                                    if (typeof data.row !== 'undefined' && data.save == true) {
+                                        _.each($scope.vxColSettings.colWithInlineEdits, function (head) {
+                                            oRow[head] = data.row[head];
+                                        });
+                                    }
+                                    $scope.vxColSettings.inlineEditState[id] = typeof data.save !== 'undefined' && data.save != null && data.save == true ? false : true;
+                                    $scope.$emit('vxGridRowSave', { 'id': $scope.vxConfig.id, 'data': cRow, 'save': !$scope.vxColSettings.inlineEditState[id] });
+                                    $scope.vxColSettings.saveInProgress[id] = false;
+                                }, function (data) {
+                                    /* FAILURE SAVE */
+                                    console.log('Error : Save Failed');
+                                    console.log(data);
+                                    $scope.vxColSettings.saveInProgress[id] = false;
+                                    $scope.vxColSettings.inlineEditState[id] = true;
+                                });
+                                defer.resolve($scope.config.fnInlineSaveOverride(cRow, oRow));
+                            }
                         }
                     }
                 }
@@ -470,7 +527,9 @@
                     if (typeof $scope.vxColSettings.multiSelected !== 'undefined' && $scope.vxColSettings.multiSelected != null & $scope.vxColSettings.multiSelected.length > 0) {
                         _.each($scope.vxColSettings.multiSelected, function (uid) {
                             $scope.revertEditForRow(uid);
+                            $scope.vxColSettings.rowSelected[id] = false;
                         });
+                        $scope.vxColSettings.multiSelected = [];
                     }
                 }
 
@@ -508,6 +567,7 @@
                         $scope.$emit('vxGridRowsDeleted', { 'id': $scope.vxConfig.id, 'data': $scope.vxColSettings.multiSelected });
                         _.each($scope.vxColSettings.multiSelected, function (id) {
                             $scope.vxColSettings.inlineEditState[id] = false;
+                            $scope.vxColSettings.rowSelected[id] = false;
                         });
                         $scope.vxColSettings.multiSelected = [];
                     }
@@ -756,7 +816,7 @@
                             }
                         })
                         $scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.vxColSettings.multiSelected });
-                        $scope.$emit('vxGridRowAllSelectionChange', { 'id': $scope.vxConfig.id, 'data': {'toggledTo':toggleTo, 'array': $scope.vxColSettings.multiSelected} });
+                        $scope.$emit('vxGridRowAllSelectionChange', { 'id': $scope.vxConfig.id, 'data': { 'toggledTo': toggleTo, 'array': $scope.vxColSettings.multiSelected } });
                     }
                     else if (toggleTo == false) {
                         /* RESET GROUPS SELECTION */

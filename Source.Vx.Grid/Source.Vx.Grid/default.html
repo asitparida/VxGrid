@@ -54,8 +54,12 @@
             }
 
             .vxSample.container {
-                height: calc(80vh - 60px);
-                margin: 10vh auto;
+                /*height: calc(80vh - 60px);
+                margin: 10vh auto;*/
+                height:100%;
+                width:calc(100vw - 40px);
+                padding: 0 20px;
+                margin:0;
             }
         }
 
@@ -87,8 +91,8 @@
                 }
     </style>
 </head>
-<body ng-controller="vxSampleController as sample">
-    <div class="container btns">
+<body ng-controller="vxSampleController as sample" style="height:100vh;">
+    <div class="container btns" style="display:none;">
         <button class="btn btn-primary sample" ng-click="sample.emptyData()"> Empty Data</button>
         <button class="btn btn-primary sample" ng-click="sample.reloadDataPage()">Reload Data Page</button>
         <button class="btn btn-primary sample" ng-click="sample.reloadDataVirtual()">Reload Data Virtual</button>
@@ -96,7 +100,7 @@
         <button class="btn btn-primary sample" ng-click="sample.openManageColumns()">Open Manage Columns</button>
     </div>
     <div class="vxSample container" style="">
-        <vx-grid config="sample.vxSampleConfig" scroll-parent="'.vxSample .vxTableContainer'"></vx-grid>
+        <vx-grid config="sample.vxSampleConfig" scroll-parent="'window'"></vx-grid>
     </div>
 </body>
 </html>

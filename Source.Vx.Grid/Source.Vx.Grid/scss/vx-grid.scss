@@ -281,7 +281,7 @@
         padding: 0;
         margin: 3px 0 0 0;
         overflow: auto;
-        height: calc(100%- 15px);
+        height: auto;
         -webkit-overflow-scrolling: touch;
         -ms-overflow-style: -ms-autohiding-scrollbar;
         border-top: none;
@@ -337,7 +337,7 @@
 
     .vxTableContainer.attrPaneOpen {
         &:not(.scrollDupHeader) {
-            height: calc(100% - 60px);
+            height: auto;
         }
 
         &.pageEnabled:not(.scrollDupHeader) {
@@ -582,7 +582,7 @@
 }
 
 .vxH100 {
-    height: 100%;
+    height: auto;
     /*width: 100%;*/
     overflow-x: hidden;
     /*position: relative;*/

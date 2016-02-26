@@ -13,8 +13,8 @@ Sample Preview @ <a href="http://vxgrid.azurewebsites.net/">http://vxgrid.azurew
     <li>Contextual Filtering</li>
     <li>Filters with Search</li>
     <li>Fixed Header</li>
-    <li>Pagination</li>
     <li>Virtualization</li>
+    <li>Pagination W/WOT Virtualization</li>
     <li>Column Hiding</li>
     <li>Column Width Changing</li>
     <li>Single Row Selection</li>
@@ -53,6 +53,7 @@ BOUND TO 'config=' IN DIRECTIVE CALL
         <CONFIG>.data                           <SUPPORTED : Y>    :   <ARRAY>
         <CONFIG>.xsRowTitleTemplate             <SUPPORTED : Y>    :   <STRING>    SET TO XS ONLY TEMPLATE - DEFAULTS TO PRIMARY COLUMN HEADER
         <CONFIG>.virtualization					<SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE VIRTUALIZATION AND ENABLE PAGINATION
+        <CONFIG>.pagination					    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE PAGINATION AND ENABLE PAGINATION
         <CONFIG>.pageLength						<SUPPORTED : Y>    :   <NUMBER>	   SET PAGINATION LENGTH AND DEFUALTS TO 20
         <CONFIG>.inlineEditingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE EDITING OPTION
         <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE DELETING OPTION

@@ -20,6 +20,7 @@
         <CONFIG>.data                           <SUPPORTED : Y>    :   <ARRAY>
         <CONFIG>.xsRowTitleTemplate             <SUPPORTED : Y>    :   <STRING>    SET TO XS ONLY TEMPLATE - DEFAULTS TO PRIMARY COLUMN HEADER
 		<CONFIG>.virtualization					<SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE VIRTUALIZATION AND ENABLE PAGINATION
+        <CONFIG>.pagination					    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE PAGINATION AND ENABLE PAGINATION
 		<CONFIG>.pageLength						<SUPPORTED : Y>    :   <NUMBER>	   SET PAGINATION LENGTH AND DEFUALTS TO 20
         <CONFIG>.inlineEditingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE EDITING OPTION
         <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE DELETING OPTION
@@ -230,6 +231,7 @@
                         { prop: 'showGridOptions', defValue: false },
                         { prop: 'selectAllOnRenderAll', defValue: false },
                         { prop: 'virtualization', defValue: true },
+                        { prop: 'pagination', defValue: false },
                         { prop: 'pageLength', defValue: 20 },
                         { prop: 'data', defValue: [] },
                         { prop: 'vxFilteredData', defValue: [] },
@@ -1229,7 +1231,7 @@
                 $scope.$watchCollection('vxConfig.vxFilteredData', function (n) {
                     if (n.length >= 0) {
                         /* PROCESS FOR PAGINATION IF VIRTUALIZATION IS FALSE */
-                        if ($scope.vxConfig.virtualization == false) {
+                        if ($scope.vxConfig.pagination == true) {
                             $scope.vxColSettings.pages = _.range(Math.ceil(n.length / parseInt($scope.vxConfig.pageLength)));
                             $scope.vxColSettings.vxPageEnabled = $scope.vxColSettings.pages.length > 1;
                             $scope.vxColSettings.activePage = 0;

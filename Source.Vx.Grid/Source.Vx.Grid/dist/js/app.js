@@ -684,7 +684,7 @@
     ];
 
     _.each(original, function (record, k) {
-        _.each(_.range(5), function (i, j) {
+        _.each(_.range(100), function (i, j) {
             var rec = angular.copy(record);
             rec.index = k + '_' + j;
             rec.laborId = 'XXX-XXXX-XXXX' + '_' + rec.index;
@@ -723,7 +723,8 @@
         vxFilteredData: [],
         showTable: false,
         virtualization: true,
-        pageLength: 50,
+        pagination: true,
+        pageLength: 100,
         inlineAddRowEnabled: true,
         categories: self.categories,
         newRowTemplate: {
@@ -803,12 +804,12 @@
     }
 
     self.reloadDataVirtual = function () {
-        self.vxSampleConfig.virtualization = true;
+        self.vxSampleConfig.pagination = false;
         self.vxSampleConfig.data = self.vxSampleData;
     }
 
     self.reloadDataPage = function () {
-        self.vxSampleConfig.virtualization = false;
+        self.vxSampleConfig.pagination = true;
         self.vxSampleConfig.data = self.vxSampleData;
     }
 

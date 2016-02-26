@@ -79,6 +79,7 @@
         <CONFIG>.getVxCounts()                  <NO PARAMS>         RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
         <CONFIG>.getData()                      <NO PARAMS>         RETURNS CURRENT DATA STATE
         <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>    SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
+        <CONFIG>.getSelectedRows()              <NO PARAMS>         RETURNS CURRENT SELECTED IDs
     */
 
     /* CAPITALIZE FIRST LETTER - STRING PROTOTYPE*/
@@ -169,7 +170,7 @@
                     var primaryId = '_uid';
                     if (typeof _primaryColDefn !== 'undefined' && _primaryColDefn != null) {
                         /* PRIMARY COLUMN EXISTS */
-                        _.each($scope.vxConfig.vxData, function (row, index) { row[primaryId] = row[_primaryColDefn.id] });
+                        _.each($scope.vxConfig.vxData, function (row, index) { row[_primaryColDefn.id] = row[_primaryColDefn.id].toString(); row[primaryId] = row[_primaryColDefn.id] });
                         primaryId = _primaryColDefn.id;
                     }
                     else {
@@ -401,6 +402,12 @@
                         $scope.vxConfig.invalidRows[id] = !valid;
                         $scope.vxConfig.invalidRowFields[id][field] = !valid;
                     }
+
+                    $scope.config.getSelectedRows = function () {
+                        return $scope.vxColSettings.multiSelected;
+                    }
+
+                    $scope.buildFns();
 
                     /* ADD FUNCTION REFERENCE FOR DIRECT CALL*/
                     $scope.config.changeRowClass = $scope.changeRowClass;
@@ -1194,16 +1201,22 @@
                         $scope.vxColSettings.selectAllEnabled = true;
                         $scope.$emit('vxCompletelyRenderedSelectAllEnabled', { 'id': $scope.vxConfig.id, 'data': data });
                     }
-                });
-                var comEvOnEvent = ['openJsonEditor', 'openManageColumns', 'resetVxInstance', 'clearFilters', 'selectAllFiltered', 'clearSelection', 'revealWrapToggle'];
-                _.each(comEvOnEvent, function (evName) {
-                    var captureEvName = 'vxGrid' + evName.capitalizeFirstLetter();
-                    var fireEvent = evName + '()';
-                    $scope.$on(captureEvName, function (e, data) {
-                        if (data.id.localeCompare($scope.vxConfig.id) == 0)
+                });                
+                $scope.buildFns = function() {
+                    var comEvOnEvent = ['openJsonEditor', 'openManageColumns', 'resetVxInstance', 'clearFilters', 'selectAllFiltered', 'clearSelection', 'revealWrapToggle'];
+                    _.each(comEvOnEvent, function (evName) {
+                        var captureEvName = 'vxGrid' + evName.capitalizeFirstLetter();
+                        var fireEvent = evName + '()';
+                        $scope.$on(captureEvName, function (e, data) {
+                            if (data.id.localeCompare($scope.vxConfig.id) == 0)
+                                $scope.$eval(fireEvent);
+                        })
+                        $scope.config[evName] = function () {
                             $scope.$eval(fireEvent);
-                    })
-                });
+                        }
+                        console.log($scope.config);
+                    });
+                }
                 $scope.$on('vxGridChangeRowClass', function (e, data) {
                     $scope.changeRowClass(data);
                 });

@@ -699,6 +699,7 @@
             rec.engagement = _.sample(['Coho Vineyard', 'Fist Up Consultants']),
             rec.assignment = record.transferFromAssignment,
             rec.userAlias = _.sample(['asparida', 'prasadne', 'ruprawat']),
+            rec.mid = parseInt(_.uniqueId());
             self.vxSampleData.push(rec);
         });
     });
@@ -763,7 +764,7 @@
             { id: 'labor', columnName: 'Labor', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false },
             { id: 'timezone', columnName: 'Timezone', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: true },
             { id: 'status', columnName: 'Status', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false },
-            { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, primary: true }
+            { id: 'mid', columnName: 'Labor ID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, primary: true }
         ]
     };
 
@@ -791,7 +792,12 @@
     }
 
     self.openManageColumns = function () {
-        $scope.$broadcast('vxGridOpenManageColumns', { 'id': self.vxSampleConfig.id });
+        //$scope.$broadcast('vxGridOpenManageColumns', { 'id': self.vxSampleConfig.id });
+        self.vxSampleConfig.openManageColumns();
+    }
+
+    self.logIDs = function () {
+        console.log(self.vxSampleConfig.getSelectedRows());
     }
 
     console.log('length : ' + self.vxSampleData.length);

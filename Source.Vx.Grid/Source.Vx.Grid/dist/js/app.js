@@ -792,7 +792,8 @@
     }
 
     self.openManageColumns = function () {
-        $scope.$broadcast('vxGridOpenManageColumns', { 'id': self.vxSampleConfig.id });
+        //$scope.$broadcast('vxGridOpenManageColumns', { 'id': self.vxSampleConfig.id });
+        self.vxSampleConfig.openManageColumns();
     }
 
     self.logIDs = function () {

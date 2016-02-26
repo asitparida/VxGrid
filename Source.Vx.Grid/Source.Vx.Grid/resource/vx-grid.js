@@ -407,6 +407,8 @@
                         return $scope.vxColSettings.multiSelected;
                     }
 
+                    $scope.buildFns();
+
                     /* ADD FUNCTION REFERENCE FOR DIRECT CALL*/
                     $scope.config.changeRowClass = $scope.changeRowClass;
                     $scope.$emit('vxGridSettingsBuilt', { 'id': $scope.vxConfig.id });
@@ -1199,16 +1201,22 @@
                         $scope.vxColSettings.selectAllEnabled = true;
                         $scope.$emit('vxCompletelyRenderedSelectAllEnabled', { 'id': $scope.vxConfig.id, 'data': data });
                     }
-                });
-                var comEvOnEvent = ['openJsonEditor', 'openManageColumns', 'resetVxInstance', 'clearFilters', 'selectAllFiltered', 'clearSelection', 'revealWrapToggle'];
-                _.each(comEvOnEvent, function (evName) {
-                    var captureEvName = 'vxGrid' + evName.capitalizeFirstLetter();
-                    var fireEvent = evName + '()';
-                    $scope.$on(captureEvName, function (e, data) {
-                        if (data.id.localeCompare($scope.vxConfig.id) == 0)
+                });                
+                $scope.buildFns = function() {
+                    var comEvOnEvent = ['openJsonEditor', 'openManageColumns', 'resetVxInstance', 'clearFilters', 'selectAllFiltered', 'clearSelection', 'revealWrapToggle'];
+                    _.each(comEvOnEvent, function (evName) {
+                        var captureEvName = 'vxGrid' + evName.capitalizeFirstLetter();
+                        var fireEvent = evName + '()';
+                        $scope.$on(captureEvName, function (e, data) {
+                            if (data.id.localeCompare($scope.vxConfig.id) == 0)
+                                $scope.$eval(fireEvent);
+                        })
+                        $scope.config[evName] = function () {
                             $scope.$eval(fireEvent);
-                    })
-                });
+                        }
+                        console.log($scope.config);
+                    });
+                }
                 $scope.$on('vxGridChangeRowClass', function (e, data) {
                     $scope.changeRowClass(data);
                 });

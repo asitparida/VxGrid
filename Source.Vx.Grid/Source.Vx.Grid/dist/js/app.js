@@ -794,6 +794,10 @@
         $scope.$broadcast('vxGridOpenManageColumns', { 'id': self.vxSampleConfig.id });
     }
 
+    self.logIDs = function () {
+        console.log(self.vxSampleConfig.getSelectedRows());
+    }
+
     console.log('length : ' + self.vxSampleData.length);
 
     $scope.$on('vsRepeatInnerCollectionUpdated', function () {

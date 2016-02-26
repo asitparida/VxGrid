@@ -79,6 +79,7 @@
         <CONFIG>.getVxCounts()                  <NO PARAMS>         RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
         <CONFIG>.getData()                      <NO PARAMS>         RETURNS CURRENT DATA STATE
         <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>    SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
+        <CONFIG>.getSelectedRows()              <NO PARAMS>         RETURNS CURRENT SELECTED IDs
     */
 
     /* CAPITALIZE FIRST LETTER - STRING PROTOTYPE*/
@@ -400,6 +401,10 @@
                         }
                         $scope.vxConfig.invalidRows[id] = !valid;
                         $scope.vxConfig.invalidRowFields[id][field] = !valid;
+                    }
+
+                    $scope.config.getSelectedRows = function () {
+                        return $scope.vxColSettings.multiSelected;
                     }
 
                     /* ADD FUNCTION REFERENCE FOR DIRECT CALL*/

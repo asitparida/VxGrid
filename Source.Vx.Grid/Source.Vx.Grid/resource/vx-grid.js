@@ -764,7 +764,6 @@
                             type = 'object';
                         }
                     }
-                    console.log({ 'key': key, 'type': type });
                     return { 'key': key, 'type': type };
                 }
 
@@ -1214,7 +1213,6 @@
                         $scope.config[evName] = function () {
                             $scope.$eval(fireEvent);
                         }
-                        console.log($scope.config);
                     });
                 }
                 $scope.$on('vxGridChangeRowClass', function (e, data) {

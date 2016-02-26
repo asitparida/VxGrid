@@ -93,11 +93,11 @@
                                                     <input class="search-input" type="search" placeholder="Search In Filters" ng-model="vxColSettings.filterSearchToken[header.id]" />
                                                 </li>
                                                 <li role="presentation" class="filter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && filter.disabled == false" ng-repeat="filter in vxColSettings.colFilterPairs[header.id] | filter:vxColSettings.filterSearchToken[header.id]">
-                                                    <input class="filter-toggle" type="checkbox" ng-model="vxColSettings.colFiltersStatus[filter.key]" ng-change="filterClick(header, filter)" /><label class="filterItemTitle">{{filter.name}}</label>
+                                                    <input class="filter-toggle" type="checkbox" ng-model="vxColSettings.colFiltersStatus[filter.key]" ng-change="filterClick(header, filter)" /><label class="filterItemTitle"><span ng-if="filter.filterDefnAvailable == false">{{filter.name}}</span><span ng-if="filter.filterDefnAvailable == true" vx-compile="filter.filterDefn"></span></label>
                                                 </li>
                                             </ul>
                                         </div>
-                                        <div ng-if="header.renderDefn == true" vx-compile="header.headerDefn"></div>
+                                        <div ng-if="header.renderHeadDefn == true" vx-compile="header.headerDefn"></div>
                                     </th>
                                 </tr>
                             </thead>
@@ -140,11 +140,11 @@
                                                     <input class="search-input" type="search" placeholder="Search In Filters" ng-model="vxColSettings.filterSearchToken[header.id]" />
                                                 </li>
                                                 <li role="presentation" class="filter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && filter.disabled == false" ng-repeat="filter in vxColSettings.colFilterPairs[header.id] | filter:vxColSettings.filterSearchToken[header.id]">
-                                                    <input class="filter-toggle" type="checkbox" ng-model="vxColSettings.colFiltersStatus[filter.key]" ng-change="filterClick(header, filter)" /><label class="filterItemTitle">{{filter.name}}</label>
+                                                    <input class="filter-toggle" type="checkbox" ng-model="vxColSettings.colFiltersStatus[filter.key]" ng-change="filterClick(header, filter)" /><label class="filterItemTitle"><span ng-if="filter.filterDefnAvailable == false">{{filter.name}}</span><span ng-if="filter.filterDefnAvailable == true" vx-compile="filter.filterDefn"></span></label>
                                                 </li>
                                             </ul>
                                         </div>
-                                        <div ng-if="header.renderDefn == true && posTop < 50" vx-compile="header.headerDefn"></div>
+                                        <div ng-if="header.renderHeadDefn == true && posTop < 50" vx-compile="header.headerDefn"></div>
                                     </th>
                                     <th class="vxHeadRowCell" ng-if="vxColSettings.xsViewEnabled == true">
                                         <div class="search-container pull-left input-group">

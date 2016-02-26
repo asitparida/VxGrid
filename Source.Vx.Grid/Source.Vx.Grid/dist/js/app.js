@@ -684,13 +684,18 @@
     ];
 
     _.each(original, function (record, k) {
-        _.each(_.range(100), function (i, j) {
+        _.each(_.range(10), function (i, j) {
             var rec = angular.copy(record);
             rec.index = k + '_' + j;
             rec.laborId = 'XXX-XXXX-XXXX' + '_' + rec.index;
             rec.category = _.sample(self.categories);
             rec.customer = record.transferFromCustomer;
-            rec.dt = _.sample([new Date('01-07-2015'), new Date('01-01-2015'), new Date('01-11-2015'), new Date('01-09-2015')]);
+            rec.dt = _.sample([
+                new Date(2015, 01, 07, 0, 0, 0, 0),
+                new Date(2015, 01, 01, 0, 0, 0, 0),
+                new Date(2015, 01, 11, 0, 0, 0, 0),
+                new Date(2015, 01, 09, 0, 0, 0, 0),
+            ]);
             rec.engagement = _.sample(['Coho Vineyard', 'Fist Up Consultants']),
             rec.assignment = record.transferFromAssignment,
             rec.userAlias = _.sample(['asparida', 'prasadne', 'ruprawat']),
@@ -748,12 +753,12 @@
             newRow: true
         },
         columnDefConfigs: [
-            { id: 'dt', columnName: 'Date', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, width: '160', headerDefn: '<span>Date</span>', cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'dt', columnName: 'Date', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
             { id: 'link', columnName: 'Link', renderDefn: true, width: '150', headerDefn: '<span>Link</span>', cellDefn: '<a style="padding-left:10px;" ng-href="{{VX_DATA_POINT}}" >{{VX_DATA_POINT}}</a>', inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" ng-class=\'{ "invalidField" : VX_INVALID_ROW && VX_INVALID_FIELD_ROW  }\' ng-change="VX_CONFIG.validateLinkField(VX_ROW_POINT, VX_DATA_POINT)" />', inlineEditValidation: true },
             { id: 'customer', columnName: 'Customer', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
-            { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: true, ddFilters: true, ddFiltersWithSearch:true, dropDownEnabled: true, hidden: false, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
+            { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: true, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, hidden: false, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'assignment', columnName: 'Assignment', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true },
-            { id: 'category', columnName: 'Category', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, cellDefn: '<span class="sampleCell">{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" vx-keep-watch="ngModel" ng-options="item.name for item in VX_CONFIG.categories" ng-model="VX_DATA_POINT"></select>', inlineEditOnColumnEnabled: true },
+            { id: 'category', columnName: 'Category', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true,filterCellDefn: "<span>{{VX_DATA_POINT.name}}</span>", cellDefn: '<span class="sampleCell">{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" vx-keep-watch="ngModel" ng-options="item.name for item in VX_CONFIG.categories" ng-model="VX_DATA_POINT"></select>', inlineEditOnColumnEnabled: true },
             { id: 'userAlias', columnName: 'User', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true },
             { id: 'labor', columnName: 'Labor', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false },
             { id: 'timezone', columnName: 'Timezone', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: true },
@@ -774,7 +779,7 @@
         $timeout(function () {
             defer.resolve({ 'row': newrow, 'save': true });
         }, 8000);
-        return defer.promise;        
+        return defer.promise;
     }
 
     self.vxSampleConfig.fnInlineDeleteOverride = function (rows) {

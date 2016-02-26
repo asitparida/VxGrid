@@ -45,6 +45,7 @@
         <COLUMN>.renderDefn                     <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE ENABLE CUSTOM TEMEPLATE
         <COLUMN>.headerDefn                     <SUPPORTED : N>    :   <STRING>    SET CUSTOM HEADER TEMPLATE
         <COLUMN>.cellDefn                       <SUPPORTED : Y>    :   <STRING>    SET CUSTOM CELL TEMPLATE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY
+        <COLUMN>.filterCellDefn                 <SUPPORTED : Y>    :   <STRING>    SET CUSTOM FILTER CELL TEMPLATE - USE 'VX_DATA_POINT' FOR FILTER CELL LEVEL PROPERTY
         <COLUMN>.inlineEditOnColumnEnabled      <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE COLUMN INLINE EDITING
         <COLUMN>.editDefn                       <SUPPORTED : Y>    :   <STRING>    SET CUSTOM CELL TEMPLATE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY
         <COLUMN>.editDefnTemplate               <SUPPORTED : Y>    :   <STRING>    SET EDIT TEMPLATE TYPE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY - SUPPORTED TYPES - 'INPUT', 'TEXTAREA'
@@ -182,7 +183,7 @@
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('inlinediting') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
-                                id: 'inlinediting', columnName: 'Edit', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
+                                id: 'inlinediting', columnName: 'Edit', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
                                 cellDefn:
                                     '<div class="vx-row-edit icon-container" tabindex="0" vx-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false" ng-if="vxColSettings.saveInProgress[VX_ROW_POINT] != true">'
                                         + '<i class="icon icon-edit"></i>'
@@ -209,7 +210,7 @@
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('checkbox') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
-                                id: 'checkbox', columnName: 'Row Selection', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
+                                id: 'checkbox', columnName: 'Row Selection', renderDefn: true,renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
                                 headerDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" /></div>',
                                 cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" /></div>'
                             };
@@ -253,6 +254,7 @@
                         /* SET DEAFULTS FOR COLUMNS */
                         var _propDefns = [
                             { prop: 'renderDefn', defValue: false },
+                            { prop: 'renderHeadDefn', defValue: false },
                             { prop: 'ddSort', defValue: false },
                             { prop: 'ddGroup', defValue: false },
                             { prop: 'ddFilters', defValue: false },
@@ -265,6 +267,7 @@
                             { prop: 'width', defValue: '200' },
                             { prop: 'headerDefn', defValue: '' },
                             { prop: 'cellDefn', defValue: '' },
+                            { prop: 'filterCellDefn', defValue: '' },
                             { prop: 'inlineEditOnColumnEnabled', defValue: false },
                             { prop: 'inlineEditValidation', defValue: false },
                             { prop: 'editDefn', defValue: null },
@@ -632,7 +635,7 @@
                 });
 
                 $scope.isValidHeaderName = function (header, name) {
-                    return header.renderDefn == false && typeof name !== 'undefined' && name != null && name != '';
+                    return header.renderHeadDefn == false && typeof name !== 'undefined' && name != null && name != '';
                 }
                 $scope.headerClick = function (header, e) {
 
@@ -683,20 +686,31 @@
                                             $scope.vxColSettings.dropDownFilters[_colDefn.id] = true;
                                             $scope.vxColSettings.colFilterPairs[_colDefn.id] = [];
                                             var uniqed = _.uniq(_.map($scope.vxConfig.vxData, function (item) {
-                                                var ret = item[_colDefn.id];
-                                                if (typeof ret !== 'undefined' && ret != null && ret != {} && typeof ret != 'object')
-                                                    return ret.trim()
-                                                else
-                                                    return ret;
-                                            }));
-                                            uniqed = _.reject(uniqed, function (item) { return typeof item === 'undefined' || item == {} });
+                                                var ret = { 'value': item[_colDefn.id], 'type': '' };
+                                                if (typeof ret.value !== 'undefined' && ret.value != null && ret.value != {} && typeof ret.value != 'object') {
+                                                    ret.value = ret.value.trim();
+                                                }
+                                                else if (Object.prototype.toString.call(ret.value) === '[object Date]') {
+                                                    ret.value = ret.value.getTime();
+                                                    ret.type = 'date';
+                                                }
+                                                return ret;
+                                            }), function (item) { return item.value });
+                                            uniqed = _.reject(uniqed, function (item) { return typeof item.value === 'undefined' || item.value == {} });
                                             _.each(uniqed.sort(), function (item) {
                                                 var retKey = getKeyedUnique(item, _colDefn.id, 'col');
                                                 var key = retKey.key;
                                                 var type = retKey.type;
-                                                var name = (item == '' || item == ' ' ? '< blank >' : item);
-                                                name = item == null ? ' < null >' : name;
-                                                var pair = { 'key': key, 'label': item, 'name': name, 'col': _colDefn.id, 'type': type, disabled: false, action: 'filter' };
+                                                var name = (item.value == '' || item.value == ' ' ? '< blank >' : item.value);
+                                                name = item.value == null ? ' < null >' : name;
+                                                var pair = { 'key': key, 'label': item.value, 'name': name, 'col': _colDefn.id, 'type': type, disabled: false, action: 'filter' };
+                                                if (typeof _colDefn.filterCellDefn !== 'undefined' && _colDefn.filterCellDefn != null && _colDefn.filterCellDefn != {} && _colDefn.filterCellDefn != '') {
+                                                    pair.filterDefn = _colDefn.filterCellDefn.replaceAll("VX_DATA_POINT", "filter.name");
+                                                    pair.filterDefnAvailable = true;
+                                                }
+                                                else {
+                                                    pair.filterDefnAvailable = false;
+                                                }
                                                 $scope.vxColSettings.colFilterPairs[_colDefn.id].push(pair);
                                                 $scope.vxColSettings.colFiltersStatus[key] = false;
                                             });
@@ -728,20 +742,22 @@
                 function getKeyedUnique(item, id, phrase) {
                     var key = phrase + '_' + id + '_key_';
                     var type = 'string';
-                    if (item == null) {
+                    if (item.value == null) {
                         key = key + 'null';
                     }
                     else {
-                        if (item == null)
+                        if (item.value == null)
                             key = key + 'null';
-                        else if (typeof item != 'object') {
-                            key = key + item.replace(/\s+/g, '_');
+                        else if (typeof item.value != 'object') {
+                            key = key + item.value.toString().replace(/\s+/g, '_');
+                            type = item.type;
                         }
                         else {
-                            key = key + JSON.stringify(item).replace(/\s+/g, '_');
+                            key = key + JSON.stringify(item.value).replace(/\s+/g, '_');
                             type = 'object';
                         }
                     }
+                    console.log({ 'key': key, 'type': type });
                     return { 'key': key, 'type': type };
                 }
 
@@ -1364,6 +1380,9 @@
                     _.each(matches, function (match) {
                         unionedMatches = _.union(unionedMatches, _.filter(copyOfItems, function (item) {
                             if (typeof match.label !== 'undefined' && match.label != null && match.label != {} && typeof item[match.col] !== 'undefined' && item[match.col] != null && item[match.col] != {}) {
+                                if (match.type == 'date') {
+                                    return item[match.col].getTime() == match.label;
+                                }
                                 if (match.type == 'object')
                                     return JSON.stringify(item[match.col]).localeCompare(JSON.stringify(match.label)) == 0;
                                 else

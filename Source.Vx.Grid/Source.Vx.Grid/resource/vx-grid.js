@@ -694,7 +694,7 @@
                                             $scope.vxColSettings.colFilterPairs[_colDefn.id] = [];
                                             var uniqed = _.uniq(_.map($scope.vxConfig.vxData, function (item) {
                                                 var ret = { 'value': item[_colDefn.id], 'type': '' };
-                                                if (typeof ret.value !== 'undefined' && ret.value != null && ret.value != {} && typeof ret.value != 'object') {
+                                                if (typeof ret.value !== 'undefined' && ret.value != null && ret.value != {} && typeof ret.value != 'object' && typeof ret.value != 'number') {
                                                     ret.value = ret.value.trim();
                                                 }
                                                 else if (Object.prototype.toString.call(ret.value) === '[object Date]') {
@@ -708,7 +708,7 @@
                                                 var retKey = getKeyedUnique(item, _colDefn.id, 'col');
                                                 var key = retKey.key;
                                                 var type = retKey.type;
-                                                var name = (item.value == '' || item.value == ' ' ? '< blank >' : item.value);
+                                                var name = (item.value === '' || item.value === ' ' ? '< blank >' : item.value);
                                                 name = item.value == null ? ' < null >' : name;
                                                 var pair = { 'key': key, 'label': item.value, 'name': name, 'col': _colDefn.id, 'type': type, disabled: false, action: 'filter' };
                                                 if (typeof _colDefn.filterCellDefn !== 'undefined' && _colDefn.filterCellDefn != null && _colDefn.filterCellDefn != {} && _colDefn.filterCellDefn != '') {
@@ -764,7 +764,6 @@
                             type = 'object';
                         }
                     }
-                    console.log({ 'key': key, 'type': type });
                     return { 'key': key, 'type': type };
                 }
 
@@ -1214,7 +1213,6 @@
                         $scope.config[evName] = function () {
                             $scope.$eval(fireEvent);
                         }
-                        console.log($scope.config);
                     });
                 }
                 $scope.$on('vxGridChangeRowClass', function (e, data) {

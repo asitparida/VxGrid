@@ -179,7 +179,12 @@
                     var primaryId = '_uid';
                     if (typeof _primaryColDefn !== 'undefined' && _primaryColDefn != null) {
                         /* PRIMARY COLUMN EXISTS */
-                        _.each($scope.vxConfig.vxData, function (row, index) { row[_primaryColDefn.id] = row[_primaryColDefn.id].toString(); row[primaryId] = row[_primaryColDefn.id] });
+                        _.each($scope.vxConfig.vxData, function (row, index) {
+                            if (row.fillEmptyElement != true) {
+                                row[_primaryColDefn.id] = row[_primaryColDefn.id].toString();
+                                row[primaryId] = row[_primaryColDefn.id];
+                            }
+                        });
                         primaryId = _primaryColDefn.id;
                     }
                     else {

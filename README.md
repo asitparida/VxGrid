@@ -121,9 +121,9 @@ BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs' IN DIRECTIVE DEFINTION
         <CONFIG>.revealWrapToggle()             <NO PARAMS>         TOGGLES WRAP ON COLUMNS
 
 ##Built Using
-<a href="https://github.com/kamilkp/angular-vs-repeat">Angular Vs Repeat</a>
-<a href="https://github.com/oblador/angular-scroll">Angular Scroll</a>
-<a href="https://github.com/josdejong/jsoneditor/">JSON Editor</a>
+<a href="https://github.com/kamilkp/angular-vs-repeat">Angular Vs Repeat</a><br />
+<a href="https://github.com/oblador/angular-scroll">Angular Scroll</a><br />
+<a href="https://github.com/josdejong/jsoneditor/">JSON Editor</a><br />
 
 ##Wokring With Save Override
 ##### Set CONFIG.inlineSaveOverrideEnabled to true to enable row save overides. 

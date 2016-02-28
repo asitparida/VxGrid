@@ -785,7 +785,7 @@
         var defer = $q.defer();
         $timeout(function () {
             defer.resolve({ 'row': newrow, 'save': true });
-        }, 8000);
+        }, 10000);
         return defer.promise;
     }
 
@@ -793,7 +793,7 @@
         var defer = $q.defer();
         $timeout(function () {
             defer.resolve({ 'rows': _.initial(rows) });
-        }, 8000);
+        }, 10000);
         return defer.promise;
     }
 

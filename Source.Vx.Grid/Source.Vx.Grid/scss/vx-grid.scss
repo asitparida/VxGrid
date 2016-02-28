@@ -868,6 +868,11 @@
                 }
             }
 
+            &.inProgress {
+                pointer-events: none;
+                opacity: 0.65;
+            }
+
             &.vxRowSelected .vxBodyRowCell {
                 background: #f0f7fc;
             }

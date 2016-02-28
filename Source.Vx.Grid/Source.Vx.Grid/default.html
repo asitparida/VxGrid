@@ -91,7 +91,8 @@
     <div class="container btns">
         <button class="btn btn-primary sample" ng-click="sample.emptyData()"> Empty Data</button>
         <button class="btn btn-primary sample" ng-click="sample.reloadDataPage()">Reload Data Page</button>
-        <button class="btn btn-primary sample" ng-click="sample.reloadDataVirtual()">Reload Data Virtual</button>
+        <button class="btn btn-primary sample" ng-click="sample.reloadDataVirtual()" ng-disabled="sample.secondSampleActive == false">Reload Data Virtual</button>
+        <button class="btn btn-primary sample" ng-click="sample.secondSample()" ng-disabled="sample.secondSampleActive == true">Reload Data Virtual Sample 2</button>
         <button class="btn btn-primary sample" ng-click="sample.consoleLogData()">Console Log Data</button>
         <button class="btn btn-primary sample" ng-click="sample.openManageColumns()">Open Manage Columns</button>
         <button class="btn btn-primary sample" ng-click="sample.logIDs()">Log Selected</button>

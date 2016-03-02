@@ -15,11 +15,11 @@
     <script type="text/javascript" src="lib/ui-bootstrap-tpls.min.js"></script>
     <script type="text/javascript" src="resource/jsoneditor/vx-grid.jsoneditor.directive.js"></script>
     <script type="text/javascript" src="lib/bootstrap.min.js"></script>
-    <!--<script type="text/javascript" src="dist/min/js/vx.grid.all.min.js"></script>-->
-    <script src="resource/angular-scroll.js"></script>
+    <script type="text/javascript" src="dist/min/js/vx.grid.all.min.js"></script>
+    <!--<script src="resource/angular-scroll.js"></script>
     <script src="resource/angular-vs-repeat.js"></script>
     <script src="resource/vx-grid.js"></script>
-    <script src="resource/vx-grid-templates.js"></script>
+    <script src="resource/vx-grid-templates.js"></script>-->
     <script type="text/javascript" src="dist/js/default.js"></script>
     <script type="text/javascript" src="dist/js/app.js"></script>
     <style>
@@ -91,9 +91,11 @@
     <div class="container btns">
         <button class="btn btn-primary sample" ng-click="sample.emptyData()"> Empty Data</button>
         <button class="btn btn-primary sample" ng-click="sample.reloadDataPage()">Reload Data Page</button>
-        <button class="btn btn-primary sample" ng-click="sample.reloadDataVirtual()">Reload Data Virtual</button>
+        <button class="btn btn-primary sample" ng-click="sample.reloadDataVirtual()" ng-disabled="sample.secondSampleActive == false">Reload Data Virtual</button>
+        <button class="btn btn-primary sample" ng-click="sample.secondSample()" ng-disabled="sample.secondSampleActive == true">Reload Data Virtual Sample 2</button>
         <button class="btn btn-primary sample" ng-click="sample.consoleLogData()">Console Log Data</button>
         <button class="btn btn-primary sample" ng-click="sample.openManageColumns()">Open Manage Columns</button>
+        <button class="btn btn-primary sample" ng-click="sample.logIDs()">Log Selected</button>
     </div>
     <div class="vxSample container" style="">
         <vx-grid config="sample.vxSampleConfig" scroll-parent="'.vxSample .vxTableContainer'"></vx-grid>

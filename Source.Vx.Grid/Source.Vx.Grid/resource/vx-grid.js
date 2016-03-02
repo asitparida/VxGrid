@@ -20,6 +20,7 @@
         <CONFIG>.data                           <SUPPORTED : Y>    :   <ARRAY>
         <CONFIG>.xsRowTitleTemplate             <SUPPORTED : Y>    :   <STRING>    SET TO XS ONLY TEMPLATE - DEFAULTS TO PRIMARY COLUMN HEADER
 		<CONFIG>.virtualization					<SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE VIRTUALIZATION AND ENABLE PAGINATION
+        <CONFIG>.pagination					    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE PAGINATION AND ENABLE PAGINATION
 		<CONFIG>.pageLength						<SUPPORTED : Y>    :   <NUMBER>	   SET PAGINATION LENGTH AND DEFUALTS TO 20
         <CONFIG>.inlineEditingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE EDITING OPTION
         <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE DELETING OPTION
@@ -44,6 +45,7 @@
         <COLUMN>.renderDefn                     <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE ENABLE CUSTOM TEMEPLATE
         <COLUMN>.headerDefn                     <SUPPORTED : N>    :   <STRING>    SET CUSTOM HEADER TEMPLATE
         <COLUMN>.cellDefn                       <SUPPORTED : Y>    :   <STRING>    SET CUSTOM CELL TEMPLATE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY
+        <COLUMN>.filterCellDefn                 <SUPPORTED : Y>    :   <STRING>    SET CUSTOM FILTER CELL TEMPLATE - USE 'VX_DATA_POINT' FOR FILTER CELL LEVEL PROPERTY
         <COLUMN>.inlineEditOnColumnEnabled      <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE COLUMN INLINE EDITING
         <COLUMN>.editDefn                       <SUPPORTED : Y>    :   <STRING>    SET CUSTOM CELL TEMPLATE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY
         <COLUMN>.editDefnTemplate               <SUPPORTED : Y>    :   <STRING>    SET EDIT TEMPLATE TYPE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY - SUPPORTED TYPES - 'INPUT', 'TEXTAREA'
@@ -77,6 +79,16 @@
         <CONFIG>.getVxCounts()                  <NO PARAMS>         RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
         <CONFIG>.getData()                      <NO PARAMS>         RETURNS CURRENT DATA STATE
         <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>    SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
+        <CONFIG>.getSelectedRows()              <NO PARAMS>         ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
+        <CONFIG>.changeRowClass()               <NO PARAMS>         ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
+        <CONFIG>.openJsonEditor()               <NO PARAMS>         OPENS JSON EDITOR IF CONFIGURED TO TRUE
+        <CONFIG>.openManageColumns()            <NO PARAMS>         OPENS MANAGE COLUMNS MODAL
+        <CONFIG>.resetVxInstance()              <NO PARAMS>         RESETS THE TABLE INSTANCE 
+        <CONFIG>.clearFilters()                 <NO PARAMS>         CLEARS ALL FILTERS APPLIED
+        <CONFIG>.selectAllFiltered()            <NO PARAMS>         SELECTS ALL ROWS WITH FILTES APPLIED 
+        <CONFIG>.clearSelection()               <NO PARAMS>         CLEARS SELECTION OF ALL ROWS
+        <CONFIG>.revealWrapToggle()             <NO PARAMS>         TOGGLES WRAP ON COLUMNS
+
     */
 
     /* CAPITALIZE FIRST LETTER - STRING PROTOTYPE*/
@@ -167,7 +179,12 @@
                     var primaryId = '_uid';
                     if (typeof _primaryColDefn !== 'undefined' && _primaryColDefn != null) {
                         /* PRIMARY COLUMN EXISTS */
-                        _.each($scope.vxConfig.vxData, function (row, index) { row[primaryId] = row[_primaryColDefn.id] });
+                        _.each($scope.vxConfig.vxData, function (row, index) {
+                            if (row.fillEmptyElement != true) {
+                                row[_primaryColDefn.id] = row[_primaryColDefn.id].toString();
+                                row[primaryId] = row[_primaryColDefn.id];
+                            }
+                        });
                         primaryId = _primaryColDefn.id;
                     }
                     else {
@@ -181,15 +198,15 @@
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('inlinediting') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
-                                id: 'inlinediting', columnName: 'Edit', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
+                                id: 'inlinediting', columnName: 'Edit', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
                                 cellDefn:
-                                    '<div class="vx-row-edit icon-container" tabindex="0" vx-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false" ng-if="vxColSettings.saveInProgress[VX_ROW_POINT] != true">'
+                                    '<div class="vx-row-edit icon-container" tabindex="0" vx-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false && vxColSettings.saveInProgress[VX_ROW_POINT] != true">'
                                         + '<i class="icon icon-edit"></i>'
                                   + '</div>'
-                                  + '<div class="vx-row-edit icon-container" ng-attr-vxdisabled="{{vxConfig.invalidRows[row[vxColSettings.primaryId]]}}" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true" ng-if="vxColSettings.saveInProgress[VX_ROW_POINT] != true">'
+                                  + '<div class="vx-row-edit icon-container" ng-attr-vxdisabled="{{vxConfig.invalidRows[row[vxColSettings.primaryId]]}}" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true && vxColSettings.saveInProgress[VX_ROW_POINT] != true">'
                                     + '<i class="icon icon-save"></i>'
                                   + '</div>'
-                                  + '<div class="vx-row-edit icon-container loader" tabindex="0" ng-if="vxColSettings.saveInProgress[VX_ROW_POINT] == true">'
+                                  + '<div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[VX_ROW_POINT] == true">'
                                     + '<img class="loader-row" src="/resource/loaderBlue30.GIF"></i>'
                                   + '</div>'
                                 , inlineEditOnColumnEnabled: false
@@ -208,7 +225,7 @@
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('checkbox') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
-                                id: 'checkbox', columnName: 'Row Selection', renderDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
+                                id: 'checkbox', columnName: 'Row Selection', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
                                 headerDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" /></div>',
                                 cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" /></div>'
                             };
@@ -230,6 +247,7 @@
                         { prop: 'showGridOptions', defValue: false },
                         { prop: 'selectAllOnRenderAll', defValue: false },
                         { prop: 'virtualization', defValue: true },
+                        { prop: 'pagination', defValue: false },
                         { prop: 'pageLength', defValue: 20 },
                         { prop: 'data', defValue: [] },
                         { prop: 'vxFilteredData', defValue: [] },
@@ -251,6 +269,7 @@
                         /* SET DEAFULTS FOR COLUMNS */
                         var _propDefns = [
                             { prop: 'renderDefn', defValue: false },
+                            { prop: 'renderHeadDefn', defValue: false },
                             { prop: 'ddSort', defValue: false },
                             { prop: 'ddGroup', defValue: false },
                             { prop: 'ddFilters', defValue: false },
@@ -263,6 +282,7 @@
                             { prop: 'width', defValue: '200' },
                             { prop: 'headerDefn', defValue: '' },
                             { prop: 'cellDefn', defValue: '' },
+                            { prop: 'filterCellDefn', defValue: '' },
                             { prop: 'inlineEditOnColumnEnabled', defValue: false },
                             { prop: 'inlineEditValidation', defValue: false },
                             { prop: 'editDefn', defValue: null },
@@ -364,7 +384,7 @@
                     /* GENERATE VX INSTANCE ID AND SEND BACK*/
                     $scope.config.id = $scope.vxConfig.id = _.uniqueId('_vxUID_');
                     /* ADD PROTOTYPE TO CALLBACK FILTERED DATA*/
-                    $scope.config.getVxCounts = function () {
+                    $scope.getVxCounts = function () {
                         if (typeof $scope.vxConfig !== 'undefined' && $scope.vxConfig != null && $scope.vxConfig != {} && $scope.vxConfig.id !== 'undefined' && $scope.vxConfig.id != null && $scope.vxConfig.id != {})
                             return {
                                 'id': $scope.vxConfig.id,
@@ -396,6 +416,12 @@
                         $scope.vxConfig.invalidRows[id] = !valid;
                         $scope.vxConfig.invalidRowFields[id][field] = !valid;
                     }
+
+                    $scope.config.getSelectedRows = function () {
+                        return $scope.vxColSettings.multiSelected;
+                    }
+
+                    $scope.buildFns();
 
                     /* ADD FUNCTION REFERENCE FOR DIRECT CALL*/
                     $scope.config.changeRowClass = $scope.changeRowClass;
@@ -630,7 +656,7 @@
                 });
 
                 $scope.isValidHeaderName = function (header, name) {
-                    return header.renderDefn == false && typeof name !== 'undefined' && name != null && name != '';
+                    return header.renderHeadDefn == false && typeof name !== 'undefined' && name != null && name != '';
                 }
                 $scope.headerClick = function (header, e) {
 
@@ -681,20 +707,31 @@
                                             $scope.vxColSettings.dropDownFilters[_colDefn.id] = true;
                                             $scope.vxColSettings.colFilterPairs[_colDefn.id] = [];
                                             var uniqed = _.uniq(_.map($scope.vxConfig.vxData, function (item) {
-                                                var ret = item[_colDefn.id];
-                                                if (typeof ret !== 'undefined' && ret != null && ret != {} && typeof ret != 'object')
-                                                    return ret.trim()
-                                                else
-                                                    return ret;
-                                            }));
-                                            uniqed = _.reject(uniqed, function (item) { return typeof item === 'undefined' || item == {} });
+                                                var ret = { 'value': item[_colDefn.id], 'type': '' };
+                                                if (typeof ret.value !== 'undefined' && ret.value != null && ret.value != {} && typeof ret.value != 'object' && typeof ret.value != 'number') {
+                                                    ret.value = ret.value.trim();
+                                                }
+                                                else if (Object.prototype.toString.call(ret.value) === '[object Date]') {
+                                                    ret.value = ret.value.getTime();
+                                                    ret.type = 'date';
+                                                }
+                                                return ret;
+                                            }), function (item) { return item.value });
+                                            uniqed = _.reject(uniqed, function (item) { return typeof item.value === 'undefined' || item.value == {} });
                                             _.each(uniqed.sort(), function (item) {
                                                 var retKey = getKeyedUnique(item, _colDefn.id, 'col');
                                                 var key = retKey.key;
                                                 var type = retKey.type;
-                                                var name = (item == '' || item == ' ' ? '< blank >' : item);
-                                                name = item == null ? ' < null >' : name;
-                                                var pair = { 'key': key, 'label': item, 'name': name, 'col': _colDefn.id, 'type': type, disabled: false, action: 'filter' };
+                                                var name = (item.value === '' || item.value === ' ' ? '< blank >' : item.value);
+                                                name = item.value == null ? ' < null >' : name;
+                                                var pair = { 'key': key, 'label': item.value, 'name': name, 'col': _colDefn.id, 'type': type, disabled: false, action: 'filter' };
+                                                if (typeof _colDefn.filterCellDefn !== 'undefined' && _colDefn.filterCellDefn != null && _colDefn.filterCellDefn != {} && _colDefn.filterCellDefn != '') {
+                                                    pair.filterDefn = _colDefn.filterCellDefn.replaceAll("VX_DATA_POINT", "filter.name");
+                                                    pair.filterDefnAvailable = true;
+                                                }
+                                                else {
+                                                    pair.filterDefnAvailable = false;
+                                                }
                                                 $scope.vxColSettings.colFilterPairs[_colDefn.id].push(pair);
                                                 $scope.vxColSettings.colFiltersStatus[key] = false;
                                             });
@@ -726,17 +763,18 @@
                 function getKeyedUnique(item, id, phrase) {
                     var key = phrase + '_' + id + '_key_';
                     var type = 'string';
-                    if (item == null) {
+                    if (item.value == null) {
                         key = key + 'null';
                     }
                     else {
-                        if (item == null)
+                        if (item.value == null)
                             key = key + 'null';
-                        else if (typeof item != 'object') {
-                            key = key + item.replace(/\s+/g, '_');
+                        else if (typeof item.value != 'object') {
+                            key = key + item.value.toString().replace(/\s+/g, '_');
+                            type = item.type;
                         }
                         else {
-                            key = key + JSON.stringify(item).replace(/\s+/g, '_');
+                            key = key + JSON.stringify(item.value).replace(/\s+/g, '_');
                             type = 'object';
                         }
                     }
@@ -1177,15 +1215,20 @@
                         $scope.$emit('vxCompletelyRenderedSelectAllEnabled', { 'id': $scope.vxConfig.id, 'data': data });
                     }
                 });
-                var comEvOnEvent = ['openJsonEditor', 'openManageColumns', 'resetVxInstance', 'clearFilters', 'selectAllFiltered', 'clearSelection', 'revealWrapToggle'];
-                _.each(comEvOnEvent, function (evName) {
-                    var captureEvName = 'vxGrid' + evName.capitalizeFirstLetter();
-                    var fireEvent = evName + '()';
-                    $scope.$on(captureEvName, function (e, data) {
-                        if (data.id.localeCompare($scope.vxConfig.id) == 0)
+                $scope.buildFns = function () {
+                    var comEvOnEvent = ['openJsonEditor', 'openManageColumns', 'resetVxInstance', 'clearFilters', 'selectAllFiltered', 'clearSelection', 'revealWrapToggle'];
+                    _.each(comEvOnEvent, function (evName) {
+                        var captureEvName = 'vxGrid' + evName.capitalizeFirstLetter();
+                        var fireEvent = evName + '()';
+                        $scope.$on(captureEvName, function (e, data) {
+                            if (data.id.localeCompare($scope.vxConfig.id) == 0)
+                                $scope.$eval(fireEvent);
+                        })
+                        $scope.config[evName] = function () {
                             $scope.$eval(fireEvent);
-                    })
-                });
+                        }
+                    });
+                }
                 $scope.$on('vxGridChangeRowClass', function (e, data) {
                     $scope.changeRowClass(data);
                 });
@@ -1229,7 +1272,7 @@
                 $scope.$watchCollection('vxConfig.vxFilteredData', function (n) {
                     if (n.length >= 0) {
                         /* PROCESS FOR PAGINATION IF VIRTUALIZATION IS FALSE */
-                        if ($scope.vxConfig.virtualization == false) {
+                        if ($scope.vxConfig.pagination == true) {
                             $scope.vxColSettings.pages = _.range(Math.ceil(n.length / parseInt($scope.vxConfig.pageLength)));
                             $scope.vxColSettings.vxPageEnabled = $scope.vxColSettings.pages.length > 1;
                             $scope.vxColSettings.activePage = 0;
@@ -1295,6 +1338,66 @@
                 element.append(clonedElement);
             })
         }
+    }])
+    .directive("vxEditFocusDisable", ['$rootScope', '$parse', function ($rootScope, $parse) {
+        var _focusDisables = {};
+        var _focuProps = {};
+        var _focusTypes = ['input', 'select', 'button', 'textarea', 'object'];
+        return {
+            restrict: 'AEC',
+            link: function ($scope, elem, attr) {
+                var ifEdit = $parse(attr['vxEditFocusDisable']);
+                var _rowId = $(elem).attr('id');
+                $scope.$watch(attr['vxEditFocusDisable'], function (newValue) {
+                    if (newValue) {
+                        _focuProps[_rowId] = { 'available': true, 'stack': [] };
+                        /* GET LIST OF ALL ELEMENTS AS DEFINED IN _focusTypes */
+                        _.each(_focusTypes, function (type) {
+                            var elements = $(elem).find(type);
+                            if (elements.length > 0) {
+                                _.each(elements, function (element) {
+                                    var _eid = $(element).attr('id');
+                                    if (typeof _eid == 'undefined' || _eid == null || _eid == '') {
+                                        $(element).attr('id', _.uniqueId('elemid'));
+                                        _eid = $(element).attr('id');
+                                    }
+                                    _focuProps[_rowId].stack.push(_eid);
+                                });
+                            }
+                        });
+                        /* PROCESS FOR TAGS WITH TABINDEX VALUE OTHER THAN -1 AND NOT A PART OF _focusTypes */
+                        var elements = $(elem).find('[tabindex]');
+                        if (elements.length > 0) {
+                            _.each(elements, function (element) {
+                                var _tbindex = $(element).attr('tabindex');
+                                if (_tbindex != -1 && _.contains(_focusTypes, element.nodeName.toUpperCase()) == false) {
+                                    var _eid = $(element).attr('id');
+                                    if (typeof _eid == 'undefined' || _eid == null || _eid == '') {
+                                        $(element).attr('id', _.uniqueId('elemid'));
+                                        _eid = $(element).attr('id');
+                                    }
+                                    _focuProps[_rowId].stack.push(_eid);
+                                }
+                            });
+                        }
+                        /* GET CURRENT TABINDEX STATE AND SERIALIZE IT */
+                        _.each(_focuProps[_rowId].stack, function (_eid) {
+                            _focusDisables[_eid] = $('#' + _eid).attr('tabindex') || 0;
+                            $('#' + _eid).attr('tabindex', -1);
+                        });
+                    }
+                    else if (newValue == false) {
+                        if (typeof _focuProps[_rowId] !== 'undefined' && typeof _focuProps[_rowId].available !== 'undefined' && _focuProps[_rowId].available == true) {
+                            _.each(_focuProps[_rowId].stack, function (eid) {
+                                var _origTabIndex = _focusDisables[eid];
+                                $('#' + eid).attr('tabindex', _origTabIndex);
+                            });
+                            _focuProps[_rowId].available = false;
+                        }
+                    }
+                });
+            }
+        };
     }])
     .directive("vxKey", ['$rootScope', '$parse', function ($rootScope, $parse) {
         return {
@@ -1362,6 +1465,9 @@
                     _.each(matches, function (match) {
                         unionedMatches = _.union(unionedMatches, _.filter(copyOfItems, function (item) {
                             if (typeof match.label !== 'undefined' && match.label != null && match.label != {} && typeof item[match.col] !== 'undefined' && item[match.col] != null && item[match.col] != {}) {
+                                if (match.type == 'date') {
+                                    return item[match.col].getTime() == match.label;
+                                }
                                 if (match.type == 'object')
                                     return JSON.stringify(item[match.col]).localeCompare(JSON.stringify(match.label)) == 0;
                                 else

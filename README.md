@@ -13,8 +13,8 @@ Sample Preview @ <a href="http://vxgrid.azurewebsites.net/">http://vxgrid.azurew
     <li>Contextual Filtering</li>
     <li>Filters with Search</li>
     <li>Fixed Header</li>
-    <li>Pagination</li>
     <li>Virtualization</li>
+    <li>Pagination W/WOT Virtualization</li>
     <li>Column Hiding</li>
     <li>Column Width Changing</li>
     <li>Single Row Selection</li>
@@ -53,6 +53,7 @@ BOUND TO 'config=' IN DIRECTIVE CALL
         <CONFIG>.data                           <SUPPORTED : Y>    :   <ARRAY>
         <CONFIG>.xsRowTitleTemplate             <SUPPORTED : Y>    :   <STRING>    SET TO XS ONLY TEMPLATE - DEFAULTS TO PRIMARY COLUMN HEADER
         <CONFIG>.virtualization					<SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE VIRTUALIZATION AND ENABLE PAGINATION
+        <CONFIG>.pagination					    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE PAGINATION AND ENABLE PAGINATION
         <CONFIG>.pageLength						<SUPPORTED : Y>    :   <NUMBER>	   SET PAGINATION LENGTH AND DEFUALTS TO 20
         <CONFIG>.inlineEditingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE EDITING OPTION
         <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE DELETING OPTION
@@ -109,11 +110,20 @@ BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs' IN DIRECTIVE DEFINTION
         <CONFIG>.getVxCounts()                  <NO PARAMS>         RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
         <CONFIG>.getData()                      <NO PARAMS>         RETURNS CURRENT DATA STATE
         <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>    SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
+        <CONFIG>.getSelectedRows()              <NO PARAMS>         ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
+        <CONFIG>.changeRowClass()               <NO PARAMS>         ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
+        <CONFIG>.openJsonEditor()               <NO PARAMS>         OPENS JSON EDITOR IF CONFIGURED TO TRUE
+        <CONFIG>.openManageColumns()            <NO PARAMS>         OPENS MANAGE COLUMNS MODAL
+        <CONFIG>.resetVxInstance()              <NO PARAMS>         RESETS THE TABLE INSTANCE 
+        <CONFIG>.clearFilters()                 <NO PARAMS>         CLEARS ALL FILTERS APPLIED
+        <CONFIG>.selectAllFiltered()            <NO PARAMS>         SELECTS ALL ROWS WITH FILTES APPLIED 
+        <CONFIG>.clearSelection()               <NO PARAMS>         CLEARS SELECTION OF ALL ROWS
+        <CONFIG>.revealWrapToggle()             <NO PARAMS>         TOGGLES WRAP ON COLUMNS
 
 ##Built Using
-<a href="https://github.com/kamilkp/angular-vs-repeat">Angular Vs Repeat</a>
-<a href="https://github.com/oblador/angular-scroll">Angular Scroll</a>
-<a href="https://github.com/josdejong/jsoneditor/">JSON Editor</a>
+<a href="https://github.com/kamilkp/angular-vs-repeat">Angular Vs Repeat</a><br />
+<a href="https://github.com/oblador/angular-scroll">Angular Scroll</a><br />
+<a href="https://github.com/josdejong/jsoneditor/">JSON Editor</a><br />
 
 ##Wokring With Save Override
 ##### Set CONFIG.inlineSaveOverrideEnabled to true to enable row save overides. 

@@ -877,10 +877,12 @@
                     var toggleTo = $scope.vxColSettings.allRowSelected;
                     if (toggleTo == true) {
                         _.each($scope.vxConfig.vxFilteredData, function (row) {
-                            var pid = row[$scope.vxColSettings.primaryId];
-                            if ($scope.vxColSettings.rowSelected[pid] == false && toggleTo == true) {
-                                $scope.vxColSettings.rowSelected[pid] = true;
-                                $scope.vxColSettings.multiSelected.push(pid);
+                            if (row.fillEmptyElement != true) {
+                                var pid = row[$scope.vxColSettings.primaryId];
+                                if ($scope.vxColSettings.rowSelected[pid] == false && toggleTo == true) {
+                                    $scope.vxColSettings.rowSelected[pid] = true;
+                                    $scope.vxColSettings.multiSelected.push(pid);
+                                }
                             }
                         });
                         _.each($scope.vxConfig.columnDefConfigs, function (header) {

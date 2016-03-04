@@ -1283,6 +1283,11 @@
                     }
                 });
 
+                $scope.getvxTableContainerWidth = function () {
+                    var elem = angular.element($(element).find('.vx-scroller')[0]);
+                    return elem.width() + 'px';
+                }
+
                 var container = angular.element($(element).find('.scrollTableContainer')[0]);
                 container.on('scroll', function () {
                     lazyScrollHeaderPositioning();

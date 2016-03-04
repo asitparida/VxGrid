@@ -834,7 +834,7 @@
 
     self.reloadDataPage = function () {
         self.vxSampleConfig.pagination = true;
-        self.vxSampleConfig.data = self.sampling(30, 'Coho Vineyard 333');
+        self.vxSampleConfig.data = self.sampling(20, 'Coho Vineyard 333');
     }
 
     self.consoleLogData = function () {

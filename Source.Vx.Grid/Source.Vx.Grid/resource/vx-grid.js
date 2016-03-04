@@ -1288,7 +1288,7 @@
                 var lazyScrollHeaderPositioning = _.debounce(function () {
                     $scope.$apply(function () {
                         $scope.posLeft = container.scrollLeft() > 1 ? -container.scrollLeft() : 1;
-                        //$scope.posTop = container.scrollTop();
+                        $scope.posTop = container.scrollTop();
                     });
                 }, 50);
 

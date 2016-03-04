@@ -14,7 +14,7 @@
 </script>
 <div id="templates">
     <div id="vxGridTableStructure">
-        <div class="vxH100 vx-grid-inner" ng-class="{ 'vxXsViewEnabled' : vxColSettings.xsViewEnabled == true}">
+        <div class="vxH100 vx-grid-inner vx-grid-related " ng-class="{ 'vxXsViewEnabled' : vxColSettings.xsViewEnabled == true}">
             <div class="row hidden-xs">
                 <div class="col-xs-12">
                     <div class="col-md-4 vsTableStats pull-left zeroPaddingLeft" ng-if="vxConfig.showGridStats">
@@ -265,7 +265,7 @@
         </div>
     </div>
     <div id="vxGridManageColumnsModal">
-        <div class="modal-body">
+        <div class="modal-body vx-grid-related ">
             <div class="vxTableSettings">
                 <div class="vxSettingsHead">
                     <label class="title">Mange Columns</label>
@@ -369,7 +369,7 @@
             </div>
         </div>
     </div>
-    <div id="vxGridJsonEditorModal">
+    <div id="vxGridJsonEditorModal vx-grid-related ">
         <div class="modal-body">
             <div class="vxTableSettings">
                 <div class="vxSettingsHead">

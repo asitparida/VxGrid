@@ -110,7 +110,7 @@
     <Content Include="lib\jquery.min.js" />
     <Content Include="lib\ui-bootstrap-tpls.min.js" />
     <Content Include="lib\underscore-min.js" />
-    <Content Include="resource\jsoneditor\angular-scroll.js" />
+    <Content Include="resource\angular-scroll.js" />
     <Content Include="resource\angular-vs-repeat.js" />
     <Content Include="resource\icon-images.png" />
     <Content Include="resource\jsoneditor\ace.js" />

@@ -118,7 +118,7 @@
                 config: '=',
                 scrollParent: '='
             },
-            controller: ["$scope", "$modal", "$sce", "$timeout", "$rootScope", "$window", "$filter", "$q", function ($scope, $modal, $sce, $timeout, $rootScope, $window, $filter, $q) {
+            controller: ["$scope", "$uibModal", "$sce", "$timeout", "$rootScope", "$window", "$filter", "$q", function ($scope, $modal, $sce, $timeout, $rootScope, $window, $filter, $q) {
                 $scope.vxColSettings = {};
                 $scope.posLeft = 1;
                 $scope.posTop = 0;
@@ -1032,7 +1032,7 @@
                     var modalInstance = $modal.open({
                         templateUrl: 'template/vx-grid/vx-grid-manage-columns-modal.html',
                         windowClass: 'vxGridManageColMod',
-                        controller: ["$scope", "$modalInstance", "originalSettings", function ($scope, $modalInstance, originalSettings) {
+                        controller: ["$scope", "$uibModalInstance", "originalSettings", function ($scope, $modalInstance, originalSettings) {
                             $scope.headerSelected = null;
                             $scope.headerSelectedForVisChange = null;
                             $scope.copyForWidthVisChange = originalSettings;

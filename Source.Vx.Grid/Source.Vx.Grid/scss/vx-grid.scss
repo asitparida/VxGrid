@@ -21,6 +21,10 @@
 
 .vx-grid-related {
 
+    .row{
+        height:auto;
+    }
+
     .vx-scroller {
         height: calc(100% - 60px);
         overflow-x: auto;
@@ -369,12 +373,11 @@
 
         .vxTableContainer.attrPaneOpen {
             &:not(.scrollDupHeader) {
-                height: 100%;
-                width: auto;
+                height: calc(100% - 60px);
             }
 
             &.pageEnabled:not(.scrollDupHeader) {
-                height: calc(100% - 48px);
+                height: calc(100% - 108px);
             }
         }
 

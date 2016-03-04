@@ -78,6 +78,7 @@
     <Content Include="images\7.PNG" />
     <Content Include="images\8.PNG" />
     <Content Include="images\9.PNG" />
+    <Content Include="lib\ui-bootstrap-tpls-1.1.1.min.js" />
     <Content Include="packages.config" />
     <Content Include="package.json" />
     <Content Include="resource\jsoneditor\jsoneditor.map" />

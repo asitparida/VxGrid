@@ -384,7 +384,7 @@
                     /* GENERATE VX INSTANCE ID AND SEND BACK*/
                     $scope.config.id = $scope.vxConfig.id = _.uniqueId('_vxUID_');
                     /* ADD PROTOTYPE TO CALLBACK FILTERED DATA*/
-                    $scope.getVxCounts = function () {
+                    $scope.config.getVxCounts = function () {
                         if (typeof $scope.vxConfig !== 'undefined' && $scope.vxConfig != null && $scope.vxConfig != {} && $scope.vxConfig.id !== 'undefined' && $scope.vxConfig.id != null && $scope.vxConfig.id != {})
                             return {
                                 'id': $scope.vxConfig.id,

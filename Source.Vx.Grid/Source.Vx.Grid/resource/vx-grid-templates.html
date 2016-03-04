@@ -14,7 +14,7 @@
 </script>
 <div id="templates">
     <div id="vxGridTableStructure">
-        <div class="vxH100 vx-grid-inner" ng-class="{ 'vxXsViewEnabled' : vxColSettings.xsViewEnabled == true}">
+        <div class="vxH100 vx-grid-inner vx-grid-related " ng-class="{ 'vxXsViewEnabled' : vxColSettings.xsViewEnabled == true}">
             <div class="row hidden-xs">
                 <div class="col-xs-12">
                     <div class="col-md-4 vsTableStats pull-left zeroPaddingLeft" ng-if="vxConfig.showGridStats">
@@ -167,7 +167,7 @@
                                 </tr>
                             </thead>
                             <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxColSettings.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.virtualization == true">
-                                <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]" ng-attr-id="{{row[vxColSettings.primaryId]}}" class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} vxBodyRow" ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxColSettings.predicate:vxColSettings.reverse))" ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}">
+                                <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]" ng-attr-id="{{row[vxColSettings.primaryId]}}" class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} vxBodyRow" ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxColSettings.predicate:vxColSettings.reverse) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength)" ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}">
                                     <td colspan="{{getNonHiddenColCount()}}" ng-if="row.fillEmptyElement == true" style="padding-left:15px;">No records to display ...</td>
                                     <td class="vxBodyRowCell {{header.colClass}}" ng-class="{'renderedDefn': header.renderDefn == true}" ng-repeat="header in vxConfig.columnDefConfigs" ng-style="{ 'width' : header.width + 'px' }" ng-if="header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
                                         <span ng-if="(header.renderDefn == false && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == false && header.inlineEditOnColumnEnabled == false)">{{row[header.id]}}</span>
@@ -265,7 +265,7 @@
         </div>
     </div>
     <div id="vxGridManageColumnsModal">
-        <div class="modal-body">
+        <div class="modal-body vx-grid-related ">
             <div class="vxTableSettings">
                 <div class="vxSettingsHead">
                     <label class="title">Mange Columns</label>
@@ -369,7 +369,7 @@
             </div>
         </div>
     </div>
-    <div id="vxGridJsonEditorModal">
+    <div id="vxGridJsonEditorModal vx-grid-related ">
         <div class="modal-body">
             <div class="vxTableSettings">
                 <div class="vxSettingsHead">

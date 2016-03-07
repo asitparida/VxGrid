@@ -408,6 +408,10 @@
                     }
 
                     $scope.config.setRowFieldValidation = function (id, field, valid) {
+                        if (typeof $scope.vxConfig.invalidRowFields[id] === 'undefined') {
+                            $scope.vxConfig.invalidRows[id] = false;
+                            $scope.vxConfig.invalidRowFields[id] = {};
+                        }
                         if ($scope.vxConfig.inlineEditSyncEnabled == true) {
                             var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(id) == 0 });
                             if (typeof exists !== 'undefined' && exists != null && exists.length > 0) {
@@ -647,7 +651,16 @@
 
                 $scope.debouncedSearch = _.debounce(function () {
                     $scope.vxColSettings.xsSearch = angular.copy($scope.vxColSettings.searchToken);
-                }, 250);
+                }, 50);
+
+                $scope.keyUpSearch = function ($event) {
+                    if ($event.keyCode == 13) {
+                        $scope.vxColSettings.xsSearch = angular.copy($scope.vxColSettings.searchToken);
+                    }
+                    else if ($event.keyCode == 8 && $scope.vxColSettings.searchToken == '') {
+                        $scope.vxColSettings.xsSearch = angular.copy($scope.vxColSettings.searchToken);
+                    }
+                }
 
                 $scope.$watch('getWindowDimensions()', function (newValue, oldValue) {
                     if (newValue.w < 768)
@@ -933,6 +946,7 @@
                     else if ($scope.vxColSettings.rowSelected[pid] == false) {
                         $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (rs) { return rs.localeCompare(pid) == 0 });
                         proceed = false;
+                        $scope.vxColSettings.allRowSelected = false;
                         $scope.$emit('vxGridRowSelectionChange', { 'id': $scope.vxConfig.id, 'data': result });
                     }
                     if (proceed) {

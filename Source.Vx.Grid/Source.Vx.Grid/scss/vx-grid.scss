@@ -315,7 +315,7 @@
         .vxTableContainer:not(.scrollDupHeader) {
             padding: 0;
             margin: 3px 0 0 0;
-            overflow-x: hidden;
+            overflow-x: auto;
             overflow-y: auto;
             height: calc(100%- 15px);
             -webkit-overflow-scrolling: touch;

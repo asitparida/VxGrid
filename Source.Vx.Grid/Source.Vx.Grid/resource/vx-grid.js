@@ -942,6 +942,7 @@
                     else if ($scope.vxColSettings.rowSelected[pid] == false) {
                         $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (rs) { return rs.localeCompare(pid) == 0 });
                         proceed = false;
+                        $scope.vxColSettings.allRowSelected = false;
                         $scope.$emit('vxGridRowSelectionChange', { 'id': $scope.vxConfig.id, 'data': result });
                     }
                     if (proceed) {

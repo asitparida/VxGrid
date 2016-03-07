@@ -408,6 +408,10 @@
                     }
 
                     $scope.config.setRowFieldValidation = function (id, field, valid) {
+                        if (typeof $scope.vxConfig.invalidRowFields[id] === 'undefined') {
+                            $scope.vxConfig.invalidRows[id] = false;
+                            $scope.vxConfig.invalidRowFields[id] = {};
+                        }
                         if ($scope.vxConfig.inlineEditSyncEnabled == true) {
                             var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(id) == 0 });
                             if (typeof exists !== 'undefined' && exists != null && exists.length > 0) {

@@ -647,7 +647,16 @@
 
                 $scope.debouncedSearch = _.debounce(function () {
                     $scope.vxColSettings.xsSearch = angular.copy($scope.vxColSettings.searchToken);
-                }, 250);
+                }, 50);
+
+                $scope.keyUpSearch = function ($event) {
+                    if ($event.keyCode == 13) {
+                        $scope.vxColSettings.xsSearch = angular.copy($scope.vxColSettings.searchToken);
+                    }
+                    else if ($event.keyCode == 8 && $scope.vxColSettings.searchToken == '') {
+                        $scope.vxColSettings.xsSearch = angular.copy($scope.vxColSettings.searchToken);
+                    }
+                }
 
                 $scope.$watch('getWindowDimensions()', function (newValue, oldValue) {
                     if (newValue.w < 768)

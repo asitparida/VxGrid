@@ -54,7 +54,7 @@
                             <i class="icon icon-add"></i>
                         </div>
                         <div class="search-container pull-right input-group">
-                            <input class="search form-control" type="search" ng-model="vxColSettings.searchToken" placeholder="Search" ng-change="debouncedSearch(vxColSettings.searchToken)" />
+                            <input class="search form-control" type="search" ng-model="vxColSettings.searchToken" placeholder="Search" ng-keyup="keyUpSearch($event)" />
                         </div>
                     </div>
                 </div>

@@ -111,7 +111,8 @@ BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs' IN DIRECTIVE DEFINTION
         <CONFIG>.getData()                      <NO PARAMS>         RETURNS CURRENT DATA STATE
         <CONFIG>.getActiveDataSet()             <NO PARAMS>         RETURNS CURRENT ACTIVE DATA STATE
         <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>    SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
-        <CONFIG>.getSelectedRows()              <NO PARAMS>         ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
+        <CONFIG>.getSelectedRows()              <NO PARAMS>         GET IDs FOR ROWS BEING SELECTED
+        <CONFIG>.getRowsBeingEdited()           <NO PARAMS>         GET IDs FOR ROWS BEING EDITED
         <CONFIG>.changeRowClass()               <NO PARAMS>         ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
         <CONFIG>.openJsonEditor()               <NO PARAMS>         OPENS JSON EDITOR IF CONFIGURED TO TRUE
         <CONFIG>.openManageColumns()            <NO PARAMS>         OPENS MANAGE COLUMNS MODAL

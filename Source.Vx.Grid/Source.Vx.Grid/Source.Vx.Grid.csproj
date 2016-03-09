@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="dist\min\js\vx.grid.min.js" />
     <Content Include="images\1.PNG" />
     <Content Include="images\10.PNG" />
     <Content Include="images\11.PNG" />
@@ -103,7 +104,6 @@
     <Content Include="dist\js\default.js" />
     <Content Include="dist\min\css\bootstrap.min.css" />
     <Content Include="dist\min\css\vx-grid.min.css" />
-    <Content Include="dist\min\js\vx.grid.all.min.js" />
     <Content Include="gulpfile.js" />
     <Content Include="lib\angular-sanitize.min.js" />
     <Content Include="lib\angular.min.js" />
@@ -121,7 +121,7 @@
     <Content Include="resource\jsoneditor\jsoneditor.js" />
     <Content Include="resource\jsoneditor\jsoneditor.min.css" />
     <Content Include="resource\jsoneditor\jsoneditor.min.js" />
-    <Content Include="resource\jsoneditor\vx-grid.jsoneditor.directive.js" />
+    <Content Include="resource\vx-grid.jsoneditor.directive.js" />
     <Content Include="resource\loaderWhite36.GIF" />
     <Content Include="resource\vx-grid-templates.html" />
     <Content Include="resource\vx-grid-templates.js" />
@@ -131,7 +131,9 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="js\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

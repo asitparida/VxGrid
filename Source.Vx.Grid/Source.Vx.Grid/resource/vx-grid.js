@@ -80,7 +80,8 @@
         <CONFIG>.getData()                      <NO PARAMS>         RETURNS CURRENT GRID DATA SET - WITHOUT DIRTY MAPS
         <CONFIG>.getActiveDataSet()             <NO PARAMS>         RETURNS CURRENT ACTIVE DATA STATE
         <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>    SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
-        <CONFIG>.getSelectedRows()              <NO PARAMS>         ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
+        <CONFIG>.getSelectedRows()              <NO PARAMS>         GET IDs FOR ROWS BEING SELECTED
+        <CONFIG>.getRowsBeingEdited()           <NO PARAMS>         GET IDs FOR ROWS BEING EDITED
         <CONFIG>.changeRowClass()               <NO PARAMS>         ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
         <CONFIG>.openJsonEditor()               <NO PARAMS>         OPENS JSON EDITOR IF CONFIGURED TO TRUE
         <CONFIG>.openManageColumns()            <NO PARAMS>         OPENS MANAGE COLUMNS MODAL
@@ -429,11 +430,23 @@
                         return $scope.vxColSettings.multiSelected;
                     }
 
+                    $scope.config.getRowsBeingEdited = function () {
+                        var _beingEdited = [];
+                        if (typeof $scope.vxColSettings.inlineEditState !== 'undefined' && $scope.vxColSettings.inlineEditState != null) {
+                            for (var arg in $scope.vxColSettings.inlineEditState) {
+                                if ($scope.vxColSettings.inlineEditState[arg] == true)
+                                    _beingEdited.push(arg);
+                            }
+                        }
+                        return _beingEdited;
+                    }
+
                     $scope.buildFns();
 
-                    /* ADD FUNCTION REFERENCE FOR DIRECT CALL*/
+                        /* ADD FUNCTION REFERENCE FOR DIRECT CALL*/
                     $scope.config.changeRowClass = $scope.changeRowClass;
-                    $scope.$emit('vxGridSettingsBuilt', { 'id': $scope.vxConfig.id });
+                    $scope.$emit('vxGridSettingsBuilt', { 'id': $scope.vxConfig.id
+                    });
                 }
 
                 $scope.editRow = function (id) {

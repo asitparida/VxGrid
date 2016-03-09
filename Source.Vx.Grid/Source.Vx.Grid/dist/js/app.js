@@ -812,7 +812,11 @@
         console.log(self.vxSampleConfig.getSelectedRows());
     }
 
-    console.log('length : ' + self.vxSampleData.length);
+    self.logEditedIDs = function () {
+        console.log(self.vxSampleConfig.getRowsBeingEdited());
+    }
+
+    console.log('length : ' +self.vxSampleData.length);
 
     $scope.$on('vsRepeatInnerCollectionUpdated', function () {
         console.log('vsRepeatInnerCollectionUpdated');
@@ -823,7 +827,7 @@
     });
 
     self.emptyData = function () {
-        self.vxSampleConfig.data = [];
+        self.vxSampleConfig.data =[];
     }
 
     self.reloadDataVirtual = function () {

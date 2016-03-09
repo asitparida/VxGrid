@@ -50,19 +50,25 @@ gulp.task('minify:js', ['minify:html:js'], function () {
 
 // Clean the concated js directory
 gulp.task('clean:concat:js', function () {
-    return del('dist/min/js/vx.grid.all.min.js');
+    return del('dist/min/js/vx.grid.min.js');
 });
 
 //Concat JS Files
 gulp.task('concat:js', ['clean:concat:js', 'minify:js'], function () {
-    return gulp.src('./js/*min.js')
-    .pipe(concat('vx.grid.all.min.js'))
+    return gulp.src([
+        './js/angular-scroll-min.js',
+        './js/angular-vs-repeat-min.js',
+        './js/vx-grid.jsoneditor.directive-min.js',
+        './js/vx-grid-min.js',
+        './js/vx-grid-templates-min.js',
+    ])
+    .pipe(concat('vx.grid.min.js'))
     .pipe(gulp.dest('./dist/min/js'));
 });
 
 //Watch JS task
 gulp.task('default:vxgrid:js', function () {
-    gulp.watch(['Resource/vx-grid.js', 'Resource/vx-grid-templates.html'], ['concat:js']);
+    gulp.watch(['Resource/vx-grid.js', 'Resource/vx-grid-templates.html', 'Resource/vx-grid.jsoneditor.directive.js'], ['concat:js']);
 });
 
 // Clean the distributable css directory

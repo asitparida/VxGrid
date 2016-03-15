@@ -186,6 +186,7 @@
                                 row[_primaryColDefn.id] = row[_primaryColDefn.id].toString();
                                 row[primaryId] = row[_primaryColDefn.id];
                             }
+                            row['_vxCreated'] = new Date().getTime();
                         });
                         primaryId = _primaryColDefn.id;
                     }
@@ -443,9 +444,10 @@
 
                     $scope.buildFns();
 
-                        /* ADD FUNCTION REFERENCE FOR DIRECT CALL*/
+                    /* ADD FUNCTION REFERENCE FOR DIRECT CALL*/
                     $scope.config.changeRowClass = $scope.changeRowClass;
-                    $scope.$emit('vxGridSettingsBuilt', { 'id': $scope.vxConfig.id
+                    $scope.$emit('vxGridSettingsBuilt', {
+                        'id': $scope.vxConfig.id
                     });
                 }
 
@@ -495,7 +497,7 @@
                             var defer = $q.defer();
                             defer.promise.then(function (data) {
                                 if (typeof cRow.row !== 'undefined' && data.save == true) {
-                                    delete cRow.newRow;
+                                    cRow.newRow = false;
                                     _.each($scope.vxConfig.columnDefConfigs, function (col) {
                                         cRow[col.id] = data.row[col.id];
                                     });
@@ -512,6 +514,7 @@
                                 console.log(data);
                                 $scope.vxColSettings.saveInProgress[id] = false;
                                 $scope.vxColSettings.inlineEditState[id] = true;
+                                cRow.newRow = true;
                             });
                             defer.resolve($scope.config.fnInlineSaveOverride(cRow, null));
                         }
@@ -606,10 +609,13 @@
                 }
 
                 $scope.addNewRow = function () {
+                    $scope.vxColSettings.predicate = '_vxCreated';
+                    $scope.vxColSettings.reverse = true;
                     var newRow = angular.copy($scope.vxConfig.newRowTemplate);
                     var _newGuid = _GUID();
                     newRow[$scope.vxColSettings.primaryId] = _newGuid;
                     newRow['newRow'] = true;
+                    newRow['_vxCreated'] = new Date().getTime();
                     $scope.vxColSettings.inlineEditState[_newGuid] = true;
                     $scope.vxConfig.vxData.unshift(newRow);
                 }

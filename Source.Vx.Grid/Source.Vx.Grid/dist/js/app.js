@@ -702,9 +702,9 @@
                 rec.engagement = _.sample([customer, 'Fist Up Consultants']),
                 rec.assignment = record.transferFromAssignment,
                 rec.users = ['asparida', 'prasadne', 'ruprawat'];
-                //if (j >= 2)
-                //    rec.userAlias = _.sample(rec.users);
-                //else
+                if (k >= 2)
+                    rec.userAlias = _.sample(rec.users);
+                else
                     rec.userAlias = null;
                 rec.mid = i + j;
                 _samples.push(rec);

@@ -690,7 +690,8 @@
                 var rec = angular.copy(record);
                 rec.index = k + '_' + j;
                 rec.laborId = 'XXX-XXXX-XXXX' + '_' + rec.index;
-                rec.category = _.sample(self.categories);
+                rec.categories = self.categories;
+                rec.category = _.sample(rec.categories);
                 rec.customer = record.transferFromCustomer;
                 rec.dt = _.sample([
                     new Date(2015, 01, 07, 0, 0, 0, 0),
@@ -700,7 +701,11 @@
                 ]);
                 rec.engagement = _.sample([customer, 'Fist Up Consultants']),
                 rec.assignment = record.transferFromAssignment,
-                rec.userAlias = _.sample(['asparida', 'prasadne', 'ruprawat']),
+                rec.users = ['asparida', 'prasadne', 'ruprawat'];
+                //if (j >= 2)
+                //    rec.userAlias = _.sample(rec.users);
+                //else
+                    rec.userAlias = null;
                 rec.mid = i + j;
                 _samples.push(rec);
             });
@@ -763,8 +768,8 @@
             { id: 'customer', columnName: 'Customer', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: true, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, hidden: true, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'assignment', columnName: 'Assignment', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: true },
-            { id: 'category', columnName: 'Category', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, filterCellDefn: "<span>{{VX_DATA_POINT.name}}</span>", cellDefn: '<span>{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" vx-keep-watch="ngModel" ng-options="item.name for item in VX_CONFIG.categories" ng-model="VX_DATA_POINT"></select>', inlineEditOnColumnEnabled: true },
-            { id: 'userAlias', columnName: 'User', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: true },
+            { id: 'category', columnName: 'Category', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, filterCellDefn: "<span>{{VX_DATA_POINT.name}}</span>", cellDefn: '<span>{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" ng-options="item.name for item in row.categories" ng-model="row[\'category\']"></select>', inlineEditOnColumnEnabled: true },
+            { id: 'userAlias', columnName: 'User', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false, cellDefn: '<select class="selectStyleSampleA" ng-model="row.userAlias" ng-options="user for user in row.users"><option value="">Select an option </option> </select>' },
             { id: 'labor', columnName: 'Labor', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: true },
             { id: 'timezone', columnName: 'Timezone', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: true },
             { id: 'status', columnName: 'Status', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: true },
@@ -785,7 +790,7 @@
         var defer = $q.defer();
         $timeout(function () {
             defer.resolve({ 'row': newrow, 'save': true });
-        }, 10000);
+        }, 3000);
         return defer.promise;
     }
 

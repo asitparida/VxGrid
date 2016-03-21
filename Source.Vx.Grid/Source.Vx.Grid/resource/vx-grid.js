@@ -1055,6 +1055,7 @@
                             $scope.emitArray.push(result);
                         }
                         $scope.vxColSettings.multiSelected = [];
+                        $scope.vxColSettings.allRowSelected = false;
                         _.each($scope.vxConfig.columnDefConfigs, function (header) {
                             if ($scope.vxColSettings.dropDownGroup[header.id] == true && $scope.vxColSettings.groupByColActivated[header.id] == true) {
                                 _.each($scope.vxColSettings.groupKeys[header.id], function (key) {

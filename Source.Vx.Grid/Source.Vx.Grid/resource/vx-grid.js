@@ -928,7 +928,7 @@
                                 });
                             }
                         })
-                        $scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.vxColSettings.multiSelected });
+                        //$scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.vxColSettings.multiSelected });
                         $scope.$emit('vxGridRowAllSelectionChange', { 'id': $scope.vxConfig.id, 'data': { 'toggledTo': toggleTo, 'array': $scope.vxColSettings.multiSelected } });
                     }
                     else if (toggleTo == false) {

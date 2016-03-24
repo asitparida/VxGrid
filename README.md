@@ -106,21 +106,23 @@ BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs' IN DIRECTIVE DEFINTION
         'vxGridRevealWrapToggle'                    <IN>    ON EVENT, TOGGLES WRAP ON COLUMNS
 
 ##VX GRID Config Extensions
+
         ----------------------------
-        <CONFIG>.getVxCounts()                  <NO PARAMS>         RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
-        <CONFIG>.getData()                      <NO PARAMS>         RETURNS CURRENT DATA STATE
-        <CONFIG>.getActiveDataSet()             <NO PARAMS>         RETURNS CURRENT ACTIVE DATA STATE
-        <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>    SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
-        <CONFIG>.getSelectedRows()              <NO PARAMS>         GET IDs FOR ROWS BEING SELECTED
-        <CONFIG>.getRowsBeingEdited()           <NO PARAMS>         GET IDs FOR ROWS BEING EDITED
-        <CONFIG>.changeRowClass()               <NO PARAMS>         ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
-        <CONFIG>.openJsonEditor()               <NO PARAMS>         OPENS JSON EDITOR IF CONFIGURED TO TRUE
-        <CONFIG>.openManageColumns()            <NO PARAMS>         OPENS MANAGE COLUMNS MODAL
-        <CONFIG>.resetVxInstance()              <NO PARAMS>         RESETS THE TABLE INSTANCE 
-        <CONFIG>.clearFilters()                 <NO PARAMS>         CLEARS ALL FILTERS APPLIED
-        <CONFIG>.selectAllFiltered()            <NO PARAMS>         SELECTS ALL ROWS WITH FILTES APPLIED 
-        <CONFIG>.clearSelection()               <NO PARAMS>         CLEARS SELECTION OF ALL ROWS
-        <CONFIG>.revealWrapToggle()             <NO PARAMS>         TOGGLES WRAP ON COLUMNS
+        <CONFIG>.getVxCounts()                  <NO PARAMS>                             RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
+        <CONFIG>.getData()                      <NO PARAMS>                             RETURNS CURRENT GRID DATA SET - WITHOUT DIRTY MAPS
+        <CONFIG>.getActiveDataSet()             <NO PARAMS>                             RETURNS CURRENT ACTIVE DATA STATE
+        <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>                        SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
+        <CONFIG>.getSelectedRows()              <NO PARAMS>                             GET IDs FOR ROWS BEING SELECTED
+        <CONFIG>.getRowsBeingEdited()           <NO PARAMS>                             GET IDs FOR ROWS BEING EDITED
+        <CONFIG>.changeRowClass()               <NO PARAMS>                             ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
+        <CONFIG>.openJsonEditor()               <NO PARAMS>                             OPENS JSON EDITOR IF CONFIGURED TO TRUE
+        <CONFIG>.openManageColumns()            <NO PARAMS>                             OPENS MANAGE COLUMNS MODAL
+        <CONFIG>.resetVxInstance()              <NO PARAMS>                             RESETS THE TABLE INSTANCE 
+        <CONFIG>.clearFilters()                 <NO PARAMS>                             CLEARS ALL FILTERS APPLIED
+        <CONFIG>.selectAllFiltered()            <NO PARAMS>                             SELECTS ALL ROWS WITH FILTES APPLIED 
+        <CONFIG>.clearSelection()               <NO PARAMS>                             CLEARS SELECTION OF ALL ROWS
+        <CONFIG>.revealWrapToggle()             <NO PARAMS>                             TOGGLES WRAP ON COLUMNS
+        <CONFIG>.modifyRows()                   <ARRAY OF ROWS, ARRAY OF FIELDS>        MODIFY ROW DATA PROGRAMATICALLY - IF FIELDS ARRAY EMPTY, UPDATES ALL FIELDS, ELSE ONLY FIELDS SUPPLIED THROUGH PARAMS
 
 ##Built Using
 <a href="https://github.com/kamilkp/angular-vs-repeat">Angular Vs Repeat</a><br />

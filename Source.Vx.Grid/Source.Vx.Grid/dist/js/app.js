@@ -682,6 +682,8 @@
             locked: true
         }
     ];
+    
+    self._origCopy = [];
 
     self.sampling = function (iter, customer) {
         var _samples = [];
@@ -710,6 +712,7 @@
                 _samples.push(rec);
             });
         });
+        self._origCopy = _.clone(_samples);
         return _samples;
     }
 
@@ -774,7 +777,7 @@
             { id: 'timezone', columnName: 'Timezone', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: true },
             { id: 'status', columnName: 'Status', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: true },
             { id: 'mid', columnName: 'MID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: true },
-            { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, primary: true, hidden: true }
+            { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, primary: true, hidden: false }
         ]
     };
     self.secondSampleActive = false;
@@ -805,6 +808,20 @@
     self.openManageColumns = function () {
         //$scope.$broadcast('vxGridOpenManageColumns', { 'id': self.vxSampleConfig.id });
         self.vxSampleConfig.openManageColumns();
+    }
+
+    self.modRows = function () {
+        var rows = [];
+        var row = self._origCopy[0];
+        row.link = 'http://microsoft.com';
+        row.category = { 'id': '1', 'name': 'previsit' };
+        rows.push(row);
+        row = self._origCopy[1];
+        row.link = 'http://xbox.com';
+        row.category = { 'id': '2', 'name': 'onsite' };
+        rows.push(row);
+        //self.vxSampleConfig.modifyRowData(rows, ['category']);
+        self.vxSampleConfig.modifyRows(rows, []);
     }
 
     self.secondSample = function () {

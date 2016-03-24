@@ -76,20 +76,21 @@
 
         VX GRID CONFIG EXTENSIONS
         ----------------------------
-        <CONFIG>.getVxCounts()                  <NO PARAMS>         RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
-        <CONFIG>.getData()                      <NO PARAMS>         RETURNS CURRENT GRID DATA SET - WITHOUT DIRTY MAPS
-        <CONFIG>.getActiveDataSet()             <NO PARAMS>         RETURNS CURRENT ACTIVE DATA STATE
-        <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>    SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
-        <CONFIG>.getSelectedRows()              <NO PARAMS>         GET IDs FOR ROWS BEING SELECTED
-        <CONFIG>.getRowsBeingEdited()           <NO PARAMS>         GET IDs FOR ROWS BEING EDITED
-        <CONFIG>.changeRowClass()               <NO PARAMS>         ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
-        <CONFIG>.openJsonEditor()               <NO PARAMS>         OPENS JSON EDITOR IF CONFIGURED TO TRUE
-        <CONFIG>.openManageColumns()            <NO PARAMS>         OPENS MANAGE COLUMNS MODAL
-        <CONFIG>.resetVxInstance()              <NO PARAMS>         RESETS THE TABLE INSTANCE 
-        <CONFIG>.clearFilters()                 <NO PARAMS>         CLEARS ALL FILTERS APPLIED
-        <CONFIG>.selectAllFiltered()            <NO PARAMS>         SELECTS ALL ROWS WITH FILTES APPLIED 
-        <CONFIG>.clearSelection()               <NO PARAMS>         CLEARS SELECTION OF ALL ROWS
-        <CONFIG>.revealWrapToggle()             <NO PARAMS>         TOGGLES WRAP ON COLUMNS
+        <CONFIG>.getVxCounts()                  <NO PARAMS>                             RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
+        <CONFIG>.getData()                      <NO PARAMS>                             RETURNS CURRENT GRID DATA SET - WITHOUT DIRTY MAPS
+        <CONFIG>.getActiveDataSet()             <NO PARAMS>                             RETURNS CURRENT ACTIVE DATA STATE
+        <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>                        SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
+        <CONFIG>.getSelectedRows()              <NO PARAMS>                             GET IDs FOR ROWS BEING SELECTED
+        <CONFIG>.getRowsBeingEdited()           <NO PARAMS>                             GET IDs FOR ROWS BEING EDITED
+        <CONFIG>.changeRowClass()               <NO PARAMS>                             ROW CLASS CHANGED AS PER PARAMETER - ACCPETS { ID : VXGRID_ID, DATA : []} , DATA IS COLLECTION OF {'key': 'ROW PRIMARY ID VALUE', 'value', '<NEW ROW CLASS NAMES>'}
+        <CONFIG>.openJsonEditor()               <NO PARAMS>                             OPENS JSON EDITOR IF CONFIGURED TO TRUE
+        <CONFIG>.openManageColumns()            <NO PARAMS>                             OPENS MANAGE COLUMNS MODAL
+        <CONFIG>.resetVxInstance()              <NO PARAMS>                             RESETS THE TABLE INSTANCE 
+        <CONFIG>.clearFilters()                 <NO PARAMS>                             CLEARS ALL FILTERS APPLIED
+        <CONFIG>.selectAllFiltered()            <NO PARAMS>                             SELECTS ALL ROWS WITH FILTES APPLIED 
+        <CONFIG>.clearSelection()               <NO PARAMS>                             CLEARS SELECTION OF ALL ROWS
+        <CONFIG>.revealWrapToggle()             <NO PARAMS>                             TOGGLES WRAP ON COLUMNS
+        <CONFIG>.modifyRows()                   <ARRAY OF ROWS, ARRAY OF FIELDS>        MODIFY ROW DATA PROGRAMATICALLY - IF FIELDS ARRAY EMPTY, UPDATES ALL FIELDS, ELSE ONLY FIELDS SUPPLIED THROUGH PARAMS
 
     */
 
@@ -440,6 +441,33 @@
                             }
                         }
                         return _beingEdited;
+                    }
+
+                    $scope.config.modifyRows = function (rows, fields) {
+                        var _newStates = [];
+                        _.each(rows, function (_nrow) {
+                            var id = _nrow[$scope.vxColSettings.primaryId];
+                            var _vxdRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId].localeCompare(id) == 0 });
+                            var _dRow = _.find($scope.vxConfig.data, function (row) { return row[$scope.vxColSettings.primaryId].localeCompare(id) == 0 });
+                            if (typeof _vxdRow !== 'undefined' && typeof _dRow !== 'undefined') {
+                                if (typeof fields === 'undefined' || fields.length == 0) {
+                                    for (var args in _nrow) {
+                                        if (args.localeCompare($scope.vxColSettings.primaryId) != 0) {
+                                            _vxdRow[args] = _nrow[args];
+                                            _dRow[args] = _nrow[args];
+                                        }
+                                    }
+                                }
+                                else if (fields.length > 0) {
+                                    _.each(fields, function (_field) { 
+                                        _vxdRow[_field] = _nrow[_field];
+                                        _dRow[_field] = _nrow[_field];
+                                    });
+                                }
+                                _newStates.push(_dRow);
+                            }
+                        });
+                        return _newStates;
                     }
 
                     $scope.buildFns();

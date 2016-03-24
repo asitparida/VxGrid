@@ -682,7 +682,7 @@
             locked: true
         }
     ];
-    
+
     self._origCopy = [];
 
     self.sampling = function (iter, customer) {
@@ -824,6 +824,14 @@
         self.vxSampleConfig.modifyRows(rows, []);
     }
 
+    self.selectProg = function () {
+        self.vxSampleConfig.selectRows(['XXX-XXXX-XXXX_0_0']);
+    }
+
+    self.deselectProg = function () {
+        self.vxSampleConfig.deselectRows(['XXX-XXXX-XXXX_0_0']);
+    }
+
     self.secondSample = function () {
         self.vxSampleConfig.pagination = false;
         self.secondSampleActive = true;
@@ -838,7 +846,7 @@
         console.log(self.vxSampleConfig.getRowsBeingEdited());
     }
 
-    console.log('length : ' +self.vxSampleData.length);
+    console.log('length : ' + self.vxSampleData.length);
 
     $scope.$on('vsRepeatInnerCollectionUpdated', function () {
         console.log('vsRepeatInnerCollectionUpdated');
@@ -849,7 +857,7 @@
     });
 
     self.emptyData = function () {
-        self.vxSampleConfig.data =[];
+        self.vxSampleConfig.data = [];
     }
 
     self.reloadDataVirtual = function () {

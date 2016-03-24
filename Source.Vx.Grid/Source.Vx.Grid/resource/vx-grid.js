@@ -90,6 +90,8 @@
         <CONFIG>.selectAllFiltered()            <NO PARAMS>                             SELECTS ALL ROWS WITH FILTES APPLIED 
         <CONFIG>.clearSelection()               <NO PARAMS>                             CLEARS SELECTION OF ALL ROWS
         <CONFIG>.revealWrapToggle()             <NO PARAMS>                             TOGGLES WRAP ON COLUMNS
+        <CONFIG>.selectRows()                   <ARRAY OF IDs>                          TOGGLE ROW STATES TO TRUE
+        <CONFIG>.deselectRows()                 <ARRAY OF IDs>                          TOGGLE ROW STATES TO FALSE
         <CONFIG>.modifyRows()                   <ARRAY OF ROWS, ARRAY OF FIELDS>        MODIFY ROW DATA PROGRAMATICALLY - IF FIELDS ARRAY EMPTY, UPDATES ALL FIELDS, ELSE ONLY FIELDS SUPPLIED THROUGH PARAMS
 
     */
@@ -468,6 +470,32 @@
                             }
                         });
                         return _newStates;
+                    }
+
+                    $scope.config.selectRows = function (ids) {
+                        var _modIds = [];
+                        _.each(ids, function (_id) {
+                            var _ostate = $scope.vxColSettings.rowSelected[_id];
+                            if (typeof _ostate === 'undefined' || _ostate == null || _ostate == false) {
+                                $scope.vxColSettings.rowSelected[_id] = true;
+                                $scope.vxColSettings.multiSelected.push(_id);
+                                _modIds.push(_id);
+                            }
+                        });
+                        return _modIds;
+                    }
+
+                    $scope.config.deselectRows = function (ids) {
+                        var _modIds = [];
+                        _.each(ids, function (_id) {
+                            var _ostate = $scope.vxColSettings.rowSelected[_id];
+                            if (typeof _ostate !== 'undefined' && _ostate == true) {
+                                $scope.vxColSettings.rowSelected[_id] = false;
+                                $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (mid) { _id.localeCompare(mid) == 0 });
+                                _modIds.push(_id);
+                            }
+                        });
+                        return _modIds;
                     }
 
                     $scope.buildFns();

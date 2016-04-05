@@ -743,6 +743,8 @@
         virtualization: true,
         pagination: false,
         pageLength: 100,
+        sortPredicate: 'dt',
+        reverseSortDirection: true,
         inlineAddRowEnabled: true,
         categories: self.categories,
         newRowTemplate: {

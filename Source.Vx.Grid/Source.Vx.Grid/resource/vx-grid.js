@@ -29,6 +29,8 @@
         <CONFIG>.inlineDeleteOverrideEnabled	<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING SAVE DELETE OVEVRRIDE
         <CONFIG>.newRowTemplate			        <SUPPORTED : Y>    :   <STRING>    SET TO NEW TEMPLATE
         <CONFIG>.jsonEditorEnabled			    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE JSON EDITOR
+        <CONFIG>.sortPredicate			        <SUPPORTED : Y>    :   <STRING>    SET TO COLUMN_DEF_ID FOR DEFAULT SORTING BY THAT COLUMN
+        <CONFIG>.reverseSortDirection			<SUPPORTED : Y>    :   <STRING>    SET TO TRUE/FALSE TO SET DEFAULT SORTING DIRECTION
         
         VX GRID COLUMN CONFIG (BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs') IN DIRECTIVE DEFINTION
         -----------------------------------------------------------------------------------------------------
@@ -150,8 +152,6 @@
                         'lastProcessedForFilters': {},
                         'multiSelected': [],
                         'multiSelColDependent': false,
-                        'predicate': '',
-                        'reverse': false,
                         'reverseSettings': {},
                         'groupPredicate': {},
                         'groupByColActivated': {},
@@ -264,7 +264,9 @@
                         { prop: 'inlineSaveOverrideEnabled', defValue: false },
                         { prop: 'inlineDeleteOverrideEnabled', defValue: false },
                         { prop: 'jsonEditorEnabled', defValue: false },
-                        { prop: 'allRowsSelectionEnabled', defValue: false }
+                        { prop: 'allRowsSelectionEnabled', defValue: false },
+                        { prop: 'sortPredicate', defValue: $scope.vxColSettings.primaryId },
+                        { prop: 'reverseSortDirection', defValue: false }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
@@ -351,8 +353,6 @@
 
                         }
                     });
-                    /* DEFAULT ORDER PRDIACTE TO PRIMARY */
-                    $scope.vxColSettings.predicate = $scope.vxColSettings.primaryId;
                     if (typeof $scope.vxConfig.multiSelectionDependentCol !== 'undefined'
                         && $scope.vxConfig.multiSelectionDependentCol != null
                         && $scope.vxConfig.multiSelectionDependentCol != {}
@@ -665,8 +665,8 @@
                 }
 
                 $scope.addNewRow = function () {
-                    $scope.vxColSettings.predicate = '_vxCreated';
-                    $scope.vxColSettings.reverse = true;
+                    $scope.vxConfig.sortPredicate = '_vxCreated';
+                    $scope.vxConfig.reverseSortDirection = true;
                     var newRow = angular.copy($scope.vxConfig.newRowTemplate);
                     var _newGuid = _GUID();
                     newRow[$scope.vxColSettings.primaryId] = _newGuid;
@@ -878,10 +878,10 @@
                     var _colDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare(header.id) == 0 });
                     if (typeof _colDefn !== 'undefined' && _colDefn != null) {
                         if (_colDefn.ddSort) {
-                            if ($scope.vxColSettings.predicate.localeCompare(_colDefn.id) != 0)
-                                $scope.vxColSettings.predicate = _colDefn.id;
+                            if ($scope.vxConfig.sortPredicate.localeCompare(_colDefn.id) != 0)
+                                $scope.vxConfig.sortPredicate = _colDefn.id;
                             $scope.vxColSettings.reverseSettings[_colDefn.id] = !$scope.vxColSettings.reverseSettings[_colDefn.id];
-                            $scope.vxColSettings.reverse = $scope.vxColSettings.reverseSettings[_colDefn.id];
+                            $scope.vxConfig.reverseSortDirection = $scope.vxColSettings.reverseSettings[_colDefn.id];
                         }
                     }
                 }
@@ -892,7 +892,7 @@
                     $scope.clearFilters();
                     //$scope.removeGroupings();
                     if ($scope.vxColSettings.groupByColActivated[header.id] != true) {
-                        $scope.vxColSettings.predicate = null;
+                        $scope.vxConfig.sortPredicate = null;
                         var collection = [];
                         var groupByProp = header.id;
                         var groupColName = header.columnName;
@@ -917,7 +917,7 @@
                 $scope.unGroupClick = function (header) {
                     $scope.clearFilters();
                     if ($scope.vxColSettings.groupByColActivated[header.id] == true) {
-                        $scope.vxColSettings.predicate = header.id;
+                        $scope.vxConfig.sortPredicate = header.id;
                         $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) {
                             if (typeof row.type !== 'undefined' && row.type != null)
                                 return row.type.localeCompare('groupRow') == 0

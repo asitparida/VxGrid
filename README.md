@@ -62,6 +62,8 @@ BOUND TO 'config=' IN DIRECTIVE CALL
         <CONFIG>.inlineDeleteOverrideEnabled	<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING SAVE DELETE OVEVRRIDE
         <CONFIG>.newRowTemplate			        <SUPPORTED : Y>    :   <STRING>    SET TO NEW TEMPLATE
         <CONFIG>.jsonEditorEnabled			    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE JSON EDITOR
+        <CONFIG>.sortPredicate			        <SUPPORTED : Y>    :   <STRING>    SET TO COLUMN_DEF_ID FOR DEFAULT SORTING BY THAT COLUMN
+        <CONFIG>.reverseSortDirection			<SUPPORTED : Y>    :   <STRING>    SET TO TRUE/FALSE TO SET DEFAULT SORTING DIRECTION
 
 ##VX GRID Column Config 
 BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs' IN DIRECTIVE DEFINTION

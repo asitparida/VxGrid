@@ -82,7 +82,7 @@ gulp.task('plato:js', function () {
 
 //Watch JS task
 gulp.task('default:vxgrid:js', function () {
-    gulp.watch(['Resource/vx-grid.js', 'Resource/vx-grid-templates.html', 'Resource/vx-grid.jsoneditor.directive.js'], ['concat:js', 'plato:js']);
+    gulp.watch(['Resource/vx-grid.js', 'Resource/vx-grid-templates.html', 'Resource/vx-grid.jsoneditor.directive.js'], ['concat:js']);
 });
 
 // Clean the distributable css directory

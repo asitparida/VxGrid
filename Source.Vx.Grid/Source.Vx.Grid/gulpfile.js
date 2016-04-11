@@ -69,11 +69,15 @@ gulp.task('concat:js', ['clean:concat:js', 'minify:js'], function () {
 
 //Plato Tasks
 gulp.task('plato:js', function () {
-    return plato.inspect(['Resource/vx-grid.js', 'Resource/vx-grid.jsoneditor.directive.js'],
-    'plato-reports/',
-    {}, function (report) {
-        /* analyse report */
-    });
+    try {
+        return plato.inspect(['Resource/vx-grid.js', 'Resource/vx-grid.jsoneditor.directive.js'],
+            'plato-reports/',
+            {}, function (report) {
+                /* analyse report */
+            });
+    } catch (e) {
+        console.log(e);
+    }
 });
 
 //Watch JS task

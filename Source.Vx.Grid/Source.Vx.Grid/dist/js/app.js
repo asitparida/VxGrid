@@ -848,6 +848,12 @@
         console.log(self.vxSampleConfig.getRowsBeingEdited());
     }
 
+    self._tempDirection = false;
+    self.sortByCol = function () {
+        self.vxSampleConfig.sortByColumn('customer', self._tempDirection);
+        self._tempDirection = !self._tempDirection;
+    }
+
     console.log('length : ' + self.vxSampleData.length);
 
     $scope.$on('vsRepeatInnerCollectionUpdated', function () {

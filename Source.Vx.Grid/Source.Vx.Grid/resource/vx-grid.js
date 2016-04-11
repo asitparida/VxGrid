@@ -1014,6 +1014,9 @@
                         $scope.vxColSettings.groupByColActivated[header.id] = true;
                     }
                 }
+
+                /// <summary>GRID FUNCTION : REMOVE GROUPING IF ENABLED ON A COLUMN</summary>
+                /// <param name="header" type="Object">HEADER OBJECT ASSOCIATED WITH COLUMN</param>
                 $scope.unGroupClick = function (header) {
                     $scope.clearFilters();
                     if ($scope.vxColSettings.groupByColActivated[header.id] == true) {
@@ -1027,21 +1030,24 @@
                         $scope.vxColSettings.groupByColActivated[header.id] = false;
                     }
                 }
+
+                /// <summary>GRID FUNCTION : GET COUNT OF NUMBER OF ROWS IN THE GRID EXCEPT THE ROWS USED TO DENOTE GROUP HEADERS</summary>
                 $scope.getAllRowLength = function () {
                     var len = _.filter($scope.vxConfig.data, function (row) {
                         return typeof row.type == 'undefined' || row.type == null || row.type.localeCompare('groupRow') != 0
                     }).length;
                     return len;
                 }
+
+                /// <summary>GRID FUNCTION : REMOVE GROUPINGS FOR ANY OF THE COLUMNS ENABLED</summary>
                 $scope.removeGroupings = function () {
                     _.each($scope.vxConfig.columnDefConfigs, function (header) {
                         $scope.unGroupClick(header);
                     });
                     $scope.vxColSettings.groupPredicate = {};
                 }
-                $scope.clearGroupingForHeader = function (header) {
-                    $scope.multiBoxFilters = _.reject($scope.multiBoxFilters, function (pair) { return pair.col.localeCompare(header.id) == 0 });
-                }
+                
+                /// <summary>GRID FUNCION : HANDLE SELECTION TOGGLE EVENT ON A GROUP CHECKBOX</summary>
                 $scope.groupSelectionChanged = function (group) {
                     $scope.emitArray = [];
                     var toggledTo = $scope.vxColSettings.groupPredicate[group.groupId];
@@ -1065,6 +1071,7 @@
                     $scope.$emit('vxGridRwSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
                 }
 
+                /// <summary>GRID FUCNTION : HANDLE SELECTION TOGGLE EVENT FOR THE ALL ROWS CHECKBOX</summary>
                 $scope.allRowSelectionChanged = function () {
                     var toggleTo = $scope.vxColSettings.allRowSelected;
                     if (toggleTo == true) {
@@ -1094,6 +1101,7 @@
                     }
                 }
 
+                /// <summary>GRID FUNCTION : HANDLE SELECTION TOGGLE EVENT FOR A ROW CHECKBOX</summary>
                 $scope.rowSelectionChanged = function (row) {
                     var pid = row[$scope.vxColSettings.primaryId];
                     var result = { 'key': row[$scope.vxConfig.onSelectionReturnCol], 'value': $scope.vxColSettings.rowSelected[pid], '_pKey': pid };
@@ -1141,6 +1149,7 @@
                     }
                 }
 
+                /// <summary>GRID FUNCTION : HANDLE CLICK EVENT WHEN A COLUMN FILTER IS CLICKED</summary>
                 $scope.filterClick = function (header, filter) {
                     $scope.clearSelection();
                     var filterValue = $scope.vxColSettings.colFiltersStatus[filter.key];
@@ -1158,6 +1167,8 @@
                         $scope.vxColSettings.colFiltersActivated[header.id] = true;
                     }
                 }
+
+                /// <summary>GRID FUNCTION : HANDLE CLICK EVENT WHEN A COLUMN FILTER IS BEING CLEARED</summary>
                 $scope.filterClearClick = function (header) {
                     if ($scope.vxColSettings.colFiltersActivated[header.id] == true) {
                         $scope.clearSelection();
@@ -1171,6 +1182,8 @@
                         $scope.vxColSettings.colFiltersActivated[header.id] = false;
                     }
                 }
+
+                /// <summary>GRID FUNCTION : HANDLE CLICK EVENT WHEN ALL FILTERS ARE TO BE CLEARED</summary>
                 $scope.clearFilters = function () {
                     if ($scope.multiBoxFilters.length > 0) {
                         _.each($scope.vxConfig.columnDefConfigs, function (col) {
@@ -1179,6 +1192,8 @@
                     }
                     $scope.multiBoxFilters = [];
                 }
+
+                /// <summary>GRID FUNCTION : SELECT ROWS WHICH ARE A PART OF THE FILTERED SUBSET</summary>
                 $scope.selectAllFiltered = function () {
                     if ($scope.vxColSettings.multiSelected.length > 0) {
                         $scope.clearSelection();
@@ -1201,6 +1216,8 @@
                     });
                     $scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
                 }
+
+                /// <summary>GRID FUNCTION : CLEAR ALL SELECTIONS IN THE GRID</summary>
                 $scope.clearSelection = function () {
                     $scope.emitArray = [];
                     _.each($scope.vxColSettings.multiSelected, function (pid) {
@@ -1222,6 +1239,8 @@
                     });
                     $scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
                 }
+
+                /// <summary>GRID FUNCTION : OPEN MODAL TO MANAGE COLUMNS</summary>
                 $scope.openManageColumns = function () {
                     var modalInstance = $modal.open({
                         templateUrl: 'template/vx-grid/vx-grid-manage-columns-modal.html',
@@ -1334,6 +1353,8 @@
                     }, function (data) {
                     });
                 }
+                    
+                /// <summary>GRID FUNCTION : OPEN MODAL TO EDIT GRID JSON DATA</summary>
                 $scope.openJsonEditor = function () {
                     var modalInstance = $modal.open({
                         templateUrl: 'template/vx-grid/vx-grid-json-editor-modal.html',
@@ -1381,41 +1402,60 @@
                     }, function (data) {
                     });
                 };
+
+                /// <summary>GRID FUNCTION : HANDLE CLICK EVENTS OUTSIDE A TARGET AREA</summary>
                 $scope.outsideHeaderClick = function (header) {
                     if ($scope.vxColSettings.dropdDownOpen[header.id] == true)
                         $scope.vxColSettings.dropdDownOpen[header.id] = false;
                 }
+
+                /// <summary>GRID FUNCTION : REVEAL ALL ROW/CELL DATA WHICH WERE PREVIOUSLY WRAPPED</summary>
                 $scope.revealWrapToggle = function () {
                     $scope.vxColSettings.revealWrapRowData = !$scope.vxColSettings.revealWrapRowData;
                 }
+
+                /// <summary>GRID FUNCTION : RESET SEARCH TOKEN FOR THE GRID</summary>
                 $scope.xsReset = function () {
                     $scope.vxColSettings.xsSearch = '';
                 }
+
+                /// <summary>GRID FUNCTION : SCROLL TO THE TOP OF THE GRID</summary>
                 $scope.justScrollTop = function () {
                     var element = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
                     $timeout(function () {
                         $(element).animate({ scrollTop: 0 }, 500);
                     }, 100);
                 }
+                
+                /// <summary>GRID EVENT : LISTED TO PARTIAL RENDERING OF VIRTUAL DOM</summary>
                 $scope.$on('vsRepeatCollectionPartiallyRendered', function (e, data) {
+                    /// <summary>GRID EVENT : EMIT EVENT WHEN GRID IS PARTIALLY RENDERED</summary>
                     $scope.$emit('vxPartiallyRendered', { 'id': $scope.vxConfig.id, 'data': data });
                     if ($scope.vxConfig.selectAllOnRenderAll == true) {
                         $scope.vxColSettings.selectAllEnabled = false;
+                        /// <summary>GRID EVENT : EMIT EVENT WHEN GRID'S PATIAL RENDERING DISABLES ALL ROWS SELECTION AT ONCE</summary>
                         $scope.$emit('vxPartiallyRenderedSelectAllDisabled', { 'id': $scope.vxConfig.id, 'data': data });
                     }
                 });
+
+                /// <summary>GRID EVENT : LISTED TO COMPLETE RENDERING OF VIRTUAL DOM</summary>
                 $scope.$on('vsRepeatCollectionCompletelyRendered', function (e, data) {
+                    /// <summary>GRID EVENT : EMIT EVENT WHEN GRID IS COMPLETEY RENDERED</summary>
                     $scope.$emit('vxCompletelyRendered', { 'id': $scope.vxConfig.id, 'data': data });
                     if ($scope.vxConfig.selectAllOnRenderAll == true) {
                         $scope.vxColSettings.selectAllEnabled = true;
+                        /// <summary>GRID EVENT : EMIT EVENT WHEN GRID'S COMPLETE RENDERING ENABLES ALL ROWS SELECTION AT ONCE</summary>
                         $scope.$emit('vxCompletelyRenderedSelectAllEnabled', { 'id': $scope.vxConfig.id, 'data': data });
                     }
                 });
+
+                /// <summary>GRID EVENTS / CONFIG EXTENSIONS : ADD CONFIG EXTENSIONS FOR HOUSE KEEPING TASKS</summary>
                 $scope.buildFns = function () {
                     var comEvOnEvent = ['openJsonEditor', 'openManageColumns', 'resetVxInstance', 'clearFilters', 'selectAllFiltered', 'clearSelection', 'revealWrapToggle'];
                     _.each(comEvOnEvent, function (evName) {
                         var captureEvName = 'vxGrid' + evName.capitalizeFirstLetter();
                         var fireEvent = evName + '()';
+                        /// <summary>GRID EVENT : LISTEN TO SPECIFIC EVENTS AND FIRE THEM AFTER VALIDATIONS</summary>
                         $scope.$on(captureEvName, function (e, data) {
                             if (data.id.localeCompare($scope.vxConfig.id) == 0)
                                 $scope.$eval(fireEvent);
@@ -1425,9 +1465,13 @@
                         }
                     });
                 }
+
+                /// <summary>GRID EVENT : LISTEN TO ASKS FOR CHANGES IN ROW CLASSES</summary>
                 $scope.$on('vxGridChangeRowClass', function (e, data) {
                     $scope.changeRowClass(data);
                 });
+
+                /// <summary>GRID FUNCTION : CHANGE ROW CLASSES BASED ON ROW DATA RECIEVED</summary>
                 $scope.changeRowClass = function (data) {
                     if (data.id.localeCompare($scope.vxConfig.id) == 0) {
                         _.each(data.data, function (pair) {
@@ -1435,10 +1479,14 @@
                         });
                     }
                 }
+               
+                /// <summary>GRID EVENT : LISTEN TO ASK FOR RESETTING OW CLASSES</summary>
                 $scope.$on('vxGridResetRowClass', function (e, data) {
                     if (data.id.localeCompare($scope.vxConfig.id) == 0)
                         $scope.vxColSettings.vxRowClass = {};
                 });
+
+                /// <summary>GRID EVENT : LISTEN TO ASK FOR DISABLING ROW SELECTION</summary>
                 $scope.$on('vxGridDisableRowSelection', function (e, data) {
                     if (data.id.localeCompare($scope.vxConfig.id) == 0) {
                         _.each(data.data, function (pair) {
@@ -1446,6 +1494,8 @@
                         });
                     }
                 });
+
+                /// <summary>GRID EVENT : LISTEN TO ASK FOR RESETTING OF ROW SELECTION DISABLED</summary>
                 $scope.$on('vxGridResetDisableRowSelection', function (e, data) {
                     if (data.id.localeCompare($scope.vxConfig.id) == 0) {
                         for (var key in $scope.vxColSettings.vxRowSelectionDisable)
@@ -1457,7 +1507,8 @@
             templateUrl: 'template/vx-grid/vx-grid.html',
             link: function ($scope, element, attributes) {
                 $scope.selfEle = element;
-                /* BUILD COL SETTINGS */
+                
+                /// <summary>GRID WATCH : LISTEN TO CHANGES IN DATA AND ACCORDINGLY RESET INSTANCE</summary>
                 $scope.$watchCollection('config.data', function (n) {
                     if (n.length == 0)
                         n = [{ 'fillEmptyElement': true }];
@@ -1465,6 +1516,7 @@
                     $scope.resetVxInstance();
                 });
 
+                /// <summary>GRID WATCH : LISTEN TO CHANGES IN FILTERED DATA COLLECTION AN ACCODRIDNGLY RESET PAGES IF PAGINATION ENABLED</summary>
                 $scope.$watchCollection('vxConfig.vxFilteredData', function (n) {
                     if (n.length >= 0) {
                         /* PROCESS FOR PAGINATION IF VIRTUALIZATION IS FALSE */
@@ -1502,6 +1554,7 @@
             }
         };
     })
+        /// <summary>GRID DIRECTIVE : COMPILE CONTENTS ON RUNTIME AND ASSOCIATE SCOPE</summary>
     .directive("vxCompile", ["$compile", function ($compile) {
         return function (scope, element, attrs) {
             scope.$watch(
@@ -1515,6 +1568,7 @@
             );
         }
     }])
+        /// <summary>GRID DIRECTIVE : COMPILE CONTENTS ON RUNTIME USING MEMOIZATION AND ASSOCIATE SCOPE</summary>
     .directive("vxCompileCloneLink", ["$compile", function ($compile) {
         var compileCache = {};
         var evalCache = {};
@@ -1540,6 +1594,7 @@
             })
         }
     }])
+        /// <summary>GRID DIRECTIVE : DISABLE ALL CONTENTS INSIDE A DIV AND PREVENT KEYBOARD ENTRY WHEN THEN DIV IS IN A DISBALED STATE</summary>
     .directive("vxEditFocusDisable", ['$rootScope', '$parse', function ($rootScope, $parse) {
         var _focusDisables = {};
         var _focuProps = {};
@@ -1600,6 +1655,7 @@
             }
         };
     }])
+        /// <summary>GRID DIRECTIVE : ADD KEYBOARD SUPPORT FOR CLICK EVENTS ON DIVS</summary>
     .directive("vxKey", ['$rootScope', '$parse', function ($rootScope, $parse) {
         return {
             restrict: 'AEC',
@@ -1639,6 +1695,7 @@
             }
         };
     }])
+        /// <summary>GRID DIRECTIVE : KEEP WATCH ON EDIT FIELDS AN FIRE EVENTS AS NEEDED</summary>
     .directive("vxKeepWatch", function () {
         return {
             restrict: 'AEC',
@@ -1654,6 +1711,7 @@
             }
         };
     })
+        /// <summary>GRID FILTER : IMPLEMENT MULTI COLUMN CONTEXT FILTERING FOR THE GRID WHEN FILTERS ARE APPLIED ACCROSS COLUMNS</summary>
     .filter("vxGridMultiBoxFilters", function () {
         return function (items, criteria) {
             if (typeof criteria !== 'undefined' && criteria != null && criteria.length > 0) {
@@ -1686,6 +1744,7 @@
                 return items;
         };
     })
+        /// <summary>GRID FILTER : IMPLEMENT FIXED LENGTH DISAPLY OF DIGITS BY PREPENDIG REQUIRED ZEROS</summary>
     .filter("vxNumberFixedLen", function () {
         return function (n, len) {
             var num = parseInt(n, 10);
@@ -1700,6 +1759,7 @@
             return num;
         };
     })
+        /// <summary>GRID FILTER : IMPLEMENT GRID SLICING TO START CONTENT PAINTING FROM A SPECFIC INDEX</summary>
 	.filter('vxStartFrom', function () {
 	    return function (input, start) {
 	        if (input) {

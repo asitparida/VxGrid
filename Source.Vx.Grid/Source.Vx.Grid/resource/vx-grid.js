@@ -95,6 +95,7 @@
         <CONFIG>.selectRows()                   <ARRAY OF IDs>                          TOGGLE ROW STATES TO TRUE
         <CONFIG>.deselectRows()                 <ARRAY OF IDs>                          TOGGLE ROW STATES TO FALSE
         <CONFIG>.sortByColumn()                 <COLUMN ID, SORT DIRECTION>             SORT BY COLUMN BASED ON DIRECTION     
+        <CONFIG>.resetColumnFilters()           <ARRAY OF IDs>                          RESET FILTERS ON COLUMNS PROVIDED BY IDS
         <CONFIG>.modifyRows()                   <ARRAY OF ROWS, ARRAY OF FIELDS>        MODIFY ROW DATA PROGRAMATICALLY - IF FIELDS ARRAY EMPTY, UPDATES ALL FIELDS, ELSE ONLY FIELDS SUPPLIED THROUGH PARAMS
 
     */
@@ -522,6 +523,13 @@
                     $scope.config.sortByColumn = function (id, direction) {
                         $scope.vxConfig.sortPredicate = id;
                         $scope.vxConfig.reverseSortDirection = direction;
+                    }
+
+                    $scope.config.resetColumnFilters = function (ids) {
+                        _.each(ids, function(id) {
+                            $scope.vxColSettings.dropdDownLoaded[id] = false;
+                            $scope.vxColSettings.colFilterPairs[id] = {};
+                        });
                     }
 
                     $scope.buildFns();

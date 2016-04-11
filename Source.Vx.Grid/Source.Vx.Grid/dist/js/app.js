@@ -854,6 +854,10 @@
         self._tempDirection = !self._tempDirection;
     }
 
+    self.resetCustCol = function() {
+        self.vxSampleConfig.resetColumnFilters(['customer']);
+    }
+
     console.log('length : ' + self.vxSampleData.length);
 
     $scope.$on('vsRepeatInnerCollectionUpdated', function () {

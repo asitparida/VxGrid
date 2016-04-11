@@ -196,6 +196,7 @@
                         'filterSearchToken': {}, //
                         'saveInProgress': {} // STORES WHETHER A CREATE/EDIT/DELETE OPERATION IS IN PROGRESS
                     };
+                    // SETTING XS VIEW BASED PROPERTIES BASED ON WINDOW WIDTH
                     if ($scope.getWindowDimensions().w < 768) {
                         $scope.vxColSettings.xsViewEnabled = true;
                         $scope.vxColSettings.latchExcess = 5;
@@ -411,7 +412,9 @@
 
                     /* GENERATE VX INSTANCE ID AND SEND BACK*/
                     $scope.config.id = $scope.vxConfig.id = _.uniqueId('_vxUID_');
-                    /* ADD PROTOTYPE TO CALLBACK FILTERED DATA*/
+                    
+                    /// <summary>CONFIG EXTENSION TO GET CURRENT STATE OF DIFFERENT COUNTS</summary>
+                    /// <returns type="OBJECT" />
                     $scope.config.getVxCounts = function () {
                         if (typeof $scope.vxConfig !== 'undefined' && $scope.vxConfig != null && $scope.vxConfig != {} && $scope.vxConfig.id !== 'undefined' && $scope.vxConfig.id != null && $scope.vxConfig.id != {})
                             return {
@@ -425,15 +428,23 @@
                         else
                             return undefined;
                     }
-
+                    
+                    /// <summary>CONFIG EXTENSION TO GET CURRENT DATA SUPPLIED TO THE VX GRID</summary>
+                    /// <returns type="ARRAY OF OBJECT" />
                     $scope.config.getData = function () {
                         return $scope.vxConfig.data;
                     }
-
+                    
+                    /// <summary>CONFIG EXTENSION TO GET ACTIVE DATA BOUND TO THE VX GRID</summary>
+                    /// <returns type="ARRAY OF OBJECT" />
                     $scope.config.getActiveDataSet = function () {
                         return $scope.vxConfig.vxData;
                     }
 
+                    /// <summary>CONFIG EXTENSION TO SET ROW VALIDATION PROPERTIES - INVALID ROWS/FILEDS</summary>
+                    /// <param name="id" type="String">ROW ID</param>
+                    /// <param name="field" type="String">FIELD NAME / COLUMN NAME</param>
+                    /// <param name="valid" type="Boolean">WHETHER TRUE OR FALSE</param>
                     $scope.config.setRowFieldValidation = function (id, field, valid) {
                         if (typeof $scope.vxConfig.invalidRowFields[id] === 'undefined') {
                             $scope.vxConfig.invalidRows[id] = false;
@@ -452,10 +463,14 @@
                         $scope.vxConfig.invalidRowFields[id][field] = !valid;
                     }
 
+                    /// <summary>CONFIG EXTENSION TO GET LIST OF ROW IDS WHICH ARE CURRENTLY SELECTED</summary>
+                    /// <returns type="ARRAY OF INT" />
                     $scope.config.getSelectedRows = function () {
                         return $scope.vxColSettings.multiSelected;
                     }
 
+                    /// <summary>CONFIG EXTENSION TO GET LIST OF ROW IDS WHICH ARE CURRENTLY BEING EDITED</summary>
+                    /// <returns type="ARRAY OF INT" />
                     $scope.config.getRowsBeingEdited = function () {
                         var _beingEdited = [];
                         if (typeof $scope.vxColSettings.inlineEditState !== 'undefined' && $scope.vxColSettings.inlineEditState != null) {
@@ -467,6 +482,10 @@
                         return _beingEdited;
                     }
 
+                    /// <summary>CONFIG EXTENSION TO MODIFY ROW VALUES USING PROGRAMMATIC ACCESS</summary>
+                    /// <param name="rows" type="ARRAY OF OBJECT">LIST OF ROW WHICH NEED TO BE MONIFIED</param>
+                    /// <param name="fields" type="ARRAY OF STRING">LIST OF FIELDS WHICH NEED TO BE MODIFIED</param>
+                    /// <returns type="ARRAY OF OBJECT" />
                     $scope.config.modifyRows = function (rows, fields) {
                         var _newStates = [];
                         _.each(rows, function (_nrow) {
@@ -494,6 +513,9 @@
                         return _newStates;
                     }
 
+                    /// <summary>CONFIG EXTENSION TO SELETCT ROWS USING PROGRAMMTIC ACCESS</summary>
+                    /// <param name="ids" type="ARRAY OF INT">LIST OF ROW IDs TO BE SELECTED</param>
+                    /// <returns type="ARRAY OF INT" />
                     $scope.config.selectRows = function (ids) {
                         var _modIds = [];
                         _.each(ids, function (_id) {
@@ -507,6 +529,9 @@
                         return _modIds;
                     }
 
+                    /// <summary>CONFIG EXTENSION TO DESELECT ROWS USING PROGRAMMTIC ACCESS</summary>
+                    /// <param name="ids" type="ARRAY OF INT">LIST OF ROW IDs TO BE DESELECTED</param>
+                    /// <returns type="ARRAY OF INT" />
                     $scope.config.deselectRows = function (ids) {
                         var _modIds = [];
                         _.each(ids, function (_id) {
@@ -520,11 +545,16 @@
                         return _modIds;
                     }
 
+                    /// <summary>CONFIG EXTENSION TO SORT COLUMN USING PROGRAMMTIC ACCESS</summary>
+                    /// <param name="id" type="String">ID FOR COLUMN IN WHICH WE NEED TO SORT</param>
+                    /// <param name="direction" type="Boolean">SET TO TRUE TO SORT IN REVERSE ELSE SET TO FALSE</param>
                     $scope.config.sortByColumn = function (id, direction) {
                         $scope.vxConfig.sortPredicate = id;
                         $scope.vxConfig.reverseSortDirection = direction;
                     }
 
+                    /// <summary>CONFIG EXTENSION TO RESET COLUMN FILTERS USING PROGRAMMTIC ACCESS</summary>
+                    /// <param name="ids" type="ARRAY OF INT">LIST OF COLUMN IDS FOR WHICH WE WOULD RESET THE FILTERS</param>
                     $scope.config.resetColumnFilters = function (ids) {
                         _.each(ids, function(id) {
                             $scope.vxColSettings.dropdDownLoaded[id] = false;
@@ -534,13 +564,16 @@
 
                     $scope.buildFns();
 
-                    /* ADD FUNCTION REFERENCE FOR DIRECT CALL*/
+                    /// <summary>CONFIG EXTENSION TO CHANGE ROW CLASSES USING PROGRAMMATIC ACCESS</summary>
                     $scope.config.changeRowClass = $scope.changeRowClass;
+
                     $scope.$emit('vxGridSettingsBuilt', {
                         'id': $scope.vxConfig.id
                     });
                 }
 
+                /// <summary>GRID FUNCTION : START THE PROCEDURE TO EDIT AN ROW</summary>
+                /// <param name="id" type="String">ID FOR ROW TO BE EDITED</param>
                 $scope.editRow = function (id) {
                     if ($scope.vxConfig.inlineEditSyncEnabled == true) {
                         if ($scope.vxColSettings.multiSelected.length > 0) {
@@ -555,6 +588,7 @@
                     $scope.vxColSettings.inlineEditState[id] = true;
                 }
 
+                /// <summary>GRID FUNCTION : GET COUNT FOR NUMBER OF ROWS BEING EDITED</summary>
                 $scope.editInProgressCount = function () {
                     var count = 0;
                     if (typeof $scope.vxColSettings.inlineEditState !== 'undefined' && $scope.vxColSettings.inlineEditState != null) {
@@ -565,6 +599,8 @@
                     return count;
                 }
 
+                /// <summary>GRID FUNCTION : SYNC DATA IN ALL MULTI SELECTED ROWS WHEN ONE OF THE SELECTED ROWS IS BEING EDITED</summary>
+                /// <param name="event param" type="OBJECT">ROW ID WHERE THE EDIT ORGINATED, FIELD ID WHICH WAS EDITED, FIELD VALUE TO BE SYNCED</param>
                 $scope.$on('vxInlineEditFieldChange', function (e, data) {
                     if ($scope.vxConfig.inlineEditSyncEnabled == true) {
                         var exists = _.filter($scope.vxColSettings.multiSelected, function (uid) { return uid.localeCompare(data.rowId) == 0 });
@@ -579,6 +615,8 @@
                     }
                 })
 
+                /// <summary>GRID FUNCTION : SAVE ROWS ONCE EDITED OR CREATED</summary>
+                /// <param name="id" type="String">ROW ID OF THE ROW BEING CREATED OR EDITED</param>
                 $scope.savingRows = function (id) {
                     var cRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId] == id; })
                     if (typeof cRow !== 'undefined' && cRow.newRow == true) {
@@ -649,6 +687,8 @@
                     }
                 }
 
+                /// <summary>GRID FUNCTION : HANDLES SAVING FOR ALL MULTI SELECTED ROWS WHEN ONE OF THEM IS SELECTED</summary>
+                /// <param name="id" type="String">ROW ID WHERE THE SAVE COMMAND ORIGINATED</param>
                 $scope.saveRow = function (id) {
                     var saved = false;
                     if ($scope.vxConfig.inlineEditSyncEnabled == true) {
@@ -665,6 +705,7 @@
                     }
                 }
 
+                /// <summary>GRID FUNCTION : HANDLES REVERTING EDITS FOR ROWS MULTI SELECTED </summary>
                 $scope.revertEdits = function () {
                     if (typeof $scope.vxColSettings.multiSelected !== 'undefined' && $scope.vxColSettings.multiSelected != null & $scope.vxColSettings.multiSelected.length > 0) {
                         _.each($scope.vxColSettings.multiSelected, function (uid) {
@@ -675,6 +716,8 @@
                     }
                 }
 
+                /// <summary>GRID FUNCTION : REVERTS EDIT STATE OF A ROW BY SHIFTING TO THE ERSTWHILE PRISTINE STATE</summary>
+                /// <param name="id" type="String">ID FOR ROW WHOSE EDITS HAVE TO BE REVERTED</param>
                 $scope.revertEditForRow = function (id) {
                     var cRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId] == id; });
                     if (typeof cRow !== 'undefined' && cRow.newRow == true) {
@@ -698,6 +741,7 @@
                     }
                 }
 
+                /// <summary>GRID FUNCTION : ADD NEW ROW TO THE GRID</summary>
                 $scope.addNewRow = function () {
                     $scope.vxConfig.sortPredicate = '_vxCreated';
                     $scope.vxConfig.reverseSortDirection = true;
@@ -710,6 +754,7 @@
                     $scope.vxConfig.vxData.unshift(newRow);
                 }
 
+                /// <summary>GRID FUNCTION : DELETE ROWS WHICH HAVE BEEN MULTI SELECTED IRRESPECTIVE OF STATE - NEW/EDITING/SAVING</summary>
                 $scope.deleteRows = function () {
                     if (typeof $scope.vxColSettings.multiSelected !== 'undefined' && $scope.vxColSettings.multiSelected != null & $scope.vxColSettings.multiSelected.length > 0) {
                         if ($scope.vxConfig.inlineDeleteOverrideEnabled == true) {
@@ -752,16 +797,20 @@
                         }
                     }
                 }
-
+                
+                /// <summary>GRID FUNCTION : ACTIVATE A PARTICULAR PAGE OF THE GRID WHEN PAGINATION IS ENABLED</summary>
+                /// <param name="page" type="int">PAGE NUMBER WHICH NEEDS TO BE ACTIVATED</param>
                 $scope.activatePage = function (page) {
                     $scope.vxColSettings.activePage = page;
                     $scope.vxColSettings.vxPageStartPosition = (page > 0 ? page * $scope.vxConfig.pageLength - 1 : 0);
                 }
 
+                /// <summary>GRID FUNCTION : DEBOUNCE THE SEARCH SO AS TO THROTTLE SEARCHING IN GRID AND PREVENT CLASHING OF DIGEST CYCLES</summary>
                 $scope.debouncedSearch = _.debounce(function () {
                     $scope.vxColSettings.xsSearch = angular.copy($scope.vxColSettings.searchToken);
                 }, 50);
 
+                /// <summary>GRID FUNCTION : SET SERACH TOKEN WHEN ACTIVATED THROUGH KEYBOARD EVENTS</summary>
                 $scope.keyUpSearch = function ($event) {
                     if ($event.keyCode == 13) {
                         $scope.vxColSettings.xsSearch = angular.copy($scope.vxColSettings.searchToken);
@@ -771,6 +820,7 @@
                     }
                 }
 
+                /// <summary>GRID FUNCTION : WATCH OVER THE WINDOW DIMENSIONS SO AS TO ENABLE XS VIEW WHEN WIDTH < 768PX </summary>
                 $scope.$watch('getWindowDimensions()', function (newValue, oldValue) {
                     if (newValue.w < 768)
                         $scope.vxColSettings.xsViewEnabled = true;
@@ -781,11 +831,17 @@
                     $scope.$apply();
                 });
 
+                /// <summary>GRID FUNCTION : CHECK IF HEADER NAME IS VALID</summary>
                 $scope.isValidHeaderName = function (header, name) {
                     return header.renderHeadDefn == false && typeof name !== 'undefined' && name != null && name != '';
                 }
+                
+                /// <summary>GRID FUNCTION : INVOKED WHEN ANY HEADER ELEMENT IS CLICKED</summary>
+                /// <summary>IF DROPDOWNS NOT ENBALED, IT WILL SORT ON THE COLUMN</summary>
+                /// <summary>IF DROPDOWNS ENABLED, IT WILL START LOADING ITS CONTENT IF NOT ALREADY LOADED</summary>
+                /// <param name="header" type="Object">HEADER OBJECT ASSOCIATED WITH THE CLICK</param>
+                /// <param name="E" type="Event"></param>
                 $scope.headerClick = function (header, e) {
-
                     var proceed = true;
                     var target = $(e.target);
                     if (typeof target !== 'undefined' && target != null & target.length > 0) {
@@ -795,7 +851,6 @@
                     }
                     if (proceed == false)
                         return;
-
                     _.each($scope.vxConfig.columnDefConfigs, function (col) { if (col.id.localeCompare(header.id) != 0) $scope.vxColSettings.dropdDownOpen[col.id] = false; })
                     var _colDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare(header.id) == 0 });
                     if (typeof _colDefn !== 'undefined' && _colDefn != null) {
@@ -886,6 +941,11 @@
                     }
                 }
 
+                /// <summary>GRID FUNCTION : GET UNIQUE KEY BASED ON ITEM, ID AND PHRASE FOR UNQIUELY IDENTIFYINGA FILTER</summary>
+                /// <param name="item" type="String">Description</param>
+                /// <param name="id" type="String">Description</param>
+                /// <param name="phrase" type="String">Description</param>
+                /// <returns type="Object" />
                 function getKeyedUnique(item, id, phrase) {
                     var key = phrase + '_' + id + '_key_';
                     var type = 'string';
@@ -907,7 +967,8 @@
                     return { 'key': key, 'type': type };
                 }
 
-
+                /// <summary>GRID FUNCTION : ENABLED SORT ON THE COLUMN WHILE TAKING INTO ACCOUNT THE DIRECTION</summary>
+                /// <param name="header" type="Object">HEADER OBJECT ASSOCIATED WITH THE COLUMN</param>
                 $scope.sortClick = function (header) {
                     var _colDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare(header.id) == 0 });
                     if (typeof _colDefn !== 'undefined' && _colDefn != null) {
@@ -919,9 +980,14 @@
                         }
                     }
                 }
+                
+                /// <summary>GRID FUNCTION : GET COUNT OF COLUMNS WHICH ARE NOT HIDDEN SO AS TO ESTABLISH CORRECT COLSPANS</summary>
                 $scope.getVisibleHeaderCounts = function () {
                     return _.filter($scope.vxConfig.columnDefConfigs, function (col) { return col.hidden != true }).length;
                 }
+
+                /// <summary>GRID FUNCTION : ENABLE GROUPING OF ROWS BASED ON THE COLUMN</summary>
+                /// <param name="header" type="Object">HEADER OBJECT AASOCIATED WITH THE COLUMN</param>
                 $scope.groupClick = function (header) {
                     $scope.clearFilters();
                     //$scope.removeGroupings();

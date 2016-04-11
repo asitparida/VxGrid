@@ -98,16 +98,23 @@
 
     */
 
-    /* CAPITALIZE FIRST LETTER - STRING PROTOTYPE*/
+    /// <summary>CAPITALISE FIRST LETTER OF STRING</summary>
+    /// <returns type="String" />
     String.prototype.capitalizeFirstLetter = function () {
         return this.charAt(0).toUpperCase() + this.slice(1);
     }
-
+    
+    /// <summary>REPLACE ALL INSTNACES USING REGEX</summary>
+    /// <param name="find" type="String">PATTERN TO LOOK FOR</param>
+    /// <param name="replaceWith" type="String">STRING TO REPLACE WITH</param>
+    /// <returns type="String" />
     String.prototype.replaceAll = function (find, replaceWith) {
         var regex = new RegExp(find, 'g');
         return this.replace(regex, replaceWith);
     }
 
+    /// <summary>GENERATE GUID LIKE STRING UISNG MATH PROPERTIES</summary>
+    /// <returns type="String" />
     function _GUID() {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)
@@ -117,62 +124,75 @@
         return s4() + s4() + "_" + s4();
     }
 
+    /// <summary>DEPEDENCIES</summary>
+    /// <summary module="ngSanitize">TO ENABLE/SANITIZE TEMPLATES</summary>
+    /// <summary module="ui.bootstrap">USING ANGULAR BOOTSTRAP MODALS</summary>
+    /// <summary module="vs-repeat">TO ENABLE DOM VIRTUALIZATION</summary>
+    /// <summary module="angular-json-editor">TO ENABLE JSON EDITOR FOR DATA</summary>
+    /// <summary module="duScroll">TO ENABLE ON DEMAND HEADERS AND OTHER SCROLL BASED CAPABILITIES</summary>
     angular.module('vx.grid.modules', ['ngSanitize', 'ui.bootstrap', 'vs-repeat', 'angular-json-editor', 'duScroll'])
     .directive("vxGrid", function () {
         return {
-            restrict: 'AEC',
+            restrict: 'E', // ONLY ENABLE DIRECTIVE DECLARATION AS ELEMENT
             scope: {
-                config: '=',
-                scrollParent: '='
+                config: '=', // EXPECTS DIRECTIVE SCOPED OBJECT FOR CONFIG MAPS AND DRIVE GRID BEHAVIOUR ACCORDINGLY
+                scrollParent: '=' // EXEPECTS DIRECTIVE SCOPED OBJECT FOR NOTIFYING WHICH DIV TO TRIGGER VIRTULIZED SCROLL ON
             },
             controller: ["$scope", "$uibModal", "$sce", "$timeout", "$rootScope", "$window", "$filter", "$q", function ($scope, $modal, $sce, $timeout, $rootScope, $window, $filter, $q) {
                 $scope.vxColSettings = {};
                 $scope.posLeft = 1;
                 $scope.posTop = 0;
+
+                /// <summary>GET THE ANGULAR SCOPED WINDOW OBJECT REFERENCE</summary>
                 var w = angular.element($window);
+
+                /// <summary>GENERATE DIMENSIONS FOR THE CURRENT WINDOW OBJECT</summary>
+                /// <returns type="OBJECT" />
                 $scope.getWindowDimensions = function () {
                     return {
                         'h': w.height(),
                         'w': w.width()
                     };
                 };
-                $rootScope.enableClickOutside = true;
+                
+                /// <summary>RESETS THE VX INSTANCE AND DEFUALTING ALL APPICABLE PROPERTIES</summary>
                 $scope.resetVxInstance = function () {
+                    /// <summary>RE-INITIALIZING ALL VXCOLSETTINGS PROPERTIES</summary>
                     $scope.vxColSettings = {
-                        'primaryId': null,
-                        'dropdDownEnabled': {},
-                        'dropdDownLoaded': {},
-                        'dropdDownOpen': {},
-                        'dropDownSort': {},
-                        'dropDownFilters': {},
-                        'dropDownGroup': {},
-                        'colFiltersStatus': {},
-                        'colFilterPairs': {},
-                        'colFiltersActivated': {},
-                        'lastProcessedForFilters': {},
-                        'multiSelected': [],
-                        'multiSelColDependent': false,
-                        'reverseSettings': {},
-                        'groupPredicate': {},
-                        'groupByColActivated': {},
-                        'rowSelected': {},
-                        'vxRowClass': {},
-                        'vxRowSelectionDisable': {},
-                        'revealWrapRowData': false,
-                        'selectAllEnabled': true,
-                        'menu': false,
-                        'xsViewEnabled': false,
-                        'xsRowTitleTemplateAvailable': false,
-                        'xsSearch': '',
-                        'searchToken': '',
-                        'latchExcess': 10,
-                        'inlineEditState': {},
+                        'primaryId': null, // COLUMN ID FOR COLUMN DESIGNATED AS PRIMARY 
+                        'dropdDownEnabled': {}, // STORES WHETHER THE DROPDOWN, TO ACCESS COLUMN OPERATIONS, IS ENABLED/DISABLED FOR COLUMNS IN GRID, USES COLUMN ID AS MAP
+                        'dropdDownLoaded': {}, // STORES WHETHER THE DROPDOWN, TO ACCESS COLUMN OPERATIONS, IS LOADED OR NOT FOR COLUMNS IN GRID, USES COLUMN ID AS MAP
+                        'dropdDownOpen': {}, // STORES WHETHER THE DPOPDOWN, TO ACCESS COLUMN OPERATIONS, IS OPENED OR CLOSED FOR COLUMNS IN GRID, USES COLUMN ID AS MAP
+                        'dropDownSort': {}, // STORES WHETHER THE SORT OPERATION IS ALLOWED IN A DROPDOWN FOR A COLUMN, USES COLUMN ID AS MAP
+                        'dropDownFilters': {}, // STORES WHETHER THE FILTER OPERATION IS ALLOWED IN A DROPDOWN FOR A COLUMN, USES COLUMN ID AS MAP 
+                        'dropDownGroup': {}, // STORES WHETHER THE GROUPING OPERATIONIS ALLOWED IN A DROPDOWN FOR A COLUMN, USES COLUMN ID AS MAP
+                        'colFiltersStatus': {}, //
+                        'colFilterPairs': {}, // STORES THE FILTER INFORMATION APPLICABLE FOR A SPECIFIC COLUMN
+                        'colFiltersActivated': {}, // STORES INFORMATION IN WHICH FILTERS ARE APPLIED ACROSS COLUMNS
+                        'lastProcessedForFilters': {}, //
+                        'multiSelected': [], // STORES THE REFERENCES FOR ALL ROWS WHICH HAVE BEEN CURRENLT SELECTED
+                        'multiSelColDependent': false, //
+                        'reverseSettings': {}, // STORES THE SORT DIRECTIONS CURRENTLY APPLIED FOR COLUMNS WITH BOOLEAN MAPS FOR ASCENDING AND DESCENDING
+                        'groupPredicate': {}, //
+                        'groupByColActivated': {}, //
+                        'rowSelected': {}, // STORES THE INDIVIDUAL ROW SELECTION STATES
+                        'vxRowClass': {}, // STORES THE CLASSES TO BE APPLIED FOR ROWS 
+                        'vxRowSelectionDisable': {}, // STORES THE STATES DESIGNATING IF A INDIVIDUAL ROW SELECTION CAN BE TOGGLED OR NOT
+                        'revealWrapRowData': false, // STORES WHETHER TO ENABLE WRAPPING FOR ROW CELLS
+                        'selectAllEnabled': true, // 
+                        'menu': false, //
+                        'xsViewEnabled': false, // STORES WHETHER THE XS VIEW IS ENABLED OR NOT
+                        'xsRowTitleTemplateAvailable': false, // STORES WHETHER THE ROW TITLE TEMPLATE IS AVAILABLE FOR XS VIEW
+                        'xsSearch': '', // STORES THE CURRENTLY TOKE AGAINST WHICH WE ARE SERACHING ACCROSS THE GRID IN XS VIEW
+                        'searchToken': '', // STORES THE CURRENTLY TOKE AGAINST WHICH WE ARE SERACHING ACCROSS THE GRID
+                        'latchExcess': 10, // STORES THE NUMBER OF ROWS WHICH NEED TO BE BROUGHT TO THE VIEW AS A RESULT OF VIRTUALIZATION
+                        'inlineEditState': {}, // STORES CURRENT ROW EDIT STATE
                         'colWithInlineEdits': [],
                         'groupKeys': {},
-                        'allRowSelected': false,
-                        'allRowSelectionDisabled': false,
-                        'filterSearchToken': {},
-                        'saveInProgress': {}
+                        'allRowSelected': false, // STORES THE STATE FOR ALL ROW SELECTIONS COMPOSED TO ONE PLACE
+                        'allRowSelectionDisabled': false, // STORES WHETHER TO ALLOW OR INHIBIT ALL ROW SELECTIONS
+                        'filterSearchToken': {}, //
+                        'saveInProgress': {} // STORES WHETHER A CREATE/EDIT/DELETE OPERATION IS IN PROGRESS
                     };
                     if ($scope.getWindowDimensions().w < 768) {
                         $scope.vxColSettings.xsViewEnabled = true;

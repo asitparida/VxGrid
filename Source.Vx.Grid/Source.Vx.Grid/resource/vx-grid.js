@@ -105,7 +105,7 @@
     String.prototype.capitalizeFirstLetter = function () {
         return this.charAt(0).toUpperCase() + this.slice(1);
     }
-    
+
     /// <summary>REPLACE ALL INSTNACES USING REGEX</summary>
     /// <param name="find" type="String">PATTERN TO LOOK FOR</param>
     /// <param name="replaceWith" type="String">STRING TO REPLACE WITH</param>
@@ -156,7 +156,7 @@
                         'w': w.width()
                     };
                 };
-                
+
                 /// <summary>RESETS THE VX INSTANCE AND DEFUALTING ALL APPICABLE PROPERTIES</summary>
                 $scope.resetVxInstance = function () {
                     /// <summary>RE-INITIALIZING ALL VXCOLSETTINGS PROPERTIES</summary>
@@ -412,7 +412,7 @@
 
                     /* GENERATE VX INSTANCE ID AND SEND BACK*/
                     $scope.config.id = $scope.vxConfig.id = _.uniqueId('_vxUID_');
-                    
+
                     /// <summary>CONFIG EXTENSION TO GET CURRENT STATE OF DIFFERENT COUNTS</summary>
                     /// <returns type="OBJECT" />
                     $scope.config.getVxCounts = function () {
@@ -428,13 +428,13 @@
                         else
                             return undefined;
                     }
-                    
+
                     /// <summary>CONFIG EXTENSION TO GET CURRENT DATA SUPPLIED TO THE VX GRID</summary>
                     /// <returns type="ARRAY OF OBJECT" />
                     $scope.config.getData = function () {
                         return $scope.vxConfig.data;
                     }
-                    
+
                     /// <summary>CONFIG EXTENSION TO GET ACTIVE DATA BOUND TO THE VX GRID</summary>
                     /// <returns type="ARRAY OF OBJECT" />
                     $scope.config.getActiveDataSet = function () {
@@ -502,7 +502,7 @@
                                     }
                                 }
                                 else if (fields.length > 0) {
-                                    _.each(fields, function (_field) { 
+                                    _.each(fields, function (_field) {
                                         _vxdRow[_field] = _nrow[_field];
                                         _dRow[_field] = _nrow[_field];
                                     });
@@ -556,7 +556,7 @@
                     /// <summary>CONFIG EXTENSION TO RESET COLUMN FILTERS USING PROGRAMMTIC ACCESS</summary>
                     /// <param name="ids" type="ARRAY OF INT">LIST OF COLUMN IDS FOR WHICH WE WOULD RESET THE FILTERS</param>
                     $scope.config.resetColumnFilters = function (ids) {
-                        _.each(ids, function(id) {
+                        _.each(ids, function (id) {
                             $scope.vxColSettings.dropdDownLoaded[id] = false;
                             $scope.vxColSettings.colFilterPairs[id] = {};
                         });
@@ -797,7 +797,7 @@
                         }
                     }
                 }
-                
+
                 /// <summary>GRID FUNCTION : ACTIVATE A PARTICULAR PAGE OF THE GRID WHEN PAGINATION IS ENABLED</summary>
                 /// <param name="page" type="int">PAGE NUMBER WHICH NEEDS TO BE ACTIVATED</param>
                 $scope.activatePage = function (page) {
@@ -835,7 +835,7 @@
                 $scope.isValidHeaderName = function (header, name) {
                     return header.renderHeadDefn == false && typeof name !== 'undefined' && name != null && name != '';
                 }
-                
+
                 /// <summary>GRID FUNCTION : INVOKED WHEN ANY HEADER ELEMENT IS CLICKED</summary>
                 /// <summary>IF DROPDOWNS NOT ENBALED, IT WILL SORT ON THE COLUMN</summary>
                 /// <summary>IF DROPDOWNS ENABLED, IT WILL START LOADING ITS CONTENT IF NOT ALREADY LOADED</summary>
@@ -980,7 +980,7 @@
                         }
                     }
                 }
-                
+
                 /// <summary>GRID FUNCTION : GET COUNT OF COLUMNS WHICH ARE NOT HIDDEN SO AS TO ESTABLISH CORRECT COLSPANS</summary>
                 $scope.getVisibleHeaderCounts = function () {
                     return _.filter($scope.vxConfig.columnDefConfigs, function (col) { return col.hidden != true }).length;
@@ -1046,7 +1046,7 @@
                     });
                     $scope.vxColSettings.groupPredicate = {};
                 }
-                
+
                 /// <summary>GRID FUNCION : HANDLE SELECTION TOGGLE EVENT ON A GROUP CHECKBOX</summary>
                 $scope.groupSelectionChanged = function (group) {
                     $scope.emitArray = [];
@@ -1353,7 +1353,7 @@
                     }, function (data) {
                     });
                 }
-                    
+
                 /// <summary>GRID FUNCTION : OPEN MODAL TO EDIT GRID JSON DATA</summary>
                 $scope.openJsonEditor = function () {
                     var modalInstance = $modal.open({
@@ -1403,12 +1403,6 @@
                     });
                 };
 
-                /// <summary>GRID FUNCTION : HANDLE CLICK EVENTS OUTSIDE A TARGET AREA</summary>
-                $scope.outsideHeaderClick = function (header) {
-                    if ($scope.vxColSettings.dropdDownOpen[header.id] == true)
-                        $scope.vxColSettings.dropdDownOpen[header.id] = false;
-                }
-
                 /// <summary>GRID FUNCTION : REVEAL ALL ROW/CELL DATA WHICH WERE PREVIOUSLY WRAPPED</summary>
                 $scope.revealWrapToggle = function () {
                     $scope.vxColSettings.revealWrapRowData = !$scope.vxColSettings.revealWrapRowData;
@@ -1437,7 +1431,16 @@
                     }
                     return false;
                 }
-                
+
+                /// <summary>GRID FUNCTION : HANDLE CLICK EVENTS OUTSIDE A TARGET AREA</summary>
+                $scope.outsideHeader = function (header) {
+                    if ($scope.vxColSettings.dropdDownOpen[header.id] == true) {
+                        $scope.vxColSettings.dropdDownOpen[header.id] = false;
+                        if (!$scope.$$phase)
+                            $scope.$apply();
+                    }
+                }
+
                 /// <summary>GRID EVENT : LISTED TO PARTIAL RENDERING OF VIRTUAL DOM</summary>
                 $scope.$on('vsRepeatCollectionPartiallyRendered', function (e, data) {
                     /// <summary>GRID EVENT : EMIT EVENT WHEN GRID IS PARTIALLY RENDERED</summary>
@@ -1490,7 +1493,7 @@
                         });
                     }
                 }
-               
+
                 /// <summary>GRID EVENT : LISTEN TO ASK FOR RESETTING OW CLASSES</summary>
                 $scope.$on('vxGridResetRowClass', function (e, data) {
                     if (data.id.localeCompare($scope.vxConfig.id) == 0)
@@ -1518,7 +1521,7 @@
             templateUrl: 'template/vx-grid/vx-grid.html',
             link: function ($scope, element, attributes) {
                 $scope.selfEle = element;
-                
+
                 /// <summary>GRID WATCH : LISTEN TO CHANGES IN DATA AND ACCORDINGLY RESET INSTANCE</summary>
                 $scope.$watchCollection('config.data', function (n) {
                     if (n.length == 0)
@@ -1755,6 +1758,30 @@
                 return items;
         };
     })
+    /// <summary>GRID DIRECTIVE : DIRECTIVE TO KEEP TRACK IF CLICK OUTSIDE WHEN A HEADER IS OPEN</summary>
+    .directive('clickOutsideHeader', ['$document', '$parse', function ($document, $parse) {
+        return {
+            restrict: 'A',
+            link: function ($scope, elem, attr) {
+                var classList = (attr.outsideIfNot !== undefined) ? attr.outsideIfNot.replace(', ', ',').split(',') : [];
+                if (attr.id !== undefined) classList.push(attr.id);
+                var fn = $parse(attr.clickOutsideHeader);
+                $document.on('click', function (e) {
+                    try {
+                        var targetHederCell = $(e.target).closest('th.vxHeadRowCell');
+                        if (typeof targetHederCell == 'undefined' || targetHederCell == null || targetHederCell.length == 0) {
+                            if ($scope.$eval(attr.checkClickOutside)) {
+                                $scope.$eval(fn);
+                            }
+                        }
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                });
+            }
+        };
+    }])
         /// <summary>GRID FILTER : IMPLEMENT FIXED LENGTH DISAPLY OF DIGITS BY PREPENDIG REQUIRED ZEROS</summary>
     .filter("vxNumberFixedLen", function () {
         return function (n, len) {

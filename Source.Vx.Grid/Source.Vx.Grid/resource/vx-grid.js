@@ -1426,6 +1426,17 @@
                         $(element).animate({ scrollTop: 0 }, 500);
                     }, 100);
                 }
+
+                /// <summary>GRID FUNCTION : SHOW SCROLL ARROW ICON WHEN CONDITION SATISFIED - SCROLL NEEDED</summary>
+                $scope.showScrollArrow = function () {
+                    var scrollContainer = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
+                    var tableContainer = $scope.selfEle.find('.scrollTableContainer table.vxTable');
+                    if (typeof scrollContainer !== 'undefined' && typeof tableContainer !== 'undefined' && scrollContainer != null && tableContainer != null) {
+                        if (tableContainer.height() > scrollContainer.height() && scrollContainer.scrollTop() > 60)
+                            return true;
+                    }
+                    return false;
+                }
                 
                 /// <summary>GRID EVENT : LISTED TO PARTIAL RENDERING OF VIRTUAL DOM</summary>
                 $scope.$on('vsRepeatCollectionPartiallyRendered', function (e, data) {

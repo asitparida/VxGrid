@@ -181,7 +181,7 @@
                 }
             }
 
-            .icon-container {
+            .icon-container:not(.scrollAction) {
                 &.active {
                     background: transparent;
                     color: #fff;
@@ -202,12 +202,6 @@
                 }
 
                 &:not(.active) {
-                    &:hover, &:active, &:focus {
-                        background: transparent;
-                    }
-                }
-
-                &.active {
                     &:hover, &:active, &:focus {
                         background: transparent;
                     }
@@ -345,7 +339,7 @@
                 opacity: 1;
                 filter: alpha(opacity = 100);
                 z-index: 9999;
-                background: #006ebd;
+                background: #006ebd !important;
                 color: #fff;
                 outline: 1px dotted #fff;
 
@@ -408,11 +402,6 @@
                 }
             }
 
-            &.active {
-                &:hover, &:active, &:focus {
-                    background: #006ebd;
-                }
-            }
         }
 
         .vxTable {

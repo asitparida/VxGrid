@@ -1426,6 +1426,17 @@
                         $(element).animate({ scrollTop: 0 }, 500);
                     }, 100);
                 }
+
+                /// <summary>GRID FUNCTION : SHOW SCROLL ARROW ICON WHEN CONDITION SATISFIED - SCROLL NEEDED</summary>
+                $scope.showScrollArrow = function () {
+                    var scrollContainer = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
+                    var tableContainer = $scope.selfEle.find('.scrollTableContainer table.vxTable');
+                    if (typeof scrollContainer !== 'undefined' && typeof tableContainer !== 'undefined' && scrollContainer != null && tableContainer != null) {
+                        if (tableContainer.height() > scrollContainer.height() && scrollContainer.scrollTop() > 60)
+                            return true;
+                    }
+                    return false;
+                }
                 
                 /// <summary>GRID EVENT : LISTED TO PARTIAL RENDERING OF VIRTUAL DOM</summary>
                 $scope.$on('vsRepeatCollectionPartiallyRendered', function (e, data) {
@@ -1626,7 +1637,7 @@
                         if (elements.length > 0) {
                             _.each(elements, function (element) {
                                 var _tbindex = $(element).attr('tabindex');
-                                if (_tbindex != -1 && _.contains(_focusTypes, element.nodeName.toUpperCase()) == false) {
+                                if (_tbindex != -1 && _.contains(_focusTypes, element.nodeName.toUpperCase()) == false && _.contains(_focuProps[_rowId].stack, _eid) == false) {
                                     var _eid = $(element).attr('id');
                                     if (typeof _eid == 'undefined' || _eid == null || _eid == '') {
                                         $(element).attr('id', _.uniqueId('elemid'));

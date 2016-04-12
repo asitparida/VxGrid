@@ -1626,7 +1626,7 @@
                         if (elements.length > 0) {
                             _.each(elements, function (element) {
                                 var _tbindex = $(element).attr('tabindex');
-                                if (_tbindex != -1 && _.contains(_focusTypes, element.nodeName.toUpperCase()) == false) {
+                                if (_tbindex != -1 && _.contains(_focusTypes, element.nodeName.toUpperCase()) == false && _.contains(_focuProps[_rowId].stack, _eid) == false) {
                                     var _eid = $(element).attr('id');
                                     if (typeof _eid == 'undefined' || _eid == null || _eid == '') {
                                         $(element).attr('id', _.uniqueId('elemid'));

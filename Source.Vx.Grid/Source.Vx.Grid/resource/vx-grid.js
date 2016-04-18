@@ -289,7 +289,8 @@
                         { prop: 'jsonEditorEnabled', defValue: false },
                         { prop: 'allRowsSelectionEnabled', defValue: false },
                         { prop: 'sortPredicate', defValue: $scope.vxColSettings.primaryId },
-                        { prop: 'reverseSortDirection', defValue: false }
+                        { prop: 'reverseSortDirection', defValue: false, },
+                        { prop: 'emptyFill', defValue: '<span>No records to display ...</span>', },
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})

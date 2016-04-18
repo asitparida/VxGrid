@@ -687,6 +687,7 @@
 
     self.sampling = function (iter, customer) {
         var _samples = [];
+        //original = _.first(original, 5);
         _.each(original, function (record, k) {
             _.each(_.range(iter), function (i, j) {
                 var rec = angular.copy(record);

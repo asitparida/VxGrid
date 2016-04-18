@@ -748,6 +748,7 @@
         reverseSortDirection: true,
         inlineAddRowEnabled: true,
         categories: self.categories,
+        emptyFill:'No records in the grid',
         newRowTemplate: {
             readOnly: "Y",
             transferFromCustomer: "Alpine Ski House A",

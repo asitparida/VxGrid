@@ -34,23 +34,27 @@
     }
 
     .vxTableScrollContainer {
-        height: calc(100% - 60px);
+        height: calc(100% - 15px);
         overflow-x: auto;
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
         -ms-overflow-style: -ms-autohiding-scrollbar;
         padding: 0;
         border: 1px solid #A0A0A0;
-    }
-    /*.vxTableContainer.attrPaneOpen {
-            &:not(.scrollDupHeader) {
-                max-height: calc(100% - 60px);
-            }
 
-            &.pageEnabled:not(.scrollDupHeader) {
-                height: calc(100% - 108px);
-            }
-        }*/
+        &.attrPaneOpen{
+            height:calc(100% - 60px);
+        }
+
+        &.attrPaneOpen.pageEnabled{
+            height:calc(100% - 98px);
+        }
+
+        &.pageEnabled:not(.attrPaneOpen){
+            height:calc(100% - 48px);
+        }
+    }
+
     .offscreen {
         position: absolute;
         clip: rect(1px 1px 1px 1px); /* for Internet Explorer */

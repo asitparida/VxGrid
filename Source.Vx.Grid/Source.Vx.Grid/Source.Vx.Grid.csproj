@@ -82,6 +82,7 @@
     <Content Include="lib\ui-bootstrap-tpls-1.1.1.min.js" />
     <Content Include="packages.config" />
     <Content Include="package.json" />
+    <Content Include="resource\angular-vs-repeat.js" />
     <Content Include="resource\jsoneditor\jsoneditor.map" />
     <Content Include="resource\loaderBlue30.gif" />
     <Content Include="scss\vx-grid.scss" />
@@ -112,7 +113,6 @@
     <Content Include="lib\ui-bootstrap-tpls.min.js" />
     <Content Include="lib\underscore-min.js" />
     <Content Include="resource\angular-scroll.js" />
-    <Content Include="resource\angular-vs-repeat.js" />
     <Content Include="resource\icon-images.png" />
     <Content Include="resource\jsoneditor\ace.js" />
     <Content Include="resource\jsoneditor\FileSaver.js" />

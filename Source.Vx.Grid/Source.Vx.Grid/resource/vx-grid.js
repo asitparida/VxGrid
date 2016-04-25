@@ -325,6 +325,7 @@
                                 col[propDefn.prop] = propDefn.defValue;
                         });
                         col.effectiveWidth = col.width;
+                        col.idCollection = [];
                         var _propDefnLocks = [
                             { prop: 'orderLocked', defValue: false },
                             { prop: 'widthLocked', defValue: false },
@@ -880,13 +881,21 @@
                             }
                             else {
                                 $timeout(function () {
+                                    _colDefn.idCollection = [];
                                     /* SORT OPERATION */
-                                    if (_colDefn.ddSort == true)
+                                    if (_colDefn.ddSort == true) {
                                         $scope.vxColSettings.dropDownSort[_colDefn.id] = true;
-                                    if (_colDefn.ddGroup == true)
+                                        _colDefn.idCollection.push(_colDefn.id + '_sort');
+                                    }
+                                    if (_colDefn.ddGroup == true) {
                                         $scope.vxColSettings.dropDownGroup[_colDefn.id] = true;
+                                        _colDefn.idCollection.push(_colDefn.id + '_group');
+                                        _colDefn.idCollection.push(_colDefn.id + '_ungroup');
+                                    }
                                     /* FILTER OPERATION */
                                     if (_colDefn.ddFilters == true) {
+                                        _colDefn.idCollection.push(_colDefn.id + '_clearfilters');
+                                        _colDefn.idCollection.push(_colDefn.id + '_searchfilters');
                                         /*  POPULATE LIST OF FILTERS*/
                                         if (filterListForColAvailable == false) {
                                             $scope.vxColSettings.dropDownFilters[_colDefn.id] = true;
@@ -903,7 +912,7 @@
                                                 return ret;
                                             }), function (item) { return item.value });
                                             uniqed = _.reject(uniqed, function (item) { return typeof item.value === 'undefined' || item.value == {} });
-                                            _.each(uniqed.sort(), function (item) {
+                                            _.each(uniqed.sort(), function (item, iterator) {
                                                 var retKey = getKeyedUnique(item, _colDefn.id, 'col');
                                                 var key = retKey.key;
                                                 var type = retKey.type;
@@ -918,6 +927,7 @@
                                                     pair.filterDefnAvailable = false;
                                                 }
                                                 $scope.vxColSettings.colFilterPairs[_colDefn.id].push(pair);
+                                                _colDefn.idCollection.push(_colDefn.id + '_filter_' + iterator);
                                                 $scope.vxColSettings.colFiltersStatus[key] = false;
                                             });
                                             $scope.vxColSettings.filterSearchToken[_colDefn.id] = '';
@@ -1244,12 +1254,83 @@
                     $scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
                 }
                 
+                /// <summary>GRID FUNCTION : FUNCTION TO MOVE FOCUS TO FIRST ITEM IN MENU</summary>
                 $scope.upDownKeyDownHandlerHeaderMenu = function (e) {
                     var _prevent = false;
                     if (e.keyCode == 40) {
                         //DOWN ARROW PRESS
                         var focussables = $(e.target).find('[tabindex="0"]');
-                        console.log(focussables);
+                        if (focussables.length > 0)
+                            $(focussables[0]).focus();
+                    }
+                    if (_prevent) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                }
+                    
+                /// <summary>GRID FUNCTION : FUNCTION TO FIND THE APPROPRIATE ID FROM COLLECTION TO FOCUS</summary>
+                $scope.findIdToBeFocussed = function (index, collection, direction) {
+                    var _id = index;
+                    var _i = index;
+                    if (direction) {
+                        while (_i <= collection.length) {
+                            var _element = $('#' + collection[_i + 1]);
+                            if ($(_element).is('[tabindex="0"]')) {
+                                return collection[_i + 1];
+                            }
+                            else
+                                _i = _i + 1;
+                        }
+                    }
+                    else if (!direction) {
+                        while (_i >= 1) {
+                            var _element = $('#' + collection[_i - 1]);
+                            if ($(_element).is('[tabindex="0"]')) {
+                                return collection[_i - 1];
+                            }
+                            else
+                                _i = _i - 1;
+                        }
+                    }
+                    return index;
+                }
+                
+                /// <summary>GRID FUNCTION : FUNCTION TO HELP FIND FOCUSABLE ITEM</summary>
+                $scope.findFocussable = function (e, col, direction) {
+                    var _id = $(e).attr('id');
+                    var _col = _.find($scope.vxConfig.columnDefConfigs, function (column) { return column.id == col });
+                    if (typeof _col !== 'undefined' && _col != null) {
+                        var _idCollection = _col.idCollection;
+                        var _index = _.indexOf(_idCollection, _id);
+                        if (_index != -1 && _index != _idCollection.length && direction == true) {
+                            return $scope.findIdToBeFocussed(_index, _idCollection, true);
+                        }
+                        else if (_index != -1 && _index != 0 &&  direction == false) {
+                            return $scope.findIdToBeFocussed(_index, _idCollection, false);
+                        }
+                        else
+                            return null;
+                    }
+                }
+                
+                /// <summary>GRID FUNCTION : FUNCTION TO HELP UP DOWN KEY STROKE MOVEMENTS IN MENU</summary>
+                $scope.upDowKeyDownHandlerHeaderMenuItems = function (e, columnId) {
+                    var _prevent = false;
+                    if (e.keyCode == 40) {
+                        var _elemId = $scope.findFocussable($(e.target), columnId, true);
+                        if ($('#' + _elemId).is('[tabindex="0"]')) {
+                            $('#' + _elemId).focus();
+                        }
+                    }
+                    else if (e.keyCode == 38) {
+                        var _elemId = $scope.findFocussable($(e.target), columnId, false);
+                        if (_elemId == null) {
+                            $(e.target).closest('th').focus();
+                        }
+                        else if ($('#' + _elemId).is('[tabindex="0"]')) {
+                            $('#' + _elemId).focus();
+                        }
                     }
                     if (_prevent) {
                         e.stopPropagation();
@@ -1402,7 +1483,7 @@
                     }, function (data) {
                     });
                 }
-                
+
                 /// <summary>GRID FUNCTION : CALCULATE EFFECTIVE COLUMN WIDTHS</summary>
                 $scope.calculateEffectiveWidths = function (data) {
                     var totalWidth = _.reduce(data, function (memo, col) {

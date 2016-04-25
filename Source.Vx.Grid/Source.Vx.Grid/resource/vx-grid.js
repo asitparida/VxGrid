@@ -1339,6 +1339,37 @@
                             $scope.cancelChangeInConfig = function () {
                                 $modalInstance.dismiss();
                             }
+                            $scope.upDownKeyPressHandler= function (e) {
+                                var _prevent = false;
+                                if (e.keyCode == 38 || e.keyCode == 40) {
+                                    //UP ARROW PRESS
+                                    _prevent = $scope.upDownMovement(e);
+                                }
+                                if (_prevent) {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                }
+                            }
+                            $scope.upDownMovement = function (e) {
+                                var _movement = false;
+                                if (e.keyCode == 38) {
+                                    //UP ARROW PRESS
+                                    var _ele = $(e.target).prev();
+                                    if (_ele.length > 0 && $(_ele[0]).attr('tabindex') !=  -1) {
+                                        $(_ele)[0].focus();
+                                    }
+                                    _movement = true;
+                                }
+                                else if (e.keyCode == 40) {
+                                    //UP ARROW PRESS
+                                    var _ele = $(e.target).next();
+                                    if (_ele.length > 0 && $(_ele[0]).attr('tabindex') != -1) {
+                                        $(_ele)[0].focus();
+                                    }
+                                    _movement = true;
+                                }
+                                return _movement;
+                            }
                         }],
                         backdrop: 'static',
                         resolve: {

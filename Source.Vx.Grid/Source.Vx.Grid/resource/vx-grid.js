@@ -187,7 +187,7 @@
                         'xsRowTitleTemplateAvailable': false, // STORES WHETHER THE ROW TITLE TEMPLATE IS AVAILABLE FOR XS VIEW
                         'xsSearch': '', // STORES THE CURRENTLY TOKE AGAINST WHICH WE ARE SERACHING ACCROSS THE GRID IN XS VIEW
                         'searchToken': '', // STORES THE CURRENTLY TOKE AGAINST WHICH WE ARE SERACHING ACCROSS THE GRID
-                        'latchExcess': 10, // STORES THE NUMBER OF ROWS WHICH NEED TO BE BROUGHT TO THE VIEW AS A RESULT OF VIRTUALIZATION
+                        'latchExcess': 3, // STORES THE NUMBER OF ROWS WHICH NEED TO BE BROUGHT TO THE VIEW AS A RESULT OF VIRTUALIZATION
                         'inlineEditState': {}, // STORES CURRENT ROW EDIT STATE
                         'colWithInlineEdits': [],
                         'groupKeys': {},
@@ -324,6 +324,7 @@
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
                                 col[propDefn.prop] = propDefn.defValue;
                         });
+                        col.effectiveWidth = col.width;
                         var _propDefnLocks = [
                             { prop: 'orderLocked', defValue: false },
                             { prop: 'widthLocked', defValue: false },
@@ -377,6 +378,8 @@
 
                         }
                     });
+
+                    $scope.vxConfig.columnDefConfigs = $scope.calculateEffectiveWidths($scope.vxConfig.columnDefConfigs);
                     if (typeof $scope.vxConfig.multiSelectionDependentCol !== 'undefined'
                         && $scope.vxConfig.multiSelectionDependentCol != null
                         && $scope.vxConfig.multiSelectionDependentCol != {}
@@ -1240,6 +1243,19 @@
                     });
                     $scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
                 }
+                
+                $scope.upDownKeyDownHandlerHeaderMenu = function (e) {
+                    var _prevent = false;
+                    if (e.keyCode == 40) {
+                        //DOWN ARROW PRESS
+                        var focussables = $(e.target).find('[tabindex="0"]');
+                        console.log(focussables);
+                    }
+                    if (_prevent) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                }
 
                 /// <summary>GRID FUNCTION : OPEN MODAL TO MANAGE COLUMNS</summary>
                 $scope.openManageColumns = function () {
@@ -1339,7 +1355,7 @@
                             $scope.cancelChangeInConfig = function () {
                                 $modalInstance.dismiss();
                             }
-                            $scope.upDownKeyPressHandler= function (e) {
+                            $scope.upDownKeyPressHandler = function (e) {
                                 var _prevent = false;
                                 if (e.keyCode == 38 || e.keyCode == 40) {
                                     //UP ARROW PRESS
@@ -1355,7 +1371,7 @@
                                 if (e.keyCode == 38) {
                                     //UP ARROW PRESS
                                     var _ele = $(e.target).prev();
-                                    if (_ele.length > 0 && $(_ele[0]).attr('tabindex') !=  -1) {
+                                    if (_ele.length > 0 && $(_ele[0]).attr('tabindex') != -1) {
                                         $(_ele)[0].focus();
                                     }
                                     _movement = true;
@@ -1380,10 +1396,32 @@
                     });
                     modalInstance.result.then(function (data) {
                         /* GET MODIFIED CHANGES FOPR CONFIG */
+                        data = $scope.calculateEffectiveWidths(data);
                         $scope.vxConfig.columnDefConfigs = data;
                         $scope.$emit('vxGridSettingsChanged', { 'id': $scope.vxConfig.id, 'data': data });
                     }, function (data) {
                     });
+                }
+                
+                /// <summary>GRID FUNCTION : CALCULATE EFFECTIVE COLUMN WIDTHS</summary>
+                $scope.calculateEffectiveWidths = function (data) {
+                    var totalWidth = _.reduce(data, function (memo, col) {
+                        var _val = 0;
+                        if (col.hidden == false)
+                            _val = parseInt(col.width);
+                        return memo + _val;
+                    }, 0);
+                    var _containerWidth = $scope.selfEle.find('.vxTableScrollContainer').width();
+                    _.each(data, function (col) {
+                        if (_containerWidth > totalWidth) {
+                            var _adjustment = (parseInt(col.width) / totalWidth) * (_containerWidth - totalWidth);
+                            col.effectiveWidth = parseInt(col.width) + _adjustment;
+                        }
+                        else
+                            col.effectiveWidth = col.width;
+
+                    });
+                    return data;
                 }
 
                 /// <summary>GRID FUNCTION : OPEN MODAL TO EDIT GRID JSON DATA</summary>
@@ -1579,17 +1617,6 @@
                     var elem = angular.element($(element).find('.vx-scroller')[0]);
                     return elem.width() + 'px';
                 }
-
-                var container = angular.element($(element).find('.scrollTableContainer')[0]);
-                container.on('scroll', function () {
-                    lazyScrollHeaderPositioning();
-                });
-                var lazyScrollHeaderPositioning = _.debounce(function () {
-                    $scope.$apply(function () {
-                        $scope.posLeft = container.scrollLeft() > 1 ? -container.scrollLeft() : 1;
-                        $scope.posTop = container.scrollTop();
-                    });
-                }, 50);
 
                 $scope.getNonHiddenColCount = function () {
                     var result = 1;

@@ -21,8 +21,8 @@
 
 .vx-grid-related {
 
-    .row{
-        height:auto;
+    .row {
+        height: auto;
     }
 
     .vx-scroller {
@@ -31,6 +31,39 @@
         -webkit-overflow-scrolling: touch;
         -ms-overflow-style: -ms-autohiding-scrollbar;
         padding: 0;
+    }
+
+    .vxTableScrollContainer {
+        height: calc(100% - 15px);
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+        padding: 0;
+        border: 1px solid #A0A0A0;
+
+        &.attrPaneOpen{
+            height:calc(100% - 60px);
+        }
+
+        &.attrPaneOpen.pageEnabled{
+            height:calc(100% - 98px);
+        }
+
+        &.pageEnabled:not(.attrPaneOpen){
+            height:calc(100% - 48px);
+        }
+    }
+
+    .offscreen {
+        position: absolute;
+        clip: rect(1px 1px 1px 1px); /* for Internet Explorer */
+        clip: rect(1px, 1px, 1px, 1px);
+        padding: 0;
+        border: 0;
+        height: 1px;
+        width: 1px;
+        overflow: hidden;
     }
 
     @media (max-width: 767px) {
@@ -309,9 +342,9 @@
         .vxTableContainer:not(.scrollDupHeader) {
             padding: 0;
             margin: 3px 0 0 0;
-            overflow-x: auto;
+            overflow-x: hidden;
             overflow-y: auto;
-            max-height: calc(100%- 15px);
+            height: 100%;
             -webkit-overflow-scrolling: touch;
             -ms-overflow-style: -ms-autohiding-scrollbar;
             border-top: none;
@@ -362,17 +395,6 @@
             table-layout: fixed;
             font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
             width: 100%;
-            border: 1px solid #D0D0D0;
-        }
-
-        .vxTableContainer.attrPaneOpen {
-            &:not(.scrollDupHeader) {
-                max-height: calc(100% - 60px);
-            }
-
-            &.pageEnabled:not(.scrollDupHeader) {
-                height: calc(100% - 108px);
-            }
         }
 
         .icon-container {
@@ -401,7 +423,6 @@
                     background: rgba(0, 0, 0, 0.1);
                 }
             }
-
         }
 
         .vxTable {
@@ -552,7 +573,20 @@
         -webkit-transition: height 0.3s ease-in-out 0s;
         transition: height 0.3s ease-in-out 0s;
 
+        &.scrollTableContainer {
+            width: auto;
+
+            table {
+                thead {
+                    th {
+                        height: 0 !important;
+                    }
+                }
+            }
+        }
+
         &.scrollTableContainer.scrollDupHeaderAdded .vxTable .vxHead tr th {
+
             &:nth-child(2n+1) span.noDdTitle {
                 color: #363636;
             }
@@ -563,16 +597,13 @@
         }
 
         &.scrollDupHeader {
-            position: absolute;
+            /*position: absolute;*/
             z-index: 999;
             margin-top: 0;
             -webkit-transition: top 0.3s ease-in-out 0s;
             transition: top 0.3s ease-in-out 0s;
-            opacity: 0;
-            filter: alpha(opacity = 0);
             padding: 0;
-
-            &:not(.scrollDupHeaderAdded) {
+            /*&:not(.scrollDupHeaderAdded) {
                 height: 0;
                 top: -100%;
             }
@@ -583,11 +614,7 @@
                 filter: alpha(opacity = 100);
                 -webkit-transition: opacity 0.2s linear 0s;
                 transition: opacity 0.2s linear 0s;
-                /*&.attrPaneOpen {
-                    top: 50px;
-                }*/
-            }
-
+            }*/
             .vxTableHolder {
                 -webkit-transition: left 0.3s ease-out 0s;
                 transition: left 0.3s ease-out 0s;

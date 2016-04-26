@@ -748,7 +748,7 @@
         reverseSortDirection: true,
         inlineAddRowEnabled: true,
         categories: self.categories,
-        emptyFill:'No records in the grid',
+        emptyFill: 'No records in the grid',
         newRowTemplate: {
             readOnly: "Y",
             transferFromCustomer: "Alpine Ski House A",
@@ -814,6 +814,10 @@
         self.vxSampleConfig.openManageColumns();
     }
 
+    self.consoleLogFiltered = function () {
+        console.log(self.vxSampleConfig.getFilteredDataSet());
+    }
+
     self.modRows = function () {
         var rows = [];
         var row = self._origCopy[0];
@@ -856,7 +860,7 @@
         self._tempDirection = !self._tempDirection;
     }
 
-    self.resetCustCol = function() {
+    self.resetCustCol = function () {
         self.vxSampleConfig.resetColumnFilters(['customer']);
     }
 

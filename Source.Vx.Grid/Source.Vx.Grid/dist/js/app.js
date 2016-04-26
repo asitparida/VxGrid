@@ -814,6 +814,10 @@
         self.vxSampleConfig.openManageColumns();
     }
 
+    self.consoleLogFiltered = function () {
+        console.log(self.vxSampleConfig.getFilteredDataSet());
+    }
+
     self.modRows = function () {
         var rows = [];
         var row = self._origCopy[0];

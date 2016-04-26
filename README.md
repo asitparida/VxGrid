@@ -112,6 +112,7 @@ BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs' IN DIRECTIVE DEFINTION
         ----------------------------
         <CONFIG>.getVxCounts()                  <NO PARAMS>                             RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
         <CONFIG>.getData()                      <NO PARAMS>                             RETURNS CURRENT GRID DATA SET - WITHOUT DIRTY MAPS
+        <CONFIG>.getFilteredDataSet()           <NO PARAMS>                             RETURNS ACTIVELY FILTERED DATA
         <CONFIG>.getActiveDataSet()             <NO PARAMS>                             RETURNS CURRENT ACTIVE DATA STATE
         <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>                        SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
         <CONFIG>.getSelectedRows()              <NO PARAMS>                             GET IDs FOR ROWS BEING SELECTED

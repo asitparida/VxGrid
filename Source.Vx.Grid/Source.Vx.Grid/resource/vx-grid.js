@@ -80,6 +80,7 @@
         ----------------------------
         <CONFIG>.getVxCounts()                  <NO PARAMS>                             RETURNS COUNT - {'vxAllDataLength': <LENGTH OF ALL DATA> , 'vxFilteredDataLength' : <LENGTH OF FILTERED DATA SET>, 'vxSelectedDataLength' : <LENGTH OF SELECTED DATA SET>
         <CONFIG>.getData()                      <NO PARAMS>                             RETURNS CURRENT GRID DATA SET - WITHOUT DIRTY MAPS
+        <CONFIG>.getFilteredDataSet()           <NO PARAMS>                             RETURNS ACTIVELY FILTERED DATA
         <CONFIG>.getActiveDataSet()             <NO PARAMS>                             RETURNS CURRENT ACTIVE DATA STATE
         <CONFIG>.setRowFieldValidation()        <ID, COL, VALID>                        SETS ROW AND FEILD VALIDATION TO 'VALID' VALUE
         <CONFIG>.getSelectedRows()              <NO PARAMS>                             GET IDs FOR ROWS BEING SELECTED
@@ -444,6 +445,12 @@
                     /// <returns type="ARRAY OF OBJECT" />
                     $scope.config.getActiveDataSet = function () {
                         return $scope.vxConfig.vxData;
+                    }
+
+                    /// <summary>CONFIG EXTENSION TO GET ACTIVELY FILTERED DATA</summary>
+                    /// <returns type="ARRAY OF OBJECT" />
+                    $scope.config.getFilteredDataSet = function () {
+                        return $scope.vxConfig.vxFilteredData;
                     }
 
                     /// <summary>CONFIG EXTENSION TO SET ROW VALIDATION PROPERTIES - INVALID ROWS/FILEDS</summary>

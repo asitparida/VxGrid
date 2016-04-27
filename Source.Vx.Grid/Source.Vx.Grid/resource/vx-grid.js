@@ -1325,18 +1325,30 @@
                 $scope.upDowKeyDownHandlerHeaderMenuItems = function (e, columnId) {
                     var _prevent = false;
                     if (e.keyCode == 40) {
+                        /* UP ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, true);
                         if ($('#' + _elemId).is('[tabindex="0"]')) {
                             $('#' + _elemId).focus();
                         }
                     }
                     else if (e.keyCode == 38) {
+                        /* DOWN ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, false);
                         if (_elemId == null) {
                             $(e.target).closest('th').focus();
                         }
                         else if ($('#' + _elemId).is('[tabindex="0"]')) {
                             $('#' + _elemId).focus();
+                        }
+                    }
+                    else if (e.keyCode == 27) {
+                        /* ESC KEY PRESSED */
+                        if ($scope.vxColSettings.dropdDownOpen[columnId] == true) {
+                            $scope.vxColSettings.dropdDownOpen[columnId] = false;
+                            var _elem = $(e.target).closest('th');
+                            if (_elem && _elem.length > 0) {
+                                $(_elem).focus();
+                            }
                         }
                     }
                     if (_prevent) {

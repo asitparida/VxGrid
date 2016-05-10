@@ -31,6 +31,8 @@
         <CONFIG>.jsonEditorEnabled			    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE JSON EDITOR
         <CONFIG>.sortPredicate			        <SUPPORTED : Y>    :   <STRING>    SET TO COLUMN_DEF_ID FOR DEFAULT SORTING BY THAT COLUMN
         <CONFIG>.reverseSortDirection			<SUPPORTED : Y>    :   <STRING>    SET TO TRUE/FALSE TO SET DEFAULT SORTING DIRECTION
+        <CONFIG>.emptyFill			            <SUPPORTED : Y>    :   <STRING>    CONTENTS TO SHOW FOR EMPTY GRID
+        <CONFIG>.loaderGifSrc                   <SUPPORTED : Y>    :   <STRING>    LOADER GIF PATH
         
         VX GRID COLUMN CONFIG (BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs') IN DIRECTIVE DEFINTION
         -----------------------------------------------------------------------------------------------------
@@ -291,7 +293,8 @@
                         { prop: 'allRowsSelectionEnabled', defValue: false },
                         { prop: 'sortPredicate', defValue: $scope.vxColSettings.primaryId },
                         { prop: 'reverseSortDirection', defValue: false, },
-                        { prop: 'emptyFill', defValue: '<span>No records to display ...</span>', },
+                        { prop: 'emptyFill', defValue: '<span>No records to display ...</span>' },
+                        { prop: 'loaderGifSrc', defValue: '/resource/loaderWhite36.GIF' }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})

@@ -33,6 +33,7 @@
         <CONFIG>.reverseSortDirection			<SUPPORTED : Y>    :   <STRING>    SET TO TRUE/FALSE TO SET DEFAULT SORTING DIRECTION
         <CONFIG>.emptyFill			            <SUPPORTED : Y>    :   <STRING>    CONTENTS TO SHOW FOR EMPTY GRID
         <CONFIG>.loaderGifSrc                   <SUPPORTED : Y>    :   <STRING>    LOADER GIF PATH
+        <CONFIG>.ariaPrimary                    <SUPPORTED : Y>    :   <STRING>    COLUMN IDENTIFYING ARIA PRIMARY
         
         VX GRID COLUMN CONFIG (BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs') IN DIRECTIVE DEFINTION
         -----------------------------------------------------------------------------------------------------
@@ -232,13 +233,13 @@
                             var _selColDefn = {
                                 id: 'inlinediting', columnName: 'Edit', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
                                 cellDefn:
-                                    '<div class="vx-row-edit icon-container" tabindex="0" vx-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false && vxColSettings.saveInProgress[VX_ROW_POINT] != true">'
+                                    '<div class="vx-row-edit icon-container" tabindex="0" vx-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false && vxColSettings.saveInProgress[VX_ROW_POINT] != true" role="button" aria-labelledby="vx_row_edit vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
                                         + '<i class="icon icon-edit"></i>'
                                   + '</div>'
-                                  + '<div class="vx-row-edit icon-container" ng-attr-vxdisabled="{{vxConfig.invalidRows[row[vxColSettings.primaryId]]}}" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true && vxColSettings.saveInProgress[VX_ROW_POINT] != true">'
+                                  + '<div class="vx-row-edit icon-container" ng-attr-vxdisabled="{{vxConfig.invalidRows[row[vxColSettings.primaryId]]}}" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true && vxColSettings.saveInProgress[VX_ROW_POINT] != true" role="button" aria-labelledby="vx_row_save vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
                                     + '<i class="icon icon-save"></i>'
                                   + '</div>'
-                                  + '<div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[VX_ROW_POINT] == true">'
+                                  + '<div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[VX_ROW_POINT] == true" role="button" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
                                     + '<img class="loader-row" src="/resource/loaderBlue30.GIF"></i>'
                                   + '</div>'
                                 , inlineEditOnColumnEnabled: false
@@ -258,8 +259,8 @@
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
                                 id: 'checkbox', columnName: 'Row Selection', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
-                                headerDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" /></div>',
-                                cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" /></div>'
+                                headerDefn: '<div class="vx-row-select"><span class="offscreen" id="vx_row_sel_row">Select Row</span><span class="offscreen" id="vx_row_sel_all_row">Select All Rows</span><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" aria-labelledby="vx_row_sel_all_row"  /></div>',
+                                cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" /></div>'
                             };
                             $scope.vxConfig.columnDefConfigs.unshift(_selColDefn);
                         }
@@ -294,7 +295,8 @@
                         { prop: 'sortPredicate', defValue: $scope.vxColSettings.primaryId },
                         { prop: 'reverseSortDirection', defValue: false },
                         { prop: 'emptyFill', defValue: '<span>No records to display ...</span>' },
-                        { prop: 'loaderGifSrc', defValue: '/resource/loaderWhite36.GIF' }
+                        { prop: 'loaderGifSrc', defValue: '/resource/loaderWhite36.GIF' },
+                        { prop: 'ariaPrimary', defValue: $scope.vxColSettings.primaryId }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
@@ -1263,7 +1265,7 @@
                     });
                     $scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
                 }
-                
+
                 /// <summary>GRID FUNCTION : FUNCTION TO MOVE FOCUS TO FIRST ITEM IN MENU</summary>
                 $scope.upDownKeyDownHandlerHeaderMenu = function (e) {
                     var _prevent = false;
@@ -1278,7 +1280,7 @@
                         e.preventDefault();
                     }
                 }
-                    
+
                 /// <summary>GRID FUNCTION : FUNCTION TO FIND THE APPROPRIATE ID FROM COLLECTION TO FOCUS</summary>
                 $scope.findIdToBeFocussed = function (index, collection, direction) {
                     var _id = index;
@@ -1305,7 +1307,7 @@
                     }
                     return index;
                 }
-                
+
                 /// <summary>GRID FUNCTION : FUNCTION TO HELP FIND FOCUSABLE ITEM</summary>
                 $scope.findFocussable = function (e, col, direction) {
                     var _id = $(e).attr('id');
@@ -1316,14 +1318,14 @@
                         if (_index != -1 && _index != _idCollection.length && direction == true) {
                             return $scope.findIdToBeFocussed(_index, _idCollection, true);
                         }
-                        else if (_index != -1 && _index != 0 &&  direction == false) {
+                        else if (_index != -1 && _index != 0 && direction == false) {
                             return $scope.findIdToBeFocussed(_index, _idCollection, false);
                         }
                         else
                             return null;
                     }
                 }
-                
+
                 /// <summary>GRID FUNCTION : FUNCTION TO HELP UP DOWN KEY STROKE MOVEMENTS IN MENU</summary>
                 $scope.upDowKeyDownHandlerHeaderMenuItems = function (e, columnId) {
                     var _prevent = false;

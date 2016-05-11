@@ -54,7 +54,7 @@
                             <i class="icon icon-add"></i>
                         </div>
                         <div class="search-container pull-right input-group">
-                            <input class="search form-control" type="search" ng-model="vxColSettings.searchToken" placeholder="Search" ng-keyup="keyUpSearch($event)" />
+                            <input class="search form-control" type="search" ng-model="vxColSettings.searchToken" placeholder="Search" ng-keyup="keyUpSearch($event)" aria-label="search table" />
                         </div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
                                                         <span class="indicator"><i class="icon icon-filter white"></i></span>Clear All Filters
                                                     </li>
                                                     <li role="presentation" class="filter-search" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && header.ddFiltersWithSearch == true">
-                                                        <input class="search-input" tabindex="0" type="search" placeholder="Search In Filters" ng-model="vxColSettings.filterSearchToken[header.id]" ng-attr-id="{{header.id}}_searchfilters" />
+                                                        <input class="search-input" tabindex="0" type="search" placeholder="Search In Filters" aria-label="search for filters in column {{header.columnName}}" ng-model="vxColSettings.filterSearchToken[header.id]" ng-attr-id="{{header.id}}_searchfilters" />
                                                     </li>
                                                     <li role="presentation" class="filter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && filter.disabled == false" ng-repeat="filter in vxColSettings.colFilterPairs[header.id] | filter:vxColSettings.filterSearchToken[header.id]">
                                                         <input class="filter-toggle" tabindex="0" type="checkbox" ng-model="vxColSettings.colFiltersStatus[filter.key]" ng-change="filterClick(header, filter)" ng-attr-id="{{header.id}}_filter_{{$index}}" /><label class="filterItemTitle"><span ng-if="filter.filterDefnAvailable == false">{{filter.name}}</span><span ng-if="filter.filterDefnAvailable == true" vx-compile="filter.filterDefn"></span></label>

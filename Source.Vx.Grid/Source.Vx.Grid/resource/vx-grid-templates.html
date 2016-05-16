@@ -25,36 +25,36 @@
                         <label class="statTitle" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}">Selected</label>
                         <label class="statValue" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}">{{vxColSettings.multiSelected.length | vxNumberFixedLen:2}}</label>
                     </div>
-                    <div class="col-md-8 vxTableOperations pull-right zeroPaddingRight" ng-if="vxConfig.showGridOptions">
-                        <div class="icon-container pull-right" title="JSON Editor" role="button" tabindex="0" ng-class="{'active' : vxColSettings.menu }" vx-key="openJsonEditor()" ng-if="vxConfig.jsonEditorEnabled">
-                            <i class="icon icon-edit"></i>
+                    <div class="vxTableOperations pull-right zeroPaddingRight" ng-if="vxConfig.showGridOptions">
+                        <div class="search-container pull-left input-group">
+                            <input class="search form-control" type="search" ng-model="vxColSettings.searchToken" placeholder="Search" ng-keyup="keyUpSearch($event)" aria-label="search table" />
                         </div>
-                        <div class="icon-container pull-right" ng-class="{'active' : vxColSettings.menu }" vx-key="openManageColumns()">
-                            <i class="icon icon-repair"></i>
-                        </div>
-                        <div class="icon-container pull-right" role="button" tabindex="{{multiBoxFilters.length == 0 ? -1 : 0}}" ng-class="{ 'disabled' : multiBoxFilters.length == 0}" vx-key="clearFilters()">
-                            <i class="icon icon-refresh"></i>
-                        </div>
-                        <div class="icon-container pull-right" ng-class="{'active' : vxColSettings.revealWrapRowData }" vx-key="revealWrapToggle()">
-                            <i class="icon icon-more"></i>
-                        </div>
-                        <div class="icon-container pull-right" role="button" tabindex="{{vxColSettings.multiSelected.length == 0 ? -1 : 0 }}" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" vx-key="clearSelection()">
-                            <i class="icon icon-clearselection"></i>
-                        </div>
-                        <div class="icon-container pull-right" role="button" tabindex="{{vxColSettings.selectAllEnabled == false && vxConfig.multiSelectionEnabled == true ? -1 : 0}}" ng-class="{ 'disabled' :vxColSettings.selectAllEnabled == false && vxConfig.multiSelectionEnabled == true}" vx-key="selectAllFiltered()">
-                            <i class="icon icon-openwith"></i>
-                        </div>
-                        <div class="icon-container pull-right" role="button" tabindex="0" ng-if="vxConfig.inlineEditingEnabled == true && vxConfig.inlineDeletingEnabled == true && vxColSettings.multiSelected.length > 0" vx-key="deleteRows()">
-                            <i class="icon icon-trash"></i>
-                        </div>
-                        <div class="icon-container pull-right" role="button" tabindex="{{editInProgressCount() == 0 ? -1 : 0}}" ng-if="vxConfig.inlineEditingEnabled == true && editInProgressCount() > 0" ng-class="{ 'disabled' : editInProgressCount() == 0}" vx-key="revertEdits()">
-                            <i class="icon icon-revert"></i>
-                        </div>
-                        <div class="icon-container pull-right" role="button" tabindex="0" ng-if="vxConfig.inlineEditingEnabled == true && vxConfig.inlineAddRowEnabled == true" vx-key="addNewRow()">
+                        <div class="icon-container pull-left" role="button" tabindex="0" ng-if="vxConfig.inlineEditingEnabled == true && vxConfig.inlineAddRowEnabled == true" vx-key="addNewRow()">
                             <i class="icon icon-add"></i>
                         </div>
-                        <div class="search-container pull-right input-group">
-                            <input class="search form-control" type="search" ng-model="vxColSettings.searchToken" placeholder="Search" ng-keyup="keyUpSearch($event)" aria-label="search table" />
+                        <div class="icon-container pull-left" role="button" tabindex="{{editInProgressCount() == 0 ? -1 : 0}}" ng-if="vxConfig.inlineEditingEnabled == true && editInProgressCount() > 0" ng-class="{ 'disabled' : editInProgressCount() == 0}" vx-key="revertEdits()">
+                            <i class="icon icon-revert"></i>
+                        </div>
+                        <div class="icon-container pull-left" role="button" tabindex="0" ng-if="vxConfig.inlineEditingEnabled == true && vxConfig.inlineDeletingEnabled == true && vxColSettings.multiSelected.length > 0" vx-key="deleteRows()">
+                            <i class="icon icon-trash"></i>
+                        </div>
+                        <div class="icon-container pull-left" role="button" tabindex="{{vxColSettings.selectAllEnabled == false && vxConfig.multiSelectionEnabled == true ? -1 : 0}}" ng-class="{ 'disabled' :vxColSettings.selectAllEnabled == false && vxConfig.multiSelectionEnabled == true}" vx-key="selectAllFiltered()">
+                            <i class="icon icon-openwith"></i>
+                        </div>
+                        <div class="icon-container pull-left" role="button" tabindex="{{vxColSettings.multiSelected.length == 0 ? -1 : 0 }}" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" vx-key="clearSelection()">
+                            <i class="icon icon-clearselection"></i>
+                        </div>
+                        <div class="icon-container pull-left" ng-class="{'active' : vxColSettings.revealWrapRowData }" vx-key="revealWrapToggle()">
+                            <i class="icon icon-more"></i>
+                        </div>
+                        <div class="icon-container pull-left" role="button" tabindex="{{multiBoxFilters.length == 0 ? -1 : 0}}" ng-class="{ 'disabled' : multiBoxFilters.length == 0}" vx-key="clearFilters()">
+                            <i class="icon icon-refresh"></i>
+                        </div>
+                        <div class="icon-container pull-left" ng-class="{'active' : vxColSettings.menu }" vx-key="openManageColumns()">
+                            <i class="icon icon-repair"></i>
+                        </div>
+                        <div class="icon-container pull-left" title="JSON Editor" role="button" tabindex="0" ng-class="{'active' : vxColSettings.menu }" vx-key="openJsonEditor()" ng-if="vxConfig.jsonEditorEnabled">
+                            <i class="icon icon-edit"></i>
                         </div>
                     </div>
                 </div>

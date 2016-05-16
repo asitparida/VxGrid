@@ -260,7 +260,7 @@
                             var _selColDefn = {
                                 id: 'checkbox', columnName: 'Row Selection', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
                                 headerDefn: '<div class="vx-row-select"><span class="offscreen" id="vx_row_sel_row">Select Row</span><span class="offscreen" id="vx_row_sel_all_row">Select All Rows</span><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" aria-labelledby="vx_row_sel_all_row"  /></div>',
-                                cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" /></div>'
+                                cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" ng-attr-id="vx_row-sel_in{{::row[vxColSettings.primaryId]}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" /></div>'
                             };
                             $scope.vxConfig.columnDefConfigs.unshift(_selColDefn);
                         }

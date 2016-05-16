@@ -271,10 +271,10 @@
                         <div class="col-xs-1 vxH100 visChangers">
                             <div class="col-xs-12 visChangersContainer">
                                 <div class="col-xs-12 visChangersItem zeroPadding">
-                                    <div class="icon-container" role="button" tabindex="{{headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == false ? -1 : 0}}" ng-class="{'disabled' : headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == false}" vx-key="makeVisible(headerSelected)" ng-keydown="upDownKeyPressHandler($event)">
+                                    <div class="icon-container" role="button" tabindex="{{headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == false ? -1 : 0}}" ng-class="{'disabled' : headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == false}" vx-key="makeVisible(headerSelected)" ng-keydown="upDownKeyPressHandler($event)" aria-label="Make Columns Visible">
                                         <i class="icon icon-right"></i>
                                     </div>
-                                    <div class="icon-container" role="button" tabindex="{{headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == true ? -1 : 0}}" ng-class="{'disabled' : headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == true}" vx-key="makeHidden(headerSelected)" ng-keydown="upDownKeyPressHandler($event)">
+                                    <div class="icon-container" role="button" tabindex="{{headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == true ? -1 : 0}}" ng-class="{'disabled' : headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == true}" vx-key="makeHidden(headerSelected)" ng-keydown="upDownKeyPressHandler($event)" aria-label="Make Columns Hidden">
                                         <i class="icon icon-left"></i>
                                     </div>
                                 </div>
@@ -313,10 +313,10 @@
                         <div class="col-xs-1 vxH100 visChangers">
                             <div class="col-xs-12 visChangersContainer">
                                 <div class="col-xs-12 visChangersItem zeroPadding">
-                                    <div class="icon-container" role="button" tabindex="{{headerSelected.orderLocked || headerSelected.hidden || headerSelected == null ? -1 : 0}}" ng-class="{'disabled' : headerSelected.orderLocked || headerSelected.hidden || headerSelected == null}" vx-key="swapAbove(headerSelected)" ng-keydown="upDownKeyPressHandler($event)">
+                                    <div class="icon-container" role="button" tabindex="{{headerSelected.orderLocked || headerSelected.hidden || headerSelected == null ? -1 : 0}}" ng-class="{'disabled' : headerSelected.orderLocked || headerSelected.hidden || headerSelected == null}" vx-key="swapAbove(headerSelected)" ng-keydown="upDownKeyPressHandler($event)" aria-label="Move Column Up">
                                         <i class="icon icon-up"></i>
                                     </div>
-                                    <div class="icon-container" role="button" tabindex="{{headerSelected.orderLocked || headerSelected.hidden || headerSelected == null ? -1 : 0}}" ng-class="{'disabled' : headerSelected.orderLocked || headerSelected.hidden || headerSelected == null}" vx-key="swapBelow(headerSelected)" ng-keydown="upDownKeyPressHandler($event)">
+                                    <div class="icon-container" role="button" tabindex="{{headerSelected.orderLocked || headerSelected.hidden || headerSelected == null ? -1 : 0}}" ng-class="{'disabled' : headerSelected.orderLocked || headerSelected.hidden || headerSelected == null}" vx-key="swapBelow(headerSelected)" ng-keydown="upDownKeyPressHandler($event)" aria-label="Move Column Down">
                                         <i class="icon icon-down"></i>
                                     </div>
                                 </div>

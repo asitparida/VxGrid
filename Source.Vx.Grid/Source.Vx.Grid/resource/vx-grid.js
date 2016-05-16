@@ -34,6 +34,7 @@
         <CONFIG>.emptyFill			            <SUPPORTED : Y>    :   <STRING>    CONTENTS TO SHOW FOR EMPTY GRID
         <CONFIG>.loaderGifSrc                   <SUPPORTED : Y>    :   <STRING>    LOADER GIF PATH
         <CONFIG>.ariaPrimary                    <SUPPORTED : Y>    :   <STRING>    COLUMN IDENTIFYING ARIA PRIMARY
+        <CONFIG>.xsTemplate                     <SUPPORTED : Y>    :   <BOOLEAN>   ENABLE XS SPECIFIC TEMPLATE  
         
         VX GRID COLUMN CONFIG (BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs') IN DIRECTIVE DEFINTION
         -----------------------------------------------------------------------------------------------------
@@ -200,11 +201,7 @@
                         'filterSearchToken': {}, //
                         'saveInProgress': {} // STORES WHETHER A CREATE/EDIT/DELETE OPERATION IS IN PROGRESS
                     };
-                    // SETTING XS VIEW BASED PROPERTIES BASED ON WINDOW WIDTH
-                    if ($scope.getWindowDimensions().w < 768) {
-                        $scope.vxColSettings.xsViewEnabled = true;
-                        $scope.vxColSettings.latchExcess = 5;
-                    }
+                    
                     $scope.vxConfig = angular.copy($scope.config);
                     /* GETTING / SETTING PRIMARY COLUMN*/
                     var _primaryColDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.primary == true });
@@ -296,12 +293,18 @@
                         { prop: 'reverseSortDirection', defValue: false },
                         { prop: 'emptyFill', defValue: '<span>No records to display ...</span>' },
                         { prop: 'loaderGifSrc', defValue: '/resource/loaderWhite36.GIF' },
-                        { prop: 'ariaPrimary', defValue: $scope.vxColSettings.primaryId }
+                        { prop: 'ariaPrimary', defValue: $scope.vxColSettings.primaryId },
+                        { prop: 'xsTemplate', defValue: false }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
                             $scope.vxConfig[propDefn.prop] = propDefn.defValue;
                     });
+                    // SETTING XS VIEW BASED PROPERTIES BASED ON WINDOW WIDTH
+                    if ($scope.getWindowDimensions().w < 768) {
+                        $scope.vxColSettings.xsViewEnabled = true && $scope.vxConfig.xsTemplate;
+                        $scope.vxColSettings.latchExcess = 5;
+                    }
                     $scope.vxColSettings.selectAllOnRenderAll = $scope.vxConfig.selectAllOnRenderAll;
                     _.each($scope.vxConfig.columnDefConfigs, function (col) {
                         /* SET DEAFULTS FOR COLUMNS */
@@ -420,6 +423,20 @@
                             $scope.vxConfig.newRowTemplate = newRowTemplate;
                         }
                     }
+
+                    /// <summary>GRID FUNCTION : WATCH OVER THE WINDOW DIMENSIONS SO AS TO ENABLE XS VIEW WHEN WIDTH < 768PX </summary>
+                    var vxWindowsWidthDeregister = $scope.$watch('getWindowDimensions()', function (newValue, oldValue) {
+                        if (newValue.w < 768)
+                            $scope.vxColSettings.xsViewEnabled = true;
+                        else
+                            $scope.vxColSettings.xsViewEnabled = false;
+                    }, true);
+                    if ($scope.vxConfig.xsTemplate == false) {
+                        vxWindowsWidthDeregister();
+                    }
+                    w.bind('resize', function () {
+                        $scope.$apply();
+                    });
 
                     /* GENERATE VX INSTANCE ID AND SEND BACK*/
                     $scope.config.id = $scope.vxConfig.id = _.uniqueId('_vxUID_');
@@ -836,17 +853,6 @@
                         $scope.vxColSettings.xsSearch = angular.copy($scope.vxColSettings.searchToken);
                     }
                 }
-
-                /// <summary>GRID FUNCTION : WATCH OVER THE WINDOW DIMENSIONS SO AS TO ENABLE XS VIEW WHEN WIDTH < 768PX </summary>
-                $scope.$watch('getWindowDimensions()', function (newValue, oldValue) {
-                    if (newValue.w < 768)
-                        $scope.vxColSettings.xsViewEnabled = true;
-                    else
-                        $scope.vxColSettings.xsViewEnabled = false;
-                }, true);
-                w.bind('resize', function () {
-                    $scope.$apply();
-                });
 
                 /// <summary>GRID FUNCTION : CHECK IF HEADER NAME IS VALID</summary>
                 $scope.isValidHeaderName = function (header, name) {

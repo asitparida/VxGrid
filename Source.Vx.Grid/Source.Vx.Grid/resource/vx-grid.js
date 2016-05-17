@@ -1602,12 +1602,32 @@
                     }, 100);
                 }
 
-                /// <summary>GRID FUNCTION : SHOW SCROLL ARROW ICON WHEN CONDITION SATISFIED - SCROLL NEEDED</summary>
-                $scope.showScrollArrow = function () {
+                /// <summary>GRID FUNCTION : SCROLL DOWN 60PX IN THE GRID</summary>
+                $scope.justScrollDown = function () {
+                    var element = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
+                    var _scrollTop = $(element).scrollTop() || 0;
+                    $timeout(function () {
+                        $(element).animate({ scrollTop: _scrollTop + 96 }, 500);
+                    }, 100);
+                }
+
+                /// <summary>GRID FUNCTION : SHOW SCROLL DOWN ARROW ICON WHEN CONDITION SATISFIED - SCROLL NEEDED</summary>
+                $scope.showScrollDownArrow = function () {
                     var scrollContainer = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
                     var tableContainer = $scope.selfEle.find('.scrollTableContainer table.vxTable');
                     if (typeof scrollContainer !== 'undefined' && typeof tableContainer !== 'undefined' && scrollContainer != null && tableContainer != null) {
-                        if (tableContainer.height() > scrollContainer.height() && scrollContainer.scrollTop() > 60)
+                        if (tableContainer.height() > scrollContainer.height())
+                            return true;
+                    }
+                    return false;
+                }
+
+                /// <summary>GRID FUNCTION : SHOW SCROLL UP ARROW ICON WHEN CONDITION SATISFIED - SCROLL NEEDED</summary>
+                $scope.showScrollUpArrow = function () {
+                    var scrollContainer = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
+                    var tableContainer = $scope.selfEle.find('.scrollTableContainer table.vxTable');
+                    if (typeof scrollContainer !== 'undefined' && typeof tableContainer !== 'undefined' && scrollContainer != null && tableContainer != null) {
+                        if (tableContainer.height() > scrollContainer.height() && scrollContainer.scrollTop() > 48)
                             return true;
                     }
                     return false;

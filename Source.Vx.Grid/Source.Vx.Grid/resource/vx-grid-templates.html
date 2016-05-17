@@ -235,8 +235,11 @@
                     <i class="icon">{{pageNum + 1}}</i>
                 </div>
             </div>
-            <div class="icon-container scrollAction" role="button" tabindex="0" vx-key="justScrollTop()" ng-class="{'pageEnabled': vxColSettings.vxPageEnabled}" ng-show="showScrollArrow()">
+            <div class="icon-container scrollAction up" role="button" tabindex="0" vx-key="justScrollTop()" ng-class="{'pageEnabled': vxColSettings.vxPageEnabled}" ng-show="showScrollUpArrow()" aria-label="Scroll Up">
                 <i class="icon icon-up"></i>
+            </div>
+            <div class="icon-container scrollAction down" role="button" tabindex="0" vx-key="justScrollDown()" ng-class="{'pageEnabled': vxColSettings.vxPageEnabled}" ng-show="showScrollDownArrow()" aria-label="Scroll Down">
+                <i class="icon icon-up down"></i>
             </div>
         </div>
     </div>
@@ -244,7 +247,7 @@
         <div class="modal-body vx-grid-related ">
             <div class="vxTableSettings">
                 <div class="vxSettingsHead">
-                    <label class="title">Mange Columns</label>
+                    <label class="title">Manage Columns</label>
                     <div class="icon-container" role="button" tabindex="0" vx-key="cancelChangeInConfig()">
                         <i class="icon icon-close"></i>
                     </div>

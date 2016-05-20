@@ -201,7 +201,7 @@
                         'filterSearchToken': {}, //
                         'saveInProgress': {} // STORES WHETHER A CREATE/EDIT/DELETE OPERATION IS IN PROGRESS
                     };
-                    
+
                     $scope.vxConfig = angular.copy($scope.config);
                     /* GETTING / SETTING PRIMARY COLUMN*/
                     var _primaryColDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.primary == true });
@@ -228,7 +228,7 @@
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('inlinediting') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
-                                id: 'inlinediting', columnName: 'Edit', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
+                                id: 'inlinediting', columnName: 'Edit', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
                                 cellDefn:
                                     '<div class="vx-row-edit icon-container" tabindex="0" vx-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false && vxColSettings.saveInProgress[VX_ROW_POINT] != true" role="button" aria-labelledby="vx_row_edit vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
                                         + '<i class="icon icon-edit"></i>'
@@ -255,7 +255,7 @@
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('checkbox') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
-                                id: 'checkbox', columnName: 'Row Selection', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
+                                id: 'checkbox', columnName: 'Row Selection', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
                                 headerDefn: '<div class="vx-row-select"><span class="offscreen" id="vx_row_sel_row">Select Row</span><span class="offscreen" id="vx_row_sel_all_row">Select All Rows</span><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" aria-labelledby="vx_row_sel_all_row"  /></div>',
                                 cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" ng-attr-id="vx_row-sel_in{{::row[vxColSettings.primaryId]}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" /></div>'
                             };
@@ -327,7 +327,8 @@
                             { prop: 'inlineEditOnColumnEnabled', defValue: false },
                             { prop: 'inlineEditValidation', defValue: false },
                             { prop: 'editDefn', defValue: null },
-                            { prop: 'editDefnTemplate', defValue: null }
+                            { prop: 'editDefnTemplate', defValue: null },
+                            { prop: 'headTabIndex', defValue: 0 }
                         ];
                         _.each(_propDefns, function (propDefn) {
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})

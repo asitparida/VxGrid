@@ -7,34 +7,36 @@
         
         VX GRID CONFIG (BOUND TO 'config=') IN DIRECTIVE CALL
         -----------------------------------------------------------       
-        <CONFIG>.enableDropdownsInHeader        <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE DROPDOWNS ON C0LUMNS, ELSE DEFAULT SORT ON HEADER CLICK
-        <CONFIG>.selectionEnabled               <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE ROW SELECTION
-        <CONFIG>.allRowsSelectionEnabled        <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE ALL ROWS SELECTION
-        <CONFIG>.multiSelectionEnabled          <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE MULTI ROW SELECTION - DEPENDENT ON 
-        <CONFIG>.showGridStats                  <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE ROW SELECTION
-        <CONFIG>.showGridOptions                <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE ROW SELECTION
-        <CONFIG>.selectAllOnRenderAll           <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE SELECT ONLY WHEN ALL ROWS ARE RENDERED
-        <CONFIG>.multiSelectionDependentCol     <SUPPORTED : Y>    :   <STRING>    SET TO COLUMN ON WHICH MULTI SELECTION IS DEPENDENT OR SET TO '' OR NULL
-        <CONFIG>.onSelectionReturnCol           <SUPPORTED : Y>    :   <STRING>    SET TO COLUMN WHICH POPERTY IS RETURNED ON ROW SELECTION CHANGE
-        <CONFIG>.showTable                      <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLE SELECT ONLY WHEN ALL ROWS ARE RENDERED
+        <CONFIG>.enableDropdownsInHeader        <SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE TO ENABLE DROPDOWNS ON C0LUMNS, ELSE DEFAULT SORT ON HEADER CLICK
+        <CONFIG>.selectionEnabled               <SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLE ROW SELECTION
+        <CONFIG>.allRowsSelectionEnabled        <SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLE ALL ROWS SELECTION
+        <CONFIG>.multiSelectionEnabled          <SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLE MULTI ROW SELECTION - DEPENDENT ON 
+        <CONFIG>.showGridStats                  <SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLE ROW SELECTION
+        <CONFIG>.showGridOptions                <SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLE ROW SELECTION
+        <CONFIG>.selectAllOnRenderAll           <SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLE SELECT ONLY WHEN ALL ROWS ARE RENDERED
+        <CONFIG>.multiSelectionDependentCol     <SUPPORTED : Y>    :   <STRING>         SET TO COLUMN ON WHICH MULTI SELECTION IS DEPENDENT OR SET TO '' OR NULL
+        <CONFIG>.onSelectionReturnCol           <SUPPORTED : Y>    :   <STRING>         SET TO COLUMN WHICH POPERTY IS RETURNED ON ROW SELECTION CHANGE
+        <CONFIG>.showTable                      <SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLE SELECT ONLY WHEN ALL ROWS ARE RENDERED
         <CONFIG>.data                           <SUPPORTED : Y>    :   <ARRAY>
-        <CONFIG>.xsRowTitleTemplate             <SUPPORTED : Y>    :   <STRING>    SET TO XS ONLY TEMPLATE - DEFAULTS TO PRIMARY COLUMN HEADER
-		<CONFIG>.virtualization					<SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE VIRTUALIZATION AND ENABLE PAGINATION
-        <CONFIG>.pagination					    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO FALSE TO DISABLE PAGINATION AND ENABLE PAGINATION
-		<CONFIG>.pageLength						<SUPPORTED : Y>    :   <NUMBER>	   SET PAGINATION LENGTH AND DEFUALTS TO 20
-        <CONFIG>.inlineEditingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE EDITING OPTION
-        <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING INLINE DELETING OPTION
-        <CONFIG>.inlineAddRowEnabled			<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING ADDING ROW
-        <CONFIG>.inlineSaveOverrideEnabled		<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING SAVE ROW OVEVRRIDE
-        <CONFIG>.inlineDeleteOverrideEnabled	<SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE FOR ENABLING SAVE DELETE OVEVRRIDE
-        <CONFIG>.newRowTemplate			        <SUPPORTED : Y>    :   <STRING>    SET TO NEW TEMPLATE
-        <CONFIG>.jsonEditorEnabled			    <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE JSON EDITOR
-        <CONFIG>.sortPredicate			        <SUPPORTED : Y>    :   <STRING>    SET TO COLUMN_DEF_ID FOR DEFAULT SORTING BY THAT COLUMN
-        <CONFIG>.reverseSortDirection			<SUPPORTED : Y>    :   <STRING>    SET TO TRUE/FALSE TO SET DEFAULT SORTING DIRECTION
-        <CONFIG>.emptyFill			            <SUPPORTED : Y>    :   <STRING>    CONTENTS TO SHOW FOR EMPTY GRID
-        <CONFIG>.loaderGifSrc                   <SUPPORTED : Y>    :   <STRING>    LOADER GIF PATH
-        <CONFIG>.ariaPrimary                    <SUPPORTED : Y>    :   <STRING>    COLUMN IDENTIFYING ARIA PRIMARY
-        <CONFIG>.xsTemplate                     <SUPPORTED : Y>    :   <BOOLEAN>   ENABLE XS SPECIFIC TEMPLATE  
+        <CONFIG>.xsRowTitleTemplate             <SUPPORTED : Y>    :   <STRING>         SET TO XS ONLY TEMPLATE - DEFAULTS TO PRIMARY COLUMN HEADER
+		<CONFIG>.virtualization					<SUPPORTED : Y>    :   <BOOLEAN>        SET TO FALSE TO DISABLE VIRTUALIZATION AND ENABLE PAGINATION
+        <CONFIG>.pagination					    <SUPPORTED : Y>    :   <BOOLEAN>        SET TO FALSE TO DISABLE PAGINATION AND ENABLE PAGINATION
+		<CONFIG>.pageLength						<SUPPORTED : Y>    :   <NUMBER>	        SET PAGINATION LENGTH AND DEFUALTS TO 20
+        <CONFIG>.inlineEditingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLING INLINE EDITING OPTION
+        <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLING INLINE DELETING OPTION
+        <CONFIG>.inlineAddRowEnabled			<SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLING ADDING ROW
+        <CONFIG>.inlineSaveOverrideEnabled		<SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLING SAVE ROW OVEVRRIDE
+        <CONFIG>.inlineDeleteOverrideEnabled	<SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLING SAVE DELETE OVEVRRIDE
+        <CONFIG>.newRowTemplate			        <SUPPORTED : Y>    :   <STRING>         SET TO NEW TEMPLATE
+        <CONFIG>.jsonEditorEnabled			    <SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE TO ENABLE JSON EDITOR
+        <CONFIG>.sortPredicate			        <SUPPORTED : Y>    :   <STRING>         SET TO COLUMN_DEF_ID FOR DEFAULT SORTING BY THAT COLUMN
+        <CONFIG>.reverseSortDirection			<SUPPORTED : Y>    :   <STRING>         SET TO TRUE/FALSE TO SET DEFAULT SORTING DIRECTION
+        <CONFIG>.emptyFill			            <SUPPORTED : Y>    :   <STRING>         CONTENTS TO SHOW FOR EMPTY GRID
+        <CONFIG>.loaderGifSrc                   <SUPPORTED : Y>    :   <STRING>         LOADER GIF PATH
+        <CONFIG>.ariaPrimary                    <SUPPORTED : Y>    :   <STRING>         COLUMN IDENTIFYING ARIA PRIMARY
+        <CONFIG>.xsTemplate                     <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE XS SPECIFIC TEMPLATE
+        <CONFIG>.initialRowClasses              <SUPPORTED : Y>    :   <MAP<OBJECT>>    PROVIDE KEY VALUE PAIRS FOR INITIAL ROW CLASSES
+        <CONFIG>.rowClassFn                     <SUPPORTED : Y>    :   <FUNCTION>       PROVIDE FUNCTION REFERENCE TO SELF INVOKE WITH ONE PARAM - VX_ROW : FUNCTION VX_SAMPLE_ROWCLASS_FUNC(ROW){}
         
         VX GRID COLUMN CONFIG (BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs') IN DIRECTIVE DEFINTION
         -----------------------------------------------------------------------------------------------------
@@ -201,7 +203,7 @@
                         'filterSearchToken': {}, //
                         'saveInProgress': {} // STORES WHETHER A CREATE/EDIT/DELETE OPERATION IS IN PROGRESS
                     };
-                    
+
                     $scope.vxConfig = angular.copy($scope.config);
                     /* GETTING / SETTING PRIMARY COLUMN*/
                     var _primaryColDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.primary == true });
@@ -228,7 +230,7 @@
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('inlinediting') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
-                                id: 'inlinediting', columnName: 'Edit', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
+                                id: 'inlinediting', columnName: 'Edit', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
                                 cellDefn:
                                     '<div class="vx-row-edit icon-container" tabindex="0" vx-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false && vxColSettings.saveInProgress[VX_ROW_POINT] != true" role="button" aria-labelledby="vx_row_edit vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
                                         + '<i class="icon icon-edit"></i>'
@@ -255,7 +257,7 @@
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('checkbox') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
-                                id: 'checkbox', columnName: 'Row Selection', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true,
+                                id: 'checkbox', columnName: 'Row Selection', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
                                 headerDefn: '<div class="vx-row-select"><span class="offscreen" id="vx_row_sel_row">Select Row</span><span class="offscreen" id="vx_row_sel_all_row">Select All Rows</span><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" aria-labelledby="vx_row_sel_all_row"  /></div>',
                                 cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" ng-attr-id="vx_row-sel_in{{::row[vxColSettings.primaryId]}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" /></div>'
                             };
@@ -300,6 +302,7 @@
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
                             $scope.vxConfig[propDefn.prop] = propDefn.defValue;
                     });
+                    $scope.vxColSettings.vxRowClass = $scope.vxConfig['initialRowClasses'];
                     // SETTING XS VIEW BASED PROPERTIES BASED ON WINDOW WIDTH
                     if ($scope.getWindowDimensions().w < 768) {
                         $scope.vxColSettings.xsViewEnabled = true && $scope.vxConfig.xsTemplate;
@@ -327,7 +330,8 @@
                             { prop: 'inlineEditOnColumnEnabled', defValue: false },
                             { prop: 'inlineEditValidation', defValue: false },
                             { prop: 'editDefn', defValue: null },
-                            { prop: 'editDefnTemplate', defValue: null }
+                            { prop: 'editDefnTemplate', defValue: null },
+                            { prop: 'headTabIndex', defValue: 0 }
                         ];
                         _.each(_propDefns, function (propDefn) {
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
@@ -1683,16 +1687,19 @@
 
                 /// <summary>GRID EVENT : LISTEN TO ASKS FOR CHANGES IN ROW CLASSES</summary>
                 $scope.$on('vxGridChangeRowClass', function (e, data) {
-                    $scope.changeRowClass(data);
+                    if (data.id.localeCompare($scope.vxConfig.id) == 0) {
+                        $scope.changeRowClass(data.data);
+                    }
                 });
 
                 /// <summary>GRID FUNCTION : CHANGE ROW CLASSES BASED ON ROW DATA RECIEVED</summary>
                 $scope.changeRowClass = function (data) {
-                    if (data.id.localeCompare($scope.vxConfig.id) == 0) {
-                        _.each(data.data, function (pair) {
-                            $scope.vxColSettings.vxRowClass[pair.key] = pair.value;
-                        });
-                    }
+                     for (var prop in data) {
+                         $scope.vxColSettings.vxRowClass[prop] = data[prop];
+                     }
+                     if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                         $scope.$apply();
+                     }
                 }
 
                 /// <summary>GRID EVENT : LISTEN TO ASK FOR RESETTING OW CLASSES</summary>

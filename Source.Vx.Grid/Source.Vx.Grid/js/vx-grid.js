@@ -36,6 +36,7 @@
         <CONFIG>.ariaPrimary                    <SUPPORTED : Y>    :   <STRING>         COLUMN IDENTIFYING ARIA PRIMARY
         <CONFIG>.xsTemplate                     <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE XS SPECIFIC TEMPLATE
         <CONFIG>.initialRowClasses              <SUPPORTED : Y>    :   <MAP<OBJECT>>    PROVIDE KEY VALUE PAIRS FOR INITIAL ROW CLASSES
+        <CONFIG>.rowClassFn                     <SUPPORTED : Y>    :   <FUNCTION>       PROVIDE FUNCTION REFERENCE TO SELF INVOKE WITH ONE PARAM - VX_ROW : FUNCTION VX_SAMPLE_ROWCLASS_FUNC(ROW){}
         
         VX GRID COLUMN CONFIG (BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs') IN DIRECTIVE DEFINTION
         -----------------------------------------------------------------------------------------------------
@@ -1693,9 +1694,12 @@
 
                 /// <summary>GRID FUNCTION : CHANGE ROW CLASSES BASED ON ROW DATA RECIEVED</summary>
                 $scope.changeRowClass = function (data) {
-                    console.log($scope.vxColSettings.vxRowClass);
-                    $scope.vxColSettings.vxRowClass = data;
-                    console.log($scope.vxColSettings.vxRowClass);
+                     for (var prop in data) {
+                         $scope.vxColSettings.vxRowClass[prop] = data[prop];
+                     }
+                     if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                         $scope.$apply();
+                     }
                 }
 
                 /// <summary>GRID EVENT : LISTEN TO ASK FOR RESETTING OW CLASSES</summary>

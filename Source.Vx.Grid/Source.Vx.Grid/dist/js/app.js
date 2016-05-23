@@ -744,7 +744,8 @@
         data: self.sampling(20, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
-        initialRowClasses : self.sampleRowClasses,
+        initialRowClasses: self.sampleRowClasses,
+        //rowClassFn: vxRowClassFn,
         showTable: false,
         virtualization: true,
         pagination: false,
@@ -796,6 +797,10 @@
         if (typeof data === 'undefined' || data == '' || data == {} || data.localeCompare('http://google.com') == 0)
             valid = false;
         self.vxSampleConfig.setRowFieldValidation(id, 'link', valid);
+    }
+
+    function vxRowClassFn(row) {
+        return 'row-fn';
     }
 
     self.vxSampleConfig.fnInlineSaveOverride = function (newrow, oldrow) {

@@ -685,8 +685,11 @@
 
     self._origCopy = [];
 
+    self.sampleRowClasses = {};
+
     self.sampling = function (iter, customer) {
         var _samples = [];
+        self.sampleRowClasses = {};
         //original = _.first(original, 5);
         _.each(original, function (record, k) {
             _.each(_.range(iter), function (i, j) {
@@ -710,6 +713,7 @@
                 else
                     rec.userAlias = null;
                 rec.mid = i + j;
+                self.sampleRowClasses[rec.laborId] = rec.locked == true ? 'row-even' : 'row-odd';
                 _samples.push(rec);
             });
         });
@@ -740,6 +744,7 @@
         data: self.sampling(20, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
+        initialRowClasses : self.sampleRowClasses,
         showTable: false,
         virtualization: true,
         pagination: false,
@@ -893,6 +898,16 @@
         console.log(self.vxSampleConfig.getData());
         console.log(self.vxSampleConfig.getActiveDataSet());
         console.log(self.smapledt);
+    }
+
+    self.classToggle = false;
+    self.toggleRowClasses = function () {
+        var data = {};
+        _.each(self.vxSampleConfig.data, function (row) {
+            data[row.laborId] = row.locked == self.classToggle ? 'row-even' : 'row-odd';
+        });
+        self.vxSampleConfig.changeRowClass(data);
+        self.classToggle = !self.classToggle;
     }
 
     $scope.$on('vxGridRowSelectionChange', function (e, data) {

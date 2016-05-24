@@ -67,7 +67,7 @@
             errorsShow: false,
             disabled: false,
             transferStatus: 0,
-            locked: false
+            locked: true
         },
         {
             readOnly: "N",
@@ -85,7 +85,7 @@
             errorsShow: false,
             disabled: false,
             transferStatus: 0,
-            locked: false
+            locked: true
         },
         {
             readOnly: "N",
@@ -744,8 +744,8 @@
         data: self.sampling(20, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
-        initialRowClasses: self.sampleRowClasses,
-        //rowClassFn: vxRowClassFn,
+        //initialRowClasses: self.sampleRowClasses,
+        rowClassFn: randomRowFunction,
         showTable: false,
         virtualization: true,
         pagination: false,
@@ -799,8 +799,12 @@
         self.vxSampleConfig.setRowFieldValidation(id, 'link', valid);
     }
 
-    function vxRowClassFn(row) {
-        return 'row-fn';
+    function randomRowFunction(row) {
+        //MANIPUKLATION DPEENDS ON ROW
+        if (row.locked == true)
+            return 'row-fn-locked';
+        else
+            return 'row-fn-notlocked';
     }
 
     self.vxSampleConfig.fnInlineSaveOverride = function (newrow, oldrow) {

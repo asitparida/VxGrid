@@ -56,6 +56,9 @@
                         <div class="icon-container pull-left" title="JSON Editor" role="button" tabindex="0" ng-class="{'active' : vxColSettings.menu }" vx-key="openJsonEditor()" ng-if="vxConfig.jsonEditorEnabled" aria-label="open json editor">
                             <i class="icon icon-edit"></i>
                         </div>
+                        <div class="icon-container pull-left" role="button" tabindex="0" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" title="Export to Excel" vx-key="openExport()" ng-if="vxConfig.exportEnabled">
+                            <i class="icon icon-disk-download"></i>
+                        </div>
                     </div>
                 </div>
             </div>

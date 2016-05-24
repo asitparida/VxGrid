@@ -35,6 +35,8 @@
         <CONFIG>.loaderGifSrc                   <SUPPORTED : Y>    :   <STRING>         LOADER GIF PATH
         <CONFIG>.ariaPrimary                    <SUPPORTED : Y>    :   <STRING>         COLUMN IDENTIFYING ARIA PRIMARY
         <CONFIG>.xsTemplate                     <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE XS SPECIFIC TEMPLATE
+        <CONFIG>.exportFileName                 <SUPPORTED : Y>    :   <STRING>         SPECIFY DOWNLOADED FILE NAME
+        <CONFIG>.exportEnabled                  <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE EXPORT TO EXCEL FEATURE
         <CONFIG>.initialRowClasses              <SUPPORTED : Y>    :   <MAP<OBJECT>>    PROVIDE KEY VALUE PAIRS FOR INITIAL ROW CLASSES
         <CONFIG>.rowClassFn                     <SUPPORTED : Y>    :   <FUNCTION>       PROVIDE FUNCTION REFERENCE TO SELF INVOKE WITH ONE PARAM - VX_ROW : FUNCTION VX_SAMPLE_ROWCLASS_FUNC(ROW){}
         
@@ -296,7 +298,9 @@
                         { prop: 'emptyFill', defValue: '<span>No records to display ...</span>' },
                         { prop: 'loaderGifSrc', defValue: '/resource/loaderWhite36.GIF' },
                         { prop: 'ariaPrimary', defValue: $scope.vxColSettings.primaryId },
-                        { prop: 'xsTemplate', defValue: false }
+                        { prop: 'xsTemplate', defValue: false },
+                        { prop: 'exportFileName', defValue: 'ExcelSheet' },
+                        { prop: 'exportEnabled', defValue: false }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
@@ -1592,6 +1596,99 @@
                 $scope.revealWrapToggle = function () {
                     $scope.vxColSettings.revealWrapRowData = !$scope.vxColSettings.revealWrapRowData;
                 }
+
+                ///<summary>GRID FUNCTION : Download excel file which consists of all selected rows</summary>
+                $scope.openExport = function () {
+                    var selectedData = [];
+                    var reportFields = {};
+
+                    var fileName = typeof $scope.vxConfig.exportFileName !== 'undefined' ? $scope.vxConfig.exportFileName : 'ExcelSheet';
+
+                    var fields = [];
+                    var header = [];
+
+                    _.each($scope.vxColSettings.multiSelected, function (mulval, mulkey) {
+                        _.each($scope.vxConfig.data, function (conval, conkey) {
+                            if (conval[$scope.vxColSettings.primaryId] === mulval) {
+                                selectedData.push(conval)
+                            }
+                        });
+                    });
+
+                    _.each($scope.config.columnDefConfigs, function (col, key) {
+                        reportFields[col.id] = col.columnName;
+                    });
+
+                    angular.forEach(reportFields, function (field, key) {
+                        if (!field || !key) {
+                            throw new Error('error json report fields');
+                        }
+
+                        fields.push(key);
+                        header.push(field);
+                    });
+
+                    var bodyData = _bodyData(selectedData, fields);
+                    var strData = _convertToExcel(bodyData, header);
+
+                    var blob = new Blob([strData], { type: "text/plain;charset=utf-8" });
+
+                    return saveAs(blob, [fileName + '.csv']);
+
+                };
+
+                ///export functionality methods
+                function _bodyData(data, fields) {
+                    var body = "";
+                    angular.forEach(data, function (dataItem) {
+                        var rowItems = [];
+
+                        angular.forEach(fields, function (field) {
+                            if (field.indexOf('.')) {
+                                field = field.split(".");
+                                var curItem = dataItem;
+
+                                // deep access to obect property
+                                angular.forEach(field, function (prop) {
+                                    if (curItem !== null && curItem !== undefined) {
+                                        curItem = curItem[prop];
+                                    }
+                                });
+
+                                data = curItem;
+                            }
+                            else {
+                                data = dataItem[field];
+                            }
+
+                            var fieldValue = data !== null ? data : ' ';
+
+                            if (fieldValue !== undefined && angular.isObject(fieldValue) && !(fieldValue instanceof Date)) {
+                                fieldValue = _objectToString(fieldValue);
+                            }
+
+                            rowItems.push(fieldValue);
+                        });
+
+                        body += rowItems + '\n';
+                    });
+
+                    return body;
+                }
+
+                function _convertToExcel(body, header) {
+                    return header + '\n' + body;
+                }
+
+                function _objectToString(object) {
+                    var output = '';
+                    angular.forEach(object, function (value, key) {
+                        output += key + ':' + value + ' ';
+                    });
+
+                    return '"' + output + '"';
+                }
+
 
                 /// <summary>GRID FUNCTION : RESET SEARCH TOKEN FOR THE GRID</summary>
                 $scope.xsReset = function () {

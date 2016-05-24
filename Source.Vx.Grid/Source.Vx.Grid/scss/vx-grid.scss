@@ -698,6 +698,9 @@
         left: 9px;
         background-repeat: no-repeat;
 
+        &.icon-disk-download {
+            background-position-y: -573px;
+        }
         &.icon-refresh {
             background-position-y: -57px;
         }

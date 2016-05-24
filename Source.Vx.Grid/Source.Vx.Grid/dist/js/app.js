@@ -788,7 +788,9 @@
             { id: 'status', columnName: 'Status', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: true },
             { id: 'mid', columnName: 'MID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: true },
             { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, primary: true, hidden: false }
-        ]
+        ],
+        exportFileName: 'DownloadedExcelSheet',
+        exportEnabled: true
     };
     self.secondSampleActive = false;
 

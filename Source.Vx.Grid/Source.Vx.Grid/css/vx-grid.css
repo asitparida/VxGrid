@@ -472,6 +472,8 @@
   top: 11px;
   left: 9px;
   background-repeat: no-repeat; }
+  .vx-grid-related .icon.icon-disk-download {
+    background-position-y: -573px; }
   .vx-grid-related .icon.icon-refresh {
     background-position-y: -57px; }
   .vx-grid-related .icon.icon-revert {

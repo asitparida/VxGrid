@@ -6,7 +6,8 @@
     cssmin = require('gulp-cssmin'),
     del = require('del'),
     html2js = require('gulp-html-js-template'),
-    minify = require('gulp-minify');
+    minify = require('gulp-minify'),
+    plato = require('plato');
 
 gulp.task('styles', function () {
     gulp.src('scss/*.scss')
@@ -35,7 +36,7 @@ gulp.task('minify:clean:html:js', function () {
     return del('Resource/vx-grid-templates.js');
 });
 
-gulp.task('minify:html:js',['minify:clean:html:js'], function () {
+gulp.task('minify:html:js', ['minify:clean:html:js'], function () {
     return gulp.src('Resource/vx-grid-templates.html')
 	.pipe(html2js())
 	.pipe(gulp.dest('Resource'));
@@ -50,19 +51,38 @@ gulp.task('minify:js', ['minify:html:js'], function () {
 
 // Clean the concated js directory
 gulp.task('clean:concat:js', function () {
-    return del('dist/min/js/vx.grid.all.min.js');
+    return del('dist/min/js/vx.grid.min.js');
 });
 
 //Concat JS Files
 gulp.task('concat:js', ['clean:concat:js', 'minify:js'], function () {
-    return gulp.src('./js/*min.js')
-    .pipe(concat('vx.grid.all.min.js'))
+    return gulp.src([
+        './js/angular-scroll-min.js',
+        './js/angular-vs-repeat-min.js',
+        './js/vx-grid.jsoneditor.directive-min.js',
+        './js/vx-grid-min.js',
+        './js/vx-grid-templates-min.js',
+    ])
+    .pipe(concat('vx.grid.min.js'))
     .pipe(gulp.dest('./dist/min/js'));
+});
+
+//Plato Tasks
+gulp.task('plato:js', function () {
+    try {
+        return plato.inspect(['Resource/vx-grid.js', 'Resource/vx-grid.jsoneditor.directive.js'],
+            'plato-reports/',
+            {}, function (report) {
+                /* analyse report */
+            });
+    } catch (e) {
+        console.log(e);
+    }
 });
 
 //Watch JS task
 gulp.task('default:vxgrid:js', function () {
-    gulp.watch(['Resource/vx-grid.js', 'Resource/vx-grid-templates.html'], ['concat:js']);
+    gulp.watch(['Resource/vx-grid.js', 'Resource/vx-grid-templates.html', 'Resource/vx-grid.jsoneditor.directive.js'], ['concat:js']);
 });
 
 // Clean the distributable css directory

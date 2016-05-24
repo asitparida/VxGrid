@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="dist\min\js\vx.grid.min.js" />
     <Content Include="images\1.PNG" />
     <Content Include="images\10.PNG" />
     <Content Include="images\11.PNG" />
@@ -78,14 +79,19 @@
     <Content Include="images\7.PNG" />
     <Content Include="images\8.PNG" />
     <Content Include="images\9.PNG" />
+    <Content Include="lib\ui-bootstrap-tpls-1.1.1.min.js" />
     <Content Include="packages.config" />
     <Content Include="package.json" />
+    <Content Include="resource\angular-vs-repeat.js" />
     <Content Include="resource\jsoneditor\jsoneditor.map" />
+    <Content Include="resource\loaderBlue30.gif" />
     <Content Include="scss\vx-grid.scss" />
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="Properties\PublishProfiles\vxgrid - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\vxgrid - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -99,7 +105,6 @@
     <Content Include="dist\js\default.js" />
     <Content Include="dist\min\css\bootstrap.min.css" />
     <Content Include="dist\min\css\vx-grid.min.css" />
-    <Content Include="dist\min\js\vx.grid.all.min.js" />
     <Content Include="gulpfile.js" />
     <Content Include="lib\angular-sanitize.min.js" />
     <Content Include="lib\angular.min.js" />
@@ -108,7 +113,6 @@
     <Content Include="lib\ui-bootstrap-tpls.min.js" />
     <Content Include="lib\underscore-min.js" />
     <Content Include="resource\angular-scroll.js" />
-    <Content Include="resource\angular-vs-repeat.js" />
     <Content Include="resource\icon-images.png" />
     <Content Include="resource\jsoneditor\ace.js" />
     <Content Include="resource\jsoneditor\FileSaver.js" />
@@ -117,7 +121,7 @@
     <Content Include="resource\jsoneditor\jsoneditor.js" />
     <Content Include="resource\jsoneditor\jsoneditor.min.css" />
     <Content Include="resource\jsoneditor\jsoneditor.min.js" />
-    <Content Include="resource\jsoneditor\vx-grid.jsoneditor.directive.js" />
+    <Content Include="resource\vx-grid.jsoneditor.directive.js" />
     <Content Include="resource\loaderWhite36.GIF" />
     <Content Include="resource\vx-grid-templates.html" />
     <Content Include="resource\vx-grid-templates.js" />
@@ -128,7 +132,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="js\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

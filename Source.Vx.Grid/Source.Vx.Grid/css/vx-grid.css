@@ -691,7 +691,8 @@
   vertical-align: top;
   text-overflow: ellipsis;
   overflow-x: hidden;
-  display: block; }
+  display: block;
+  padding-left: 15px; }
 
 .vx-grid-related .vxTable .vxHead th .dropdown ul.dropdown-menu li {
   padding: 14px 15px;

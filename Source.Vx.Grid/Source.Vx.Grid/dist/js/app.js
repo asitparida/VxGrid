@@ -748,7 +748,7 @@
         rowClassFn: randomRowFunction,
         showTable: false,
         virtualization: true,
-        pagination: false,
+        pagination: true,
         pageLength: 100,
         sortPredicate: 'dt',
         reverseSortDirection: true,
@@ -790,7 +790,8 @@
             { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, primary: true, hidden: false }
         ],
         exportFileName: 'DownloadedExcelSheet',
-        exportEnabled: true
+        exportEnabled: true,
+        pageLengthOptions: [10,25,50,100]
     };
     self.secondSampleActive = false;
 

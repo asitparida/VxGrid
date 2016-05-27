@@ -100,7 +100,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="default.html" />
+    <Content Include="index.html" />
     <Content Include="dist\js\app.js" />
     <Content Include="dist\js\default.js" />
     <Content Include="dist\min\css\bootstrap.min.css" />

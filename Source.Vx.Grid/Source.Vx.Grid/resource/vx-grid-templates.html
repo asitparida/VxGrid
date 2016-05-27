@@ -58,7 +58,7 @@
                         </div>
                         <div class="icon-container pull-left" role="button" tabindex="0" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" title="Export to Excel" vx-key="openExport()" ng-if="vxConfig.exportEnabled">
                             <i class="icon icon-disk-download"></i>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                             <table class="vxTable">
                                 <thead class="vxHead">
                                     <tr class="vxHeadRow">
-                                        <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" title="{{header.columnName}}" vx-key="headerClick(header, $event)" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" ng-attr-tabindex="{{header.headTabIndex}}" click-outside="outsideHeaderClick(header)" ng-attr-id="vxHeadSt_{{$index}}" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)" ng-style="{ 'width' : header.effectiveWidth + 'px' }" >
+                                        <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs track by header.id" title="{{header.columnName}}" vx-key="headerClick(header, $event)" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" ng-attr-tabindex="{{header.headTabIndex}}" click-outside="outsideHeaderClick(header)" ng-attr-id="vxHeadSt_{{$index}}" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)" ng-style="{ 'width' : header.effectiveWidth + 'px' }" >
                                             <span class="noDdTitle" ng-if="isValidHeaderName(header, header.columnName) && vxColSettings.dropdDownEnabled[header.id] == false">{{header.columnName}}</span>
                                             <div class="dropdown" data-container="body" ng-if="vxColSettings.dropdDownEnabled[header.id] == true" ng-class="{ 'open' : vxColSettings.dropdDownOpen[header.id] == true}">
                                                 <button class="btn btn-default dropdown-toggle" type="button" ng-attr-id="ddMenu_{{header.id}}" aria-expanded="true" tabindex="-1">
@@ -119,7 +119,7 @@
                             <table class="vxTable">
                                 <thead class="vxHead">
                                     <tr class="vxHeadRow">
-                                        <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" ng-attr-id="vxHead_{{$index}}" ng-style="{ 'width' : header.effectiveWidth + 'px' }" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false">
+                                        <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs track by header.id" ng-attr-id="vxHead_{{$index}}" ng-style="{ 'width' : header.effectiveWidth + 'px' }" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false">
                                             <span class="noDdTitle offscreen">{{header.columnName}}</span>
                                         </th>
                                         <th class="vxHeadRowCell" ng-if="vxColSettings.xsViewEnabled == true">
@@ -143,10 +143,10 @@
                                     </tr>
                                 </thead>
                                 <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxColSettings.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.virtualization == true">
-                                    <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]" ng-attr-id="{{row[vxColSettings.primaryId]}}" class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow" ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength)" ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}">
+                                    <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]" ng-attr-id="{{row[vxColSettings.primaryId]}}" class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow" ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength) track by row[vxColSettings.primaryId]" ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}">
                                         <span class="offscreen" role="rowheader" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{row[vxConfig.ariaPrimary]}}</span>
                                         <td colspan="{{getNonHiddenColCount()}}" ng-if="row.fillEmptyElement == true" style="padding-left:15px;"><span ng-bind-html="vxConfig.emptyFill"></span></td>
-                                        <td class="vxBodyRowCell {{header.colClass}}" ng-class="{'renderedDefn': header.renderDefn == true}" ng-repeat="header in vxConfig.columnDefConfigs" ng-style="{ 'width' : header.effectiveWidth + 'px' }" ng-if="header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
+                                        <td class="vxBodyRowCell {{header.colClass}}" ng-class="{'renderedDefn': header.renderDefn == true}" ng-repeat="header in vxConfig.columnDefConfigs track by header.id" ng-style="{ 'width' : header.effectiveWidth + 'px' }" ng-if="header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
                                             <span ng-if="(header.renderDefn == false && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == false && header.inlineEditOnColumnEnabled == false)" title="{{row[header.id]}}">{{row[header.id]}}</span>
                                             <div ng-if="(header.renderDefn == true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == true && header.inlineEditOnColumnEnabled == false)" vx-compile-clone-link="header.cellDefn"></div>
                                             <div ng-if="vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
@@ -170,7 +170,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 xsCellContentHolder" collapse="!row.xsViewDetails">
-                                                <div class="xsCellContent" ng-repeat="header in vxConfig.columnDefConfigs" ng-if="$index > 0 && header.xsHidden == false && row.type != 'groupRow'">
+                                                <div class="xsCellContent" ng-repeat="header in vxConfig.columnDefConfigs track by header.id" ng-if="$index > 0 && header.xsHidden == false && row.type != 'groupRow'">
                                                     <div class="col-xs-12 xsCellHeader">{{header.columnName}}</div>
                                                     <div class="col-xs-12 xsCellValue">
                                                         <span ng-if="header.renderDefn == false">{{row[header.id]}}</span>
@@ -183,10 +183,10 @@
                                     </tr>
                                 </tbody>
                                 <tbody class="vxBody" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.virtualization == false">
-                                    <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]" ng-attr-id="{{row[vxColSettings.primaryId]}}" class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow" ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength )" ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}">
+                                    <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]" ng-attr-id="{{row[vxColSettings.primaryId]}}" class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow" ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength) track by row[vxColSettings.primaryId]" ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}">
                                         <span class="offscreen" role="rowheader" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{row[vxConfig.ariaPrimary]}}</span>
                                         <td colspan="{{getNonHiddenColCount()}}" ng-if="row.fillEmptyElement == true" style="padding-left:15px;"><span ng-bind-html="vxConfig.emptyFill"></span></td>
-                                        <td class="vxBodyRowCell {{header.colClass}}" ng-class="{'renderedDefn': header.renderDefn == true || (vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true) }" ng-repeat="header in vxConfig.columnDefConfigs" ng-style="{ 'width' : header.effectiveWidth + 'px' }" ng-if="header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
+                                        <td class="vxBodyRowCell {{header.colClass}}" ng-class="{'renderedDefn': header.renderDefn == true || (vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true) }" ng-repeat="header in vxConfig.columnDefConfigs track by header.id" ng-style="{ 'width' : header.effectiveWidth + 'px' }" ng-if="header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
                                             <span ng-if="(header.renderDefn == false && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == false && header.inlineEditOnColumnEnabled == false)" title="{{row[header.id]}}">{{row[header.id]}}</span>
                                             <div ng-if="(header.renderDefn == true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == true && header.inlineEditOnColumnEnabled == false)" vx-compile-clone-link="header.cellDefn"></div>
                                             <div ng-if="vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
@@ -210,7 +210,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 xsCellContentHolder" collapse="!row.xsViewDetails">
-                                                <div class="xsCellContent" ng-repeat="header in vxConfig.columnDefConfigs" ng-if="$index > 0 && header.xsHidden == false && row.type != 'groupRow'">
+                                                <div class="xsCellContent" ng-repeat="header in vxConfig.columnDefConfigs " ng-if="$index > 0 && header.xsHidden == false && row.type != 'groupRow'">
                                                     <div class="col-xs-12 xsCellHeader">{{header.columnName}}</div>
                                                     <div class="col-xs-12 xsCellValue">
                                                         <span ng-if="header.renderDefn == false">{{row[header.id]}}</span>
@@ -228,15 +228,19 @@
                 </div>
             </div>
             <div class="col-xs-12 vxTablePagination pad0" ng-if="vxColSettings.vxPageEnabled">
+                <div class="select-container pull-left">
+                    <select class="form-control" ng-model="vxConfig.pageLength" ng-options="option for option in vxConfig.pageLengthOptions track by option" aria-label="Change pageLength dropdown" title="Change pageLength"
+                            ng-change="changePageLength(vxConfig.pageLength)"></select>
+                </div>
                 <div class="icon-container dirNumContainer" vx-key="activatePage(vxColSettings.activePage - 1)" ng-class="{ 'disabled' :vxColSettings.activePage == 0}">
                     <i class="icon icon-previous"></i>
                 </div>
                 <div class="icon-container dirNumContainer" vx-key="activatePage(vxColSettings.activePage + 1)" ng-class="{ 'disabled' :vxColSettings.activePage == vxColSettings.pages.length - 1}">
                     <i class="icon icon-next"></i>
                 </div>
-                <div class="icon-container pageNumContainer" ng-repeat="pageNum in vxColSettings.pages" vx-key="activatePage(pageNum)" ng-class="{'active' : pageNum == vxColSettings.activePage}">
+                <div class="icon-container pageNumContainer" ng-repeat="pageNum in vxColSettings.pages track by pageNum" vx-key="activatePage(pageNum)" ng-class="{'active' : pageNum == vxColSettings.activePage}">
                     <i class="icon">{{pageNum + 1}}</i>
-                </div>
+                </div>                
             </div>
             <div class="icon-container scrollAction up" role="button" tabindex="0" vx-key="justScrollTop()" ng-class="{'pageEnabled': vxColSettings.vxPageEnabled}" ng-show="showScrollUpArrow()" aria-label="Scroll Up">
                 <i class="icon icon-up"></i>

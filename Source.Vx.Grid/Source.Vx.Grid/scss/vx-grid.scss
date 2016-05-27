@@ -1637,3 +1637,10 @@ img.vxGridAttendReqd {
     display: block;
     margin: 0 auto;
 }
+
+.select-container {   
+    margin-right: 10px;
+    select.form-control {     
+        border-radius: 0;        
+    }
+}

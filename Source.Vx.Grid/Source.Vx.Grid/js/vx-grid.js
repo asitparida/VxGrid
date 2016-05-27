@@ -21,7 +21,7 @@
         <CONFIG>.xsRowTitleTemplate             <SUPPORTED : Y>    :   <STRING>         SET TO XS ONLY TEMPLATE - DEFAULTS TO PRIMARY COLUMN HEADER
 		<CONFIG>.virtualization					<SUPPORTED : Y>    :   <BOOLEAN>        SET TO FALSE TO DISABLE VIRTUALIZATION AND ENABLE PAGINATION
         <CONFIG>.pagination					    <SUPPORTED : Y>    :   <BOOLEAN>        SET TO FALSE TO DISABLE PAGINATION AND ENABLE PAGINATION
-		<CONFIG>.pageLength						<SUPPORTED : Y>    :   <NUMBER>	        SET PAGINATION LENGTH AND DEFUALTS TO 20
+		<CONFIG>.pageLength						<SUPPORTED : Y>    :   <NUMBER>	        SET PAGINATION LENGTH AND DEFUALTS TO All
         <CONFIG>.inlineEditingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLING INLINE EDITING OPTION
         <CONFIG>.inlineDeletingEnabled			<SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLING INLINE DELETING OPTION
         <CONFIG>.inlineAddRowEnabled			<SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLING ADDING ROW
@@ -166,6 +166,8 @@
                     };
                 };
 
+               
+
                 /// <summary>RESETS THE VX INSTANCE AND DEFUALTING ALL APPICABLE PROPERTIES</summary>
                 $scope.resetVxInstance = function () {
                     /// <summary>RE-INITIALIZING ALL VXCOLSETTINGS PROPERTIES</summary>
@@ -207,6 +209,7 @@
                     };
 
                     $scope.vxConfig = angular.copy($scope.config);
+
                     /* GETTING / SETTING PRIMARY COLUMN*/
                     var _primaryColDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.primary == true });
                     var primaryId = '_uid';
@@ -282,7 +285,7 @@
                         { prop: 'selectAllOnRenderAll', defValue: false },
                         { prop: 'virtualization', defValue: true },
                         { prop: 'pagination', defValue: false },
-                        { prop: 'pageLength', defValue: 20 },
+                        { prop: 'pageLength', defValue: 25 },
                         { prop: 'data', defValue: [] },
                         { prop: 'vxFilteredData', defValue: [] },
                         { prop: 'xsRowTitleTemplate', defValue: '<div class="xsRowTemplate">{{row[vxColSettings.primaryId]}}</div>' },
@@ -300,7 +303,8 @@
                         { prop: 'ariaPrimary', defValue: $scope.vxColSettings.primaryId },
                         { prop: 'xsTemplate', defValue: false },
                         { prop: 'exportFileName', defValue: 'ExcelSheet' },
-                        { prop: 'exportEnabled', defValue: false }
+                        { prop: 'exportEnabled', defValue: false },
+                        { prop: 'pageLengthOptions', defValue: [ 25, 50, 100 ] }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
@@ -336,6 +340,7 @@
                             { prop: 'editDefn', defValue: null },
                             { prop: 'editDefnTemplate', defValue: null },
                             { prop: 'headTabIndex', defValue: 0 }
+
                         ];
                         _.each(_propDefns, function (propDefn) {
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
@@ -844,7 +849,7 @@
                 /// <param name="page" type="int">PAGE NUMBER WHICH NEEDS TO BE ACTIVATED</param>
                 $scope.activatePage = function (page) {
                     $scope.vxColSettings.activePage = page;
-                    $scope.vxColSettings.vxPageStartPosition = (page > 0 ? page * $scope.vxConfig.pageLength - 1 : 0);
+                    $scope.vxColSettings.vxPageStartPosition = (page > 0 ? page * $scope.vxConfig.pageLength : 0);
                 }
 
                 /// <summary>GRID FUNCTION : DEBOUNCE THE SEARCH SO AS TO THROTTLE SEARCHING IN GRID AND PREVENT CLASHING OF DIGEST CYCLES</summary>
@@ -1596,6 +1601,18 @@
                 $scope.revealWrapToggle = function () {
                     $scope.vxColSettings.revealWrapRowData = !$scope.vxColSettings.revealWrapRowData;
                 }
+
+                ///<summary>GRID FUNCTION :pageLength selection</summary>
+                $scope.changePageLength = function (selectedPageLength) {
+                    console.log(selectedPageLength);
+                    //$scope.vxConfig.pageLength = selectedPageLength;                
+                    if ($scope.vxConfig.pagination == true) {
+                        $scope.vxColSettings.pages = _.range(Math.ceil($scope.vxConfig.vxData.length / parseInt(selectedPageLength)));
+                        $scope.vxColSettings.vxPageEnabled = $scope.vxColSettings.pages.length > 1;
+                        $scope.vxColSettings.activePage = 0;
+                        $scope.vxColSettings.vxPageStartPosition = 0;
+                    }
+                };
 
                 ///<summary>GRID FUNCTION : Download excel file which consists of all selected rows</summary>
                 $scope.openExport = function () {

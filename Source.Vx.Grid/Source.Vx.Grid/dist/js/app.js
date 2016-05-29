@@ -751,7 +751,7 @@
         pagination: true,
         pageLength: 100,
         sortPredicate: 'dt',
-        reverseSortDirection: true,
+        reverseSortDirection: false,
         inlineAddRowEnabled: true,
         categories: self.categories,
         emptyFill:'No records in the grid',
@@ -823,6 +823,15 @@
         $timeout(function () {
             defer.resolve({ 'rows': _.initial(rows) });
         }, 10000);
+        return defer.promise;
+    }
+
+    self.vxSampleConfig.fnServerPushData = function (pageLength) {
+        console.log("fnServerPushData pageLength = ", pageLength);
+        var defer = $q.defer();
+        $timeout(function () {
+            defer.resolve({ 'data': self.sampling(3, 'sachin tendulkar') });
+        }, 3000);
         return defer.promise;
     }
 

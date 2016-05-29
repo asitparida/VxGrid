@@ -44,10 +44,10 @@
                         <div class="icon-container pull-left" role="button" tabindex="{{vxColSettings.multiSelected.length == 0 ? -1 : 0 }}" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" vx-key="clearSelection()" aria-label="clear any row selections">
                             <i class="icon icon-clearselection"></i>
                         </div>
-                        <div class="icon-container pull-left" ng-class="{'active' : vxColSettings.revealWrapRowData }" vx-key="revealWrapToggle()" aria-label="toggle row content reveal">
+                        <div class="icon-container pull-left" ng-class="{'active' : vxColSettings.revealWrapRowData}" vx-key="revealWrapToggle()" aria-label="toggle row content reveal">
                             <i class="icon icon-more"></i>
                         </div>
-                        <div class="icon-container pull-left" role="button" tabindex="{{multiBoxFilters.length == 0 ? -1 : 0}}" ng-class="{ 'disabled' : multiBoxFilters.length == 0}" vx-key="clearFilters()" aria-label="clear any filters applied">
+                        <div class="icon-container pull-left" role="button" tabindex="{{multiBoxFilters.length == 0 ? -1 : 0}}" ng-class="{'disabled' : multiBoxFilters.length == 0}" vx-key="clearFilters()" aria-label="clear any filters applied">
                             <i class="icon icon-refresh"></i>
                         </div>
                         <div class="icon-container pull-left" ng-class="{'active' : vxColSettings.menu }" vx-key="openManageColumns()" aria-label="open manage columns modal">
@@ -56,7 +56,7 @@
                         <div class="icon-container pull-left" title="JSON Editor" role="button" tabindex="0" ng-class="{'active' : vxColSettings.menu }" vx-key="openJsonEditor()" ng-if="vxConfig.jsonEditorEnabled" aria-label="open json editor">
                             <i class="icon icon-edit"></i>
                         </div>
-                        <div class="icon-container pull-left" role="button" tabindex="0" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" title="Export to Excel" vx-key="openExport()" ng-if="vxConfig.exportEnabled">
+                        <div class="icon-container pull-left" role="button" tabindex="0" ng-class="{'disabled' : vxColSettings.multiSelected.length == 0}" title="Export to Excel" vx-key="openExport()" ng-if="vxConfig.exportEnabled">
                             <i class="icon icon-disk-download"></i>
                         </div>                        
                     </div>
@@ -210,7 +210,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 xsCellContentHolder" collapse="!row.xsViewDetails">
-                                                <div class="xsCellContent" ng-repeat="header in vxConfig.columnDefConfigs " ng-if="$index > 0 && header.xsHidden == false && row.type != 'groupRow'">
+                                                <div class="xsCellContent" ng-repeat="header in vxConfig.columnDefConfigs" ng-if="$index > 0 && header.xsHidden == false && row.type != 'groupRow'">
                                                     <div class="col-xs-12 xsCellHeader">{{header.columnName}}</div>
                                                     <div class="col-xs-12 xsCellValue">
                                                         <span ng-if="header.renderDefn == false">{{row[header.id]}}</span>
@@ -227,20 +227,24 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-12 vxTablePagination pad0" ng-if="vxColSettings.vxPageEnabled">
+            <div class="col-xs-12 vxTablePagination pad0" ng-if="vxConfig.pagination">                
                 <div class="select-container pull-left">
                     <select class="form-control" ng-model="vxConfig.pageLength" ng-options="option for option in vxConfig.pageLengthOptions track by option" aria-label="Change pageLength dropdown" title="Change pageLength"
                             ng-change="changePageLength(vxConfig.pageLength)"></select>
                 </div>
-                <div class="icon-container dirNumContainer" vx-key="activatePage(vxColSettings.activePage - 1)" ng-class="{ 'disabled' :vxColSettings.activePage == 0}">
+                <div class="icon-container dirNumContainer" ng-if="!vxConfig.isServerLoad" role="button" tabindex="0" vx-key="serverPush()" aria-label="Server Push new data" title="Server Push new data">
+                    <i class="icon icon-up"></i>
+                </div>
+                <img class="loader-row" src="/resource/loaderBlue30.GIF" ng-if="vxConfig.isServerLoad" alt="Loading icon" />
+                <div class="icon-container dirNumContainer" vx-key="activatePage(vxColSettings.activePage - 1)" ng-class="{ 'disabled' :vxColSettings.activePage == 0}" ng-if="vxColSettings.vxPageEnabled">
                     <i class="icon icon-previous"></i>
                 </div>
-                <div class="icon-container dirNumContainer" vx-key="activatePage(vxColSettings.activePage + 1)" ng-class="{ 'disabled' :vxColSettings.activePage == vxColSettings.pages.length - 1}">
+                <div class="icon-container dirNumContainer" vx-key="activatePage(vxColSettings.activePage + 1)" ng-class="{ 'disabled' :vxColSettings.activePage == vxColSettings.pages.length - 1}" ng-if="vxColSettings.vxPageEnabled">
                     <i class="icon icon-next"></i>
                 </div>
-                <div class="icon-container pageNumContainer" ng-repeat="pageNum in vxColSettings.pages track by pageNum" vx-key="activatePage(pageNum)" ng-class="{'active' : pageNum == vxColSettings.activePage}">
-                    <i class="icon">{{pageNum + 1}}</i>
-                </div>                
+                <div class="icon-container pageNumContainer" ng-repeat="pageNum in vxColSettings.pages track by pageNum" vx-key="activatePage(pageNum)" ng-class="{'active' : pageNum == vxColSettings.activePage}" ng-if="vxColSettings.vxPageEnabled">
+                    <i class="icon">{{::pageNum + 1}}</i>
+                </div>   
             </div>
             <div class="icon-container scrollAction up" role="button" tabindex="0" vx-key="justScrollTop()" ng-class="{'pageEnabled': vxColSettings.vxPageEnabled}" ng-show="showScrollUpArrow()" aria-label="Scroll Up">
                 <i class="icon icon-up"></i>

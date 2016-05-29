@@ -244,7 +244,7 @@
                                     + '<i class="icon icon-save"></i>'
                                   + '</div>'
                                   + '<div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[VX_ROW_POINT] == true" role="button" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
-                                    + '<img class="loader-row" src="/resource/loaderBlue30.GIF"></i>'
+                                    + '<img class="loader-row" src="/resource/loaderBlue30.GIF" />'
                                   + '</div>'
                                 , inlineEditOnColumnEnabled: false
                             };
@@ -304,7 +304,8 @@
                         { prop: 'xsTemplate', defValue: false },
                         { prop: 'exportFileName', defValue: 'ExcelSheet' },
                         { prop: 'exportEnabled', defValue: false },
-                        { prop: 'pageLengthOptions', defValue: [ 25, 50, 100 ] }
+                        { prop: 'pageLengthOptions', defValue: [25, 50, 100] },
+                        { prop: 'isServerLoad', defValue: false }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
@@ -849,7 +850,7 @@
                 /// <param name="page" type="int">PAGE NUMBER WHICH NEEDS TO BE ACTIVATED</param>
                 $scope.activatePage = function (page) {
                     $scope.vxColSettings.activePage = page;
-                    $scope.vxColSettings.vxPageStartPosition = (page > 0 ? page * $scope.vxConfig.pageLength : 0);
+                    $scope.vxColSettings.vxPageStartPosition = (page > 0 ? page * $scope.vxConfig.pageLength + 1 : 0);
                 }
 
                 /// <summary>GRID FUNCTION : DEBOUNCE THE SEARCH SO AS TO THROTTLE SEARCHING IN GRID AND PREVENT CLASHING OF DIGEST CYCLES</summary>
@@ -1078,7 +1079,7 @@
 
                 /// <summary>GRID FUNCTION : GET COUNT OF NUMBER OF ROWS IN THE GRID EXCEPT THE ROWS USED TO DENOTE GROUP HEADERS</summary>
                 $scope.getAllRowLength = function () {
-                    var len = _.filter($scope.vxConfig.data, function (row) {
+                    var len = _.filter($scope.vxConfig.vxData, function (row) {
                         return typeof row.type == 'undefined' || row.type == null || row.type.localeCompare('groupRow') != 0
                     }).length;
                     return len;
@@ -1602,19 +1603,42 @@
                     $scope.vxColSettings.revealWrapRowData = !$scope.vxColSettings.revealWrapRowData;
                 }
 
-                ///<summary>GRID FUNCTION :pageLength selection</summary>
-                $scope.changePageLength = function (selectedPageLength) {
-                    console.log(selectedPageLength);
-                    //$scope.vxConfig.pageLength = selectedPageLength;                
+                /// <summary>GRID FUNCTION : SERVER PUSH NEW DATA</summary>
+                $scope.serverPush = function () {
+                    $scope.vxConfig.isServerLoad = true;
+                    var defer = $q.defer();
+                    var pageLength = $scope.vxConfig.pageLength;
+                    var vxData = angular.copy($scope.vxConfig.vxData);
+                    defer.promise.then(function (response) {
+                        if (response.data.length > 0) {
+                            console.log(response.data);
+                            console.log(vxData);
+                            _.each(response.data, function (row, key) {
+                                vxData.push(row);
+                            });
+                            $scope.vxConfig.vxData = vxData;
+                        }
+                        $scope.vxConfig.isServerLoad = false;
+                    }, function (error) {
+                        /* FAILURE PUSH DATA */
+                        console.log('Error : Server Push Failed!');
+                        console.log(error);
+                        $scope.vxConfig.isServerLoad = false;
+                    });
+                    defer.resolve($scope.config.fnServerPushData(pageLength));
+                };
+
+                /// <summary>GRID FUNCTION :PAGELENGTH SELECTION</summary>
+                $scope.changePageLength = function (selectedPageLength) {                              
                     if ($scope.vxConfig.pagination == true) {
-                        $scope.vxColSettings.pages = _.range(Math.ceil($scope.vxConfig.vxData.length / parseInt(selectedPageLength)));
+                        $scope.vxColSettings.pages = _.range(Math.ceil($scope.vxConfig.vxFilteredData.length / parseInt(selectedPageLength)));
                         $scope.vxColSettings.vxPageEnabled = $scope.vxColSettings.pages.length > 1;
                         $scope.vxColSettings.activePage = 0;
                         $scope.vxColSettings.vxPageStartPosition = 0;
                     }
                 };
 
-                ///<summary>GRID FUNCTION : Download excel file which consists of all selected rows</summary>
+                /// <summary>GRID FUNCTION : DOWNLOAD EXCEL FILE WHICH CONSISTS OF ALL SELECTED RECORDS</summary>
                 $scope.openExport = function () {
                     var selectedData = [];
                     var reportFields = {};
@@ -1654,7 +1678,7 @@
 
                 };
 
-                ///export functionality methods
+                /// <summary>GRID METHODS : EXPORT FUNCTIONALITY METHODS</summary>
                 function _bodyData(data, fields) {
                     var body = "";
                     angular.forEach(data, function (dataItem) {
@@ -1705,8 +1729,7 @@
 
                     return '"' + output + '"';
                 }
-
-
+                
                 /// <summary>GRID FUNCTION : RESET SEARCH TOKEN FOR THE GRID</summary>
                 $scope.xsReset = function () {
                     $scope.vxColSettings.xsSearch = '';
@@ -1717,7 +1740,7 @@
                     var element = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
                     $timeout(function () {
                         $(element).animate({ scrollTop: 0 }, 500);
-                    }, 100);
+                    }, 10);
                 }
 
                 /// <summary>GRID FUNCTION : SCROLL DOWN 60PX IN THE GRID</summary>
@@ -1726,7 +1749,7 @@
                     var _scrollTop = $(element).scrollTop() || 0;
                     $timeout(function () {
                         $(element).animate({ scrollTop: _scrollTop + 96 }, 500);
-                    }, 100);
+                    }, 10);
                 }
 
                 /// <summary>GRID FUNCTION : SHOW SCROLL DOWN ARROW ICON WHEN CONDITION SATISFIED - SCROLL NEEDED</summary>

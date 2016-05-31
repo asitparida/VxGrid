@@ -1739,6 +1739,7 @@
                     else
                         $scope.config.noData = false;
                     $scope.config.vxData = angular.copy(n);
+                    console.log($scope.config.vxData.length);
                     $scope.resetVxInstance();
                 });
 

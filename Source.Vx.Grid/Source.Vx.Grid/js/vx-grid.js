@@ -878,6 +878,13 @@
                     }
                     if (proceed == false)
                         return;
+                    var _scrollContainer = $scope.selfEle.find('.vxTableScrollContainer');
+                    var _headerMenus = $scope.selfEle.find('.vxHeadRowCell .dropdown ul.dropdown-menu');
+                    var _windowHeight = $scope.getWindowDimensions().h / 2;
+                    _.each($scope.selfEle.find('.vxHeadRowCell .dropdown ul.dropdown-menu'), function (_menu) {
+                        var _height = Math.min(Math.floor(_scrollContainer.height()) - 48, _windowHeight);
+                        $(_menu).css('max-height', _height + 'px');
+                    });
                     _.each($scope.vxConfig.columnDefConfigs, function (col) { if (col.id.localeCompare(header.id) != 0) $scope.vxColSettings.dropdDownOpen[col.id] = false; })
                     var _colDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare(header.id) == 0 });
                     if (typeof _colDefn !== 'undefined' && _colDefn != null) {

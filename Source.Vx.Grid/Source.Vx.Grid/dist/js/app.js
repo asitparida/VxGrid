@@ -860,6 +860,14 @@
         self.vxSampleConfig.data = self.sampling(10, 'Coho Vineyard 222');
     }
 
+    self.singleSample = function () {
+        self.vxSampleConfig.pagination = false;
+        var data = self.sampling(1, 'Coho Vineyard 222');
+        self.vxSampleConfig.data = _.filter(data, function(row, iter) {
+            return iter == 0;
+        });
+    }
+
     self.logIDs = function () {
         console.log(self.vxSampleConfig.getSelectedRows());
     }

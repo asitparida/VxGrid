@@ -694,7 +694,7 @@
         _.each(original, function (record, k) {
             _.each(_.range(iter), function (i, j) {
                 var rec = angular.copy(record);
-                rec.index = k + '_' + j;
+                rec.index = j + '_' + k;
                 rec.laborId = 'XXX-XXXX-XXXX' + '_' + rec.index;
                 rec.categories = self.categories;
                 rec.category = _.sample(rec.categories);
@@ -741,7 +741,7 @@
         inlineDeleteOverrideEnabled: true,
         showGridStats: true,
         showGridOptions: true,
-        data: self.sampling(20, 'Coho Vineyard 1111'),
+        data: self.sampling(1, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
         //initialRowClasses: self.sampleRowClasses,

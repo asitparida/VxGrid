@@ -347,7 +347,7 @@
             margin: 3px 0 0 0;
             overflow-x: hidden;
             overflow-y: auto;
-            height: 100%;
+            height: calc(100% - 48px);
             -webkit-overflow-scrolling: touch;
             -ms-overflow-style: -ms-autohiding-scrollbar;
             border-top: none;
@@ -383,7 +383,6 @@
             &:hover, &:active, &:focus {
                 position: absolute;
                 bottom: 25px;
-
                 opacity: 1;
                 filter: alpha(opacity = 100);
                 z-index: 9999;
@@ -1033,7 +1032,7 @@
                     text-overflow: ellipsis;
                     overflow-x: hidden;
                     display: block;
-                    padding-left:15px;
+                    padding-left: 15px;
                 }
 
                 .dropdown ul.dropdown-menu li {

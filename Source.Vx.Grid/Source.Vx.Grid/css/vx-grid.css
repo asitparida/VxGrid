@@ -227,7 +227,7 @@
     margin: 3px 0 0 0;
     overflow-x: hidden;
     overflow-y: auto;
-    height: 100%;
+    height: calc(100% - 48px);
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     border-top: none;

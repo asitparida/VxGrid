@@ -232,10 +232,10 @@
                             var _selColDefn = {
                                 id: 'inlinediting', columnName: 'Edit', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
                                 cellDefn:
-                                    '<div class="vx-row-edit icon-container" tabindex="0" vx-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false && vxColSettings.saveInProgress[VX_ROW_POINT] != true" role="button" aria-labelledby="vx_row_edit vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
+                                    '<div class="vx-row-edit icon-container" tabindex="0" ax-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false && vxColSettings.saveInProgress[VX_ROW_POINT] != true" role="button" aria-labelledby="vx_row_edit vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
                                         + '<i class="icon icon-edit"></i>'
                                   + '</div>'
-                                  + '<div class="vx-row-edit icon-container" ng-attr-vxdisabled="{{vxConfig.invalidRows[row[vxColSettings.primaryId]]}}" tabindex="0" vx-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true && vxColSettings.saveInProgress[VX_ROW_POINT] != true" role="button" aria-labelledby="vx_row_save vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
+                                  + '<div class="vx-row-edit icon-container" ax-disabled="vxConfig.invalidRows[row[vxColSettings.primaryId]]" tabindex="0" ax-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true && vxColSettings.saveInProgress[VX_ROW_POINT] != true" role="button" aria-labelledby="vx_row_save vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
                                     + '<i class="icon icon-save"></i>'
                                   + '</div>'
                                   + '<div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[VX_ROW_POINT] == true" role="button" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
@@ -1879,32 +1879,44 @@
         };
     }])
         /// <summary>GRID DIRECTIVE : ADD KEYBOARD SUPPORT FOR CLICK EVENTS ON DIVS</summary>
-    .directive("vxKey", ['$rootScope', '$parse', function ($rootScope, $parse) {
+    .directive("axKey", ['$rootScope', '$parse', function ($rootScope, $parse) {
         return {
-            restrict: 'AEC',
+            restrict: 'A',
             compile: function ($element, attr) {
-                var fn = $parse(attr['vxKey']);
-                return function vxKeyHandler(scope, element) {
+                var fn = $parse(attr['axKey']);
+                return function axKeyHandler(scope, element) {
                     if (!element.attr('role')) {
                         element.attr('role', 'button');
                     }
-
                     if (!element.attr('tabindex')) {
                         element.attr('tabindex', 0);
                     }
+                    var _watchListeners = [];
+                    scope._origTabindex = 0;
+                    _watchListeners.push(scope.$watch(attr['axDisabled'] || attr['ngDisabled'], function (value) {
+                        if (value) {
+                            scope._origTabindex = element.attr('tabindex');
+                            element.attr('tabindex', -1);
+                            element.attr('aria-disabled', true);
+                        }
+                        else {
+                            element.attr('tabindex', scope._origTabindex);
+                            element.attr('aria-disabled', false);
+                        }
+                    }));
                     element.on('click', function (e) {
-                        if (attr.vxDisabled == true || attr.ngDisabled)
+                        if (scope.$eval(attr['axDisabled']) || scope.$eval(attr['ngDisabled']))
                             return;
-                        vxKeyHandlerCallback(e)
+                        axKeyHandlerCallback(e)
                     });
                     element.on('keyup', function (e) {
-                        if (attr.vxDisabled == true || attr.ngDisabled)
+                        if (scope.$eval(attr['axDisabled']) || scope.$eval(attr['ngDisabled']))
                             return;
                         if (e.keyCode == 13 || e.keyCode == 32) {
-                            vxKeyHandlerCallback(e);
+                            axKeyHandlerCallback(e);
                         }
                     });
-                    function vxKeyHandlerCallback(e) {
+                    function axKeyHandlerCallback(e) {
                         var callback = function () {
                             fn(scope, { $event: e });
                         };
@@ -1914,6 +1926,11 @@
                             scope.$apply(callback);
                         }
                     }
+                    scope.$on("$destroy", function () {
+                        while (_watchListeners.length) {
+                            _watchListeners.shift()();
+                        }
+                    });
                 }
             }
         };

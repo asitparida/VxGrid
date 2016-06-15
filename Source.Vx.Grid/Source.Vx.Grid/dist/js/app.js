@@ -237,7 +237,7 @@
         inlineDeleteOverrideEnabled: true,
         showGridStats: true,
         showGridOptions: true,
-        data: self.sampling(1, 'Coho Vineyard 1111'),
+        data: self.sampling(3, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
         //initialRowClasses: self.sampleRowClasses,

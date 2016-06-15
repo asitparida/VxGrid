@@ -1076,8 +1076,8 @@
 
                 /// <summary>GRID FUNCTION : GET COUNT OF NUMBER OF ROWS IN THE GRID EXCEPT THE ROWS USED TO DENOTE GROUP HEADERS</summary>
                 $scope.getAllRowLength = function () {
-                    var len = _.filter($scope.vxConfig.data, function (row) {
-                        return typeof row.type == 'undefined' || row.type == null || row.type.localeCompare('groupRow') != 0
+                    var len = _.filter($scope.vxConfig.vxData, function (row) {
+                        return typeof row.type == 'undefined' || row.type == null || row.type.localeCompare('groupRow') != 0 || row.fillEmptyElement == true
                     }).length;
                     return len;
                 }

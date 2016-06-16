@@ -331,7 +331,8 @@
                             { prop: 'inlineEditValidation', defValue: false },
                             { prop: 'editDefn', defValue: null },
                             { prop: 'editDefnTemplate', defValue: null },
-                            { prop: 'headTabIndex', defValue: 0 }
+                            { prop: 'headTabIndex', defValue: 0 },
+                            { prop: 'cellIsDate', defValue: false },
                         ];
                         _.each(_propDefns, function (propDefn) {
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
@@ -360,7 +361,7 @@
                         }
                         $scope.vxColSettings.dropdDownLoaded[col.id] = false;
                         $scope.vxColSettings.dropdDownOpen[col.id] = false;
-                        if (typeof col.renderDefn !== 'undefined' && col.renderDefn != null && col.renderDefn != {} && col.renderDefn == true) {
+                        if (typeof col.renderDefn !== 'undefined' && col.renderDefn != null && col.renderDefn != {} && col.renderDefn == true && col.cellIsDate == false) {
                             col.cellDefn = col.cellDefn.replaceAll("VX_ROW_POINT", "row[vxColSettings.primaryId]");
                             col.cellDefn = col.cellDefn.replaceAll("VX_DATA_POINT", "row[header.id]");
                             col.cellDefn = col.cellDefn.replaceAll("VX_ROW", "row");
@@ -1978,10 +1979,13 @@
                     });
                     filtered = _.intersection(filtered, unionedMatches);
                 }
+                console.log(101);
                 return filtered;
             }
-            else
+            else {
+                console.log(2);
                 return items;
+            }
         };
     })
     /// <summary>GRID DIRECTIVE : DIRECTIVE TO KEEP TRACK IF CLICK OUTSIDE WHEN A HEADER IS OPEN</summary>

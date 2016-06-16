@@ -1892,16 +1892,17 @@
                         element.attr('tabindex', 0);
                     }
                     var _watchListeners = [];
-                    scope._origTabindex = 0;
+                    var _origTabindex = 0;
                     _watchListeners.push(scope.$watch(attr['axDisabled'] || attr['ngDisabled'], function (value) {
                         if (value) {
-                            scope._origTabindex = element.attr('tabindex');
+                            _origTabindex = element.attr('tabindex');
                             element.attr('tabindex', -1);
                             element.attr('aria-disabled', true);
                         }
                         else {
-                            element.attr('tabindex', scope._origTabindex);
+                            element.attr('tabindex', 0);
                             element.attr('aria-disabled', false);
+                            console.log(2);
                         }
                     }));
                     element.on('click', function (e) {

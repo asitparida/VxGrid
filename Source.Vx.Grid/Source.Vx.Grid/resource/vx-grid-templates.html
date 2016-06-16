@@ -53,7 +53,7 @@
                         <div class="icon-container pull-left" ng-class="{'active' : vxColSettings.menu }" ax-key="openManageColumns()" aria-label="open manage columns modal">
                             <i class="icon icon-repair"></i>
                         </div>
-                        <div class="icon-container pull-left" title="JSON Editor" role="button" tabindex="0" ng-class="{'active' : vxColSettings.menu }" ax-key="openJsonEditor()" ng-if="vxConfig.jsonEditorEnabled" aria-label="open json editor">
+                        <div class="icon-container pull-left" title="JSON Editor" role="button" tabindex="0" ng-class="{'active' : vxColSettings.menu }" ax-key="openJsonEditor()" ng-show="vxConfig.jsonEditorEnabled" aria-label="open json editor">
                             <i class="icon icon-edit"></i>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                                             <span class="noDdTitle" ng-if="isValidHeaderName(header, header.columnName) && vxColSettings.dropdDownEnabled[header.id] == false">{{header.columnName}}</span>
                                             <span class="noDdTitle" ng-if="isValidHeaderName(header, header.columnName) && vxColSettings.dropdDownEnabled[header.id] == true && ((vxConfig.noData == true) || (vxConfig.noData == false && vxConfig.vxData.length == 1))">{{header.columnName}}</span>
                                             <div class="dropdown" data-container="body" ng-if="vxColSettings.dropdDownEnabled[header.id] == true && vxConfig.noData == false && vxConfig.vxData.length > 1" ng-class="{ 'open' : vxColSettings.dropdDownOpen[header.id] == true}">
-                                                <button class="btn btn-default dropdown-toggle" type="button" ng-attr-id="ddMenu_{{header.id}}" aria-expanded="true" tabindex="-1">
+                                                <button class="btn btn-default dropdown-toggle" type="button" ng-attr-id="ddMenu_{{header.id}}" ng-attr-aria-expanded="{{vxColSettings.dropdDownOpen[header.id] == true}}" tabindex="-1">
                                                     <span class="colTitle">{{header.columnName}}</span>
                                                     <span class="ddCaret" ng-show="vxColSettings.colFiltersActivated[header.id] != true"><i class="icon icon-ScrollChevronDownLegacy white"></i></span>
                                                     <span class="ddCaret" ng-show="vxColSettings.colFiltersActivated[header.id] == true"><i class="icon icon-filter white"></i></span>

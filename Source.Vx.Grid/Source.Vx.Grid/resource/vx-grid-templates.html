@@ -66,7 +66,7 @@
                             <table class="vxTable">
                                 <thead class="vxHead">
                                     <tr class="vxHeadRow">
-                                        <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" title="{{header.columnName}}" ax-key="headerClick(header, $event)" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" ng-attr-tabindex="{{vxConfig.noData == false ? header.headTabIndex : -1}}" click-outside="outsideHeaderClick(header)" ng-attr-id="vxHeadSt_{{$index}}" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)" ng-style="{ 'width' : header.effectiveWidth + 'px' }" >
+                                        <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" title="{{header.columnName}}" ax-key="headerClick(header, $event)" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" ng-attr-tabindex="{{vxConfig.noData == false ? header.headTabIndex : -1}}" click-outside="outsideHeaderClick(header)" ng-attr-id="vxHeadSt_{{$index}}" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)" ng-style="{ 'width' : header.effectiveWidth + 'px' }">
                                             <span class="noDdTitle" ng-if="isValidHeaderName(header, header.columnName) && vxColSettings.dropdDownEnabled[header.id] == false">{{header.columnName}}</span>
                                             <span class="noDdTitle" ng-if="isValidHeaderName(header, header.columnName) && vxColSettings.dropdDownEnabled[header.id] == true && ((vxConfig.noData == true) || (vxConfig.noData == false && vxConfig.vxData.length == 1))">{{header.columnName}}</span>
                                             <div class="dropdown" data-container="body" ng-if="vxColSettings.dropdDownEnabled[header.id] == true && vxConfig.noData == false && vxConfig.vxData.length > 1" ng-class="{ 'open' : vxColSettings.dropdDownOpen[header.id] == true}">
@@ -88,14 +88,14 @@
                                                     <li tabindex="0" role="presentation" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownGroup[header.id] == true && vxColSettings.groupByColActivated[header.id] == true" ax-key="unGroupClick(header)" ng-attr-id="{{header.id}}_ungroup">
                                                         <span>Ungroup</span>
                                                     </li>
-                                                    <li tabindex="{{ vxColSettings.colFiltersActivated[header.id] == false ? -1 : 0}}" role="presentation" class="filterClear" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && vxColSettings.colFilterPairs[header.id].length > 0" ng-class="{ 'disabled': vxColSettings.colFiltersActivated[header.id] == false}" ax-key="filterClearClick(header)" ng-attr-id="{{header.id}}_clearfilters">
+                                                    <li role="presentation" class="filterClear" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && vxColSettings.colFilterPairs[header.id].length > 0" ng-class="{ 'disabled': vxColSettings.colFiltersActivated[header.id] == false}" ax-key="filterClearClick(header)" ng-attr-id="{{header.id}}_clearfilters" ax-disabled="vxColSettings.colFiltersActivated[header.id] == false">
                                                         <span class="indicator"><i class="icon icon-filter white"></i></span>Clear All Filters
                                                     </li>
                                                     <li role="presentation" class="filter-search" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && header.ddFiltersWithSearch == true">
                                                         <input class="search-input" tabindex="0" type="search" placeholder="Search In Filters" aria-label="search for filters in column {{header.columnName}}" ng-model="vxColSettings.filterSearchToken[header.id]" ng-attr-id="{{header.id}}_searchfilters" />
                                                     </li>
                                                     <li role="presentation" class="filter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && filter.disabled == false" ng-repeat="filter in vxColSettings.colFilterPairs[header.id] | filter:vxColSettings.filterSearchToken[header.id]">
-                                                        <input class="filter-toggle" tabindex="0" type="checkbox" ng-model="vxColSettings.colFiltersStatus[filter.key]" ng-change="filterClick(header, filter)" ng-attr-id="{{header.id}}_filter_{{$index}}" /><label class="filterItemTitle" ng-attr-for="{{header.id}}_filter_{{$index}}"><span ng-if="filter.filterDefnAvailable == false">{{filter.name}}</span><span ng-if="filter.filterDefnAvailable == true" vx-compile="filter.filterDefn"></span></label>
+                                                        <input class="filter-toggle" tabindex="0" type="checkbox" ng-model="vxColSettings.colFiltersStatus[filter.key]" ng-change="filterClick(header, filter)" ng-attr-id="{{header.id}}_filter_{{$index}}" /><label class="filterItemTitle" ng-attr-for="{{header.id}}_filter_{{$index}}"><span ng-if="filter.filterDefnAvailable == false"><span class="offscreen">{{header.columnName}} filter </span> {{filter.name}}</span><span ng-if="filter.filterDefnAvailable == true" vx-compile="filter.filterDefn"></span></label>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -113,6 +113,8 @@
                             <div class="offscreen">
                                 <span class="offscreen" id="vx_row_edit"> Edit Row</span>
                                 <span class="offscreen" id="vx_row_save"> Save Row</span>
+                                <span class="offscreen" id="vx_row_sel_row">Select Row</span>
+                                <span class="offscreen" id="vx_row_sel_all_row">Select All Rows</span>
                             </div>
                             <table class="vxTable">
                                 <thead class="vxHead">

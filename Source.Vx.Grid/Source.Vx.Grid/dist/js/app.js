@@ -50,132 +50,6 @@
             disabled: false,
             transferStatus: 0,
             locked: true
-        },
-        {
-            readOnly: "N",
-            transferFromCustomer: "Alpine Ski House B",
-            transferFromAssignment: "NB-FY15-XYZ-Coho-174 NB-FY15-XYZ-Coho-174 NB-FY15-XYZ-Coho-174 NB-FY15-XYZ-Coho-1746",
-            status: "Pending",
-            dt: "APR 21, 2014",
-            labor: "01:45",
-            date: "APR 21st,2014",
-            category: "Previsit",
-            timezone: "(UTC - 5:00)Pacific Time(US&Canada)",
-            notes: "Lorem ipsum dolor sit amet",
-            laborId: "xxx-xxx-xxxx-2",
-            errors: {}, link: 'http://bing.com',
-            errorsShow: false,
-            disabled: false,
-            transferStatus: 0,
-            locked: true
-        },
-        {
-            readOnly: "N",
-            transferFromCustomer: "Alpine Ski House C",
-            transferFromAssignment: "NB-FY15-XYZ-Coho-1745",
-            status: "Pending",
-            dt: "APR 21, 2014",
-            labor: "01:45",
-            date: "APR 21st,2014",
-            category: "Previsit",
-            timezone: "(UTC - 5:00)Pacific Time(US&Canada)",
-            notes: "Lorem ipsum dolor sit amet",
-            laborId: "xxx-xxx-xxxx-3",
-            errors: {}, link: 'http://bing.com',
-            errorsShow: false,
-            disabled: false,
-            transferStatus: 0,
-            locked: true
-        },
-        {
-            readOnly: "N",
-            transferFromCustomer: "Alpine Ski House c",
-            transferFromAssignment: "NB-FY15-XYZ-Coho-1745",
-            status: "Pending",
-            dt: "APR 21, 2014",
-            labor: "01:45",
-            date: "APR 21st,2014",
-            category: "Previsit",
-            timezone: "(UTC - 5:00)Pacific Time(US&Canada)",
-            notes: "Lorem ipsum dolor sit amet",
-            laborId: "xxx-xxx-xxxx-5",
-            errors: {}, link: 'http://bing.com',
-            errorsShow: false,
-            disabled: false,
-            transferStatus: 0,
-            locked: false
-        },
-        {
-            readOnly: "N",
-            transferFromCustomer: "Alpine Ski House c",
-            transferFromAssignment: "NB-FY15-XYZ-Coho-1746",
-            status: "Pending",
-            dt: "APR 21, 2014",
-            labor: "01:45",
-            date: "APR 21st,2014",
-            category: "Previsit",
-            timezone: "(UTC - 5:00)Pacific Time(US&Canada)",
-            notes: "Lorem ipsum dolor sit amet",
-            laborId: "xxx-xxx-xxxx-6",
-            errors: {}, link: 'http://bing.com',
-            errorsShow: false,
-            disabled: false,
-            transferStatus: 0,
-            locked: false
-        },
-        {
-            readOnly: "N",
-            transferFromCustomer: "Alpine Ski House B",
-            transferFromAssignment: "NB-FY15-XYZ-Coho-1746",
-            status: "Pending",
-            dt: "APR 21, 2014",
-            labor: "01:45",
-            date: "APR 21st,2014",
-            category: "Previsit",
-            timezone: "(UTC - 5:00)Pacific Time(US&Canada)",
-            notes: "Lorem ipsum dolor sit amet",
-            laborId: "xxx-xxx-xxxx-7",
-            errors: {}, link: 'http://bing.com',
-            errorsShow: false,
-            disabled: false,
-            transferStatus: 0,
-            locked: false
-        },
-        {
-            readOnly: "N",
-            transferFromCustomer: "Alpine Ski House d",
-            transferFromAssignment: "NB-FY15-XYZ-Coho-1745",
-            status: "Pending",
-            dt: "APR 21, 2014",
-            labor: "01:45",
-            date: "APR 21st,2014",
-            category: "Previsit",
-            timezone: "(UTC - 5:00)Pacific Time(US&Canada)",
-            notes: "Lorem ipsum dolor sit amet",
-            laborId: "xxx-xxx-xxxx-8",
-            errors: {}, link: 'http://bing.com',
-            errorsShow: false,
-            disabled: false,
-            transferStatus: 0,
-            locked: false
-        },
-        {
-            readOnly: "Y",
-            transferFromCustomer: "Alpine Ski House A",
-            transferFromAssignment: "NB-FY15-XYZ-Coho-1745",
-            status: "Pending",
-            dt: "APR 21, 2014",
-            labor: "01:45",
-            date: "APR 21st,2014",
-            category: "Previsit",
-            timezone: "(UTC - 5:00)Pacific Time(US&Canada)",
-            notes: "Lorem ipsum dolor sit amet b",
-            laborId: "xxx-xxx-xxxx-37",
-            errors: {}, link: 'http://bing.com',
-            errorsShow: false,
-            disabled: false,
-            transferStatus: 0,
-            locked: true
         }
     ];
 
@@ -201,6 +75,16 @@
                     new Date(2015, 01, 11, 0, 0, 0, 0),
                     new Date(2015, 01, 09, 0, 0, 0, 0),
                 ]);
+                rec.dt1 = rec.dt;
+                rec.dt2 = rec.dt;
+                rec.dt3 = rec.dt;
+                rec.dt4 = rec.dt;
+                rec.dt5 = rec.dt;
+                rec.dt6 = rec.dt;
+                rec.dt7 = rec.dt;
+                rec.dt8 = rec.dt;
+                rec.dt9 = rec.dt;
+                rec.dt10 = rec.dt;
                 rec.engagement = _.sample([customer, 'Fist Up Consultants']),
                 rec.assignment = record.transferFromAssignment,
                 rec.users = ['asparida', 'prasadne', 'ruprawat'];
@@ -237,7 +121,7 @@
         inlineDeleteOverrideEnabled: true,
         showGridStats: true,
         showGridOptions: true,
-        data: self.sampling(3, 'Coho Vineyard 1111'),
+        data: self.sampling(200, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
         //initialRowClasses: self.sampleRowClasses,
@@ -245,12 +129,12 @@
         showTable: false,
         virtualization: true,
         pagination: false,
-        pageLength: 100,
+        pageLength: 10000,
         sortPredicate: 'dt',
         reverseSortDirection: true,
         inlineAddRowEnabled: true,
         categories: self.categories,
-        emptyFill:'No records in the grid',
+        emptyFill: 'No records in the grid',
         newRowTemplate: {
             readOnly: "Y",
             transferFromCustomer: "Alpine Ski House A",
@@ -272,17 +156,27 @@
             newRow: true
         },
         columnDefConfigs: [
-            { id: 'dt', columnName: 'Date', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
-            { id: 'link', columnName: 'Link', renderDefn: true, width: '150', headerDefn: '<span>Link</span>', hidden: false, cellDefn: '<a style="padding-left:10px;" ng-href="{{VX_DATA_POINT}}" >{{VX_DATA_POINT}}</a>', inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" ng-class=\'{ "invalidField" : VX_INVALID_ROW && VX_INVALID_FIELD_ROW  }\' ng-change="VX_CONFIG.validateLinkField(VX_ROW_POINT, VX_DATA_POINT)" />', inlineEditValidation: true },
+            { id: 'dt1', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'dt2', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'dt3', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'dt4', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'dt5', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'dt6', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'dt7', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'dt8', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'dt9', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'dt10', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'dt', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'link', columnName: 'Link', renderDefn: false, width: '150', headerDefn: '<span>Link</span>', hidden: false, cellDefn: '<a style="padding-left:10px;" ng-href="{{VX_DATA_POINT}}" >{{VX_DATA_POINT}}</a>', inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" ng-class=\'{ "invalidField" : VX_INVALID_ROW && VX_INVALID_FIELD_ROW  }\' ng-change="VX_CONFIG.validateLinkField(VX_ROW_POINT, VX_DATA_POINT)" />', inlineEditValidation: true },
             { id: 'customer', columnName: 'Customer', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, inlineEditOnColumnEnabled: true, hidden: false, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
-            { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: true, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, hidden: true, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
-            { id: 'assignment', columnName: 'Assignment', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: true },
-            { id: 'category', columnName: 'Category', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span>{{VX_DATA_POINT.name}}</span>", cellDefn: '<span>{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" ng-options="item.name for item in row.categories" ng-model="row[\'category\']"></select>', inlineEditOnColumnEnabled: true },
-            { id: 'userAlias', columnName: 'User', renderDefn: true, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false, cellDefn: '<select class="selectStyleSampleA" ng-model="row.userAlias" ng-options="user for user in row.users"><option value="">Select an option </option> </select>' },
-            { id: 'labor', columnName: 'Labor', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: true },
+            { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: true, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, hidden: false, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
+            { id: 'assignment', columnName: 'Assignment', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false },
+            { id: 'category', columnName: 'Category', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span>{{VX_DATA_POINT.name}}</span>", cellDefn: '<span>{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" ng-options="item.name for item in row.categories" ng-model="row[\'category\']"></select>', inlineEditOnColumnEnabled: true },
+            { id: 'userAlias', columnName: 'User', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false, cellDefn: '<select class="selectStyleSampleA" ng-model="row.userAlias" ng-options="user for user in row.users"><option value="">Select an option </option> </select>' },
+            { id: 'labor', columnName: 'Labor', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
             { id: 'timezone', columnName: 'Timezone', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
-            { id: 'status', columnName: 'Status', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: true },
-            { id: 'mid', columnName: 'MID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: true },
+            { id: 'status', columnName: 'Status', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
+            { id: 'mid', columnName: 'MID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false },
             { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, primary: true, hidden: false }
         ]
     };
@@ -359,7 +253,7 @@
     self.singleSample = function () {
         self.vxSampleConfig.pagination = false;
         var data = self.sampling(1, 'Coho Vineyard 222');
-        self.vxSampleConfig.data = _.filter(data, function(row, iter) {
+        self.vxSampleConfig.data = _.filter(data, function (row, iter) {
             return iter == 0;
         });
     }
@@ -378,7 +272,7 @@
         self._tempDirection = !self._tempDirection;
     }
 
-    self.resetCustCol = function() {
+    self.resetCustCol = function () {
         self.vxSampleConfig.resetColumnFilters(['customer']);
     }
 

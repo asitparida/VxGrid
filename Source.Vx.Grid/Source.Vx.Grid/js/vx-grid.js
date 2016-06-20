@@ -1885,9 +1885,9 @@
             compile: function ($element, attr) {
                 var fn = $parse(attr['axKey']);
                 return function axKeyHandler(scope, element) {
-                    //if (!element.attr('role')) {
-                    //    element.attr('role', 'button');
-                    //}
+                    if (!element.attr('role')) {
+                        element.attr('role', 'button');
+                    }
                     if (!element.attr('tabindex')) {
                         element.attr('tabindex', 0);
                     }

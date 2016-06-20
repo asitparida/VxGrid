@@ -1072,7 +1072,7 @@
                 }
 
                 &.filter-search {
-                    input{
+                    input[type="search"] {
                         line-height: 36px;
                         height: 36px;
                         padding: 0 10px;

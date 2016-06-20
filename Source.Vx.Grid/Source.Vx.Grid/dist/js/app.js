@@ -119,7 +119,7 @@
         inlineEditSyncEnabled: true,
         inlineSaveOverrideEnabled: true,
         inlineDeleteOverrideEnabled: true,
-        showGridStats: true,
+        showGridStats: false,
         showGridOptions: true,
         data: self.sampling(200, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,

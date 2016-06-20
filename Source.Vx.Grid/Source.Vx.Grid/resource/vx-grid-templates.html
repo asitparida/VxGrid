@@ -9,6 +9,8 @@
              $templateCache.put("template/vx-grid/vx-grid-json-editor-modal.html", vxGridTemplates.vxGridJsonEditorModal);
              $templateCache.put("template/vx-grid/vx-grid-manage-columns-modal.html", vxGridTemplates.vxGridManageColumnsModal);
              $templateCache.put("template/vx-grid/vx-grid.html", vxGridTemplates.vxGridTableStructure);
+             $templateCache.put("template/vx-grid/vx-grid-row-tmpl.html", vxGridTemplates.vxGridRowTmpl);
+             $templateCache.put("template/vx-grid/vx-grid-row-tmpl-bindonce.html", vxGridTemplates.vxGridRowTmplBindonce);
          }])
     })();
 </script>
@@ -68,7 +70,7 @@
                                     <tr class="vxHeadRow">
                                         <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" title="{{header.columnName}}" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" tabindex="-1" ng-attr-id="vxHeadSt_{{$index}}" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)" ng-style="{ 'width' : header.effectiveWidth + 'px' }">
                                             <div class="dropdown" data-container="body" ng-if="header.renderHeadDefn == false" ng-class="{ 'open' : vxColSettings.dropdDownOpen[header.id] == true}">
-                                                <button class="btn btn-default dropdown-toggle" type="button" ng-attr-id="ddMenu_{{header.id}}" ng-attr-aria-expanded="{{vxColSettings.dropdDownOpen[header.id] == true}}" ng-attr-tabindex="{{vxConfig.noData == false ? header.headTabIndex : -1}}" ng-click="headerClick(header, $event)" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)" >
+                                                <button class="btn btn-default dropdown-toggle" type="button" ng-attr-id="ddMenu_{{header.id}}" ng-attr-aria-expanded="{{vxColSettings.dropdDownOpen[header.id] == true}}" ng-attr-tabindex="{{vxConfig.noData == false ? header.headTabIndex : -1}}" ng-click="headerClick(header, $event)" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)">
                                                     <span class="colTitle">{{header.columnName}}</span>
                                                     <span class="ddCaret" aria-hidden="true" ng-show="vxColSettings.colFiltersActivated[header.id] != true && vxColSettings.dropdDownEnabled[header.id] == true"><i class="icon icon-ScrollChevronDownLegacy white"></i></span>
                                                     <span class="ddCaret" aria-hidden="true" ng-show="vxColSettings.colFiltersActivated[header.id] == true && vxColSettings.dropdDownEnabled[header.id] == true"><i class="icon icon-filter white"></i></span>
@@ -117,6 +119,7 @@
                             <table class="vxTable">
                                 <thead class="vxHead">
                                     <tr class="vxHeadRow">
+                                        <th class="offscreen" style="visibility:collapse" aria-hidden="true">Hidden Row ID Column</th>
                                         <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" ng-attr-id="vxHead_{{$index}}" ng-style="{ 'width' : header.effectiveWidth + 'px' }" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false" scope="col">
                                             <span class="noDdTitle offscreen">{{header.columnName}}</span>
                                         </th>
@@ -141,153 +144,39 @@
                                     </tr>
                                 </thead>
                                 <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxColSettings.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.bindOnce == false && vxConfig.virtualization == true">
-                                    <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]" ng-attr-id="{{row[vxColSettings.primaryId]}}" class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow" ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection))" ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}">
-                                        <span class="offscreen" role="rowheader" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{row[vxConfig.ariaPrimary]}}</span>
-                                        <td colspan="{{getNonHiddenColCount()}}" ng-if="row.fillEmptyElement == true" style="padding-left:15px;"><span ng-bind-html="vxConfig.emptyFill"></span></td>
-                                        <td class="vxBodyRowCell {{header.colClass}}" ng-class="{'renderedDefn': header.renderDefn == true}" ng-repeat="header in vxConfig.columnDefConfigs" ng-style="{ 'width' : header.effectiveWidth + 'px' }" ng-if="header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
-                                            <span ng-if="(header.renderDefn == false && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == false && header.inlineEditOnColumnEnabled == false)" title="{{row[header.id]}}">{{row[header.id]}}</span>
-                                            <div ng-if="(header.renderDefn == true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == true && header.inlineEditOnColumnEnabled == false)" vx-compile-clone-link="header.cellDefn"></div>
-                                            <div ng-if="vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
-                                        </td>
-                                        <td class="vxBodyRowCell groupCell" ng-if="row.type == 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)" colspan="1">
-                                            <div vx-compile="row.cellDefn"></div>
-                                        </td>
-                                        <td class="vxBodyRowCell groupCell" ng-if="row.type == 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)" colspan="{{getVisibleHeaderCounts() - 1}}">
-                                            <span class="first">GROUPED BY {{row.colName}} : </span><span class="colname">{{row.value}}</span>
-                                        </td>
-                                        <td class="vxBodyRowCell xsCell" ng-if="vxColSettings.xsViewEnabled == true && !(row.fillEmptyElement == true)" ng-class="{ 'rowSelectionEnabled': vxConfig.selectionEnabled == true }">
-                                            <div class="xsSelectionHolder" vx-compile-clone-link="vxConfig.columnDefConfigs[0].cellDefn" ng-if="vxConfig.selectionEnabled"></div>
-                                            <div class="xsRowTitleHolder" ax-key="row.xsViewDetails = !row.xsViewDetails">
-                                                <span ng-if="vxColSettings.xsRowTitleTemplateAvailable == false">{{row[vxColSettings.primaryId]}}</span>
-                                                <div ng-if="vxColSettings.xsRowTitleTemplateAvailable == true" vx-compile="vxConfig.xsRowTitleTemplate"></div>
-                                            </div>
-                                            <div class="xsRowViewToggleHolder" ax-key="row.xsViewDetails = !row.xsViewDetails">
-                                                <div class="icon-container">
-                                                    <i class="icon icon-ScrollChevronUpLegacy" ng-show="row.xsViewDetails"></i>
-                                                    <i class="icon icon-ScrollChevronDownLegacy" ng-show="!row.xsViewDetails"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 xsCellContentHolder" collapse="!row.xsViewDetails">
-                                                <div class="xsCellContent" ng-repeat="header in vxConfig.columnDefConfigs" ng-if="$index > 0 && header.xsHidden == false && row.type != 'groupRow'">
-                                                    <div class="col-xs-12 xsCellHeader">{{header.columnName}}</div>
-                                                    <div class="col-xs-12 xsCellValue">
-                                                        <span ng-if="header.renderDefn == false">{{row[header.id]}}</span>
-                                                        <div ng-if="header.renderDefn == true" vx-compile-clone-link="header.cellDefn"></div>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
+                                        ng-attr-id="{{row[vxColSettings.primaryId]}}"
+                                        class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"
+                                        ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection))"
+                                        ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}"
+                                        ng-include="'template/vx-grid/vx-grid-row-tmpl.html'" ></tr>
                                 </tbody>
                                 <tbody class="vxBody" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.bindOnce == false && vxConfig.virtualization == false">
-                                    <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]" ng-attr-id="{{row[vxColSettings.primaryId]}}" class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow" ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength )" ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}">
-                                        <span class="offscreen" role="rowheader" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{row[vxConfig.ariaPrimary]}}</span>
-                                        <td colspan="{{getNonHiddenColCount()}}" ng-if="row.fillEmptyElement == true" style="padding-left:15px;"><span ng-bind-html="vxConfig.emptyFill"></span></td>
-                                        <td class="vxBodyRowCell {{header.colClass}}" ng-class="{'renderedDefn': header.renderDefn == true || (vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true) }" ng-repeat="header in vxConfig.columnDefConfigs" ng-style="{ 'width' : header.effectiveWidth + 'px' }" ng-if="header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
-                                            <span ng-if="(header.renderDefn == false && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == false && header.inlineEditOnColumnEnabled == false)" title="{{row[header.id]}}">{{row[header.id]}}</span>
-                                            <div ng-if="(header.renderDefn == true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == true && header.inlineEditOnColumnEnabled == false)" vx-compile-clone-link="header.cellDefn"></div>
-                                            <div ng-if="vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
-                                        </td>
-                                        <td class="vxBodyRowCell groupCell" ng-if="row.type == 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)" colspan="1">
-                                            <div vx-compile="row.cellDefn"></div>
-                                        </td>
-                                        <td class="vxBodyRowCell groupCell" ng-if="row.type == 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)" colspan="{{getVisibleHeaderCounts() - 1}}">
-                                            <span class="first">GROUPED BY {{row.colName}} : </span><span class="colname">{{row.value}}</span>
-                                        </td>
-                                        <td class="vxBodyRowCell xsCell" ng-if="vxColSettings.xsViewEnabled == true && !(row.fillEmptyElement == true)" ng-class="{ 'rowSelectionEnabled': vxConfig.selectionEnabled == true }">
-                                            <div class="xsSelectionHolder" vx-compile-clone-link="vxConfig.columnDefConfigs[0].cellDefn" ng-if="vxConfig.selectionEnabled"></div>
-                                            <div class="xsRowTitleHolder" ax-key="row.xsViewDetails = !row.xsViewDetails">
-                                                <span ng-if="vxColSettings.xsRowTitleTemplateAvailable == false">{{row[vxColSettings.primaryId]}}</span>
-                                                <div ng-if="vxColSettings.xsRowTitleTemplateAvailable == true" vx-compile="vxConfig.xsRowTitleTemplate"></div>
-                                            </div>
-                                            <div class="xsRowViewToggleHolder" ax-key="row.xsViewDetails = !row.xsViewDetails">
-                                                <div class="icon-container">
-                                                    <i class="icon icon-ScrollChevronUpLegacy" ng-show="row.xsViewDetails"></i>
-                                                    <i class="icon icon-ScrollChevronDownLegacy" ng-show="!row.xsViewDetails"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 xsCellContentHolder" collapse="!row.xsViewDetails">
-                                                <div class="xsCellContent" ng-repeat="header in vxConfig.columnDefConfigs" ng-if="$index > 0 && header.xsHidden == false && row.type != 'groupRow'">
-                                                    <div class="col-xs-12 xsCellHeader">{{header.columnName}}</div>
-                                                    <div class="col-xs-12 xsCellValue">
-                                                        <span ng-if="header.renderDefn == false">{{row[header.id]}}</span>
-                                                        <div ng-if="header.renderDefn == true" vx-compile-clone-link="header.cellDefn"></div>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]" 
+                                        ng-attr-id="{{row[vxColSettings.primaryId]}}" 
+                                        class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow" 
+                                        ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength )" 
+                                        ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}"
+                                        ng-include="'template/vx-grid/vx-grid-row-tmpl.html'" ></tr>
                                 </tbody>
                                 <!-- vxConfig.bindOnce == true -->
                                 <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxColSettings.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.bindOnce == true && vxConfig.virtualization == true">
-                                    <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]" ng-attr-id="{{::row[vxColSettings.primaryId]}}" class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow" ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection))" ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}" ng-init="rowId = row[vxColSettings.primaryId]">
-                                        <span class="offscreen" role="rowheader" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{::row[vxConfig.ariaPrimary]}}</span>
-                                        <td colspan="{{::getNonHiddenColCount()}}" ng-if="::row.fillEmptyElement == true" style="padding-left:15px;"><span ng-bind-html="vxConfig.emptyFill"></span></td>
-                                        <td class="vxBodyRowCell {{::header.colClass}}" ng-class="::{'renderedDefn': header.renderDefn == true}" ng-repeat="header in vxConfig.columnDefConfigs" ng-style="::{ 'width' : header.effectiveWidth + 'px' }" ng-if="::header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
-                                            <span ng-show="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && ((header.renderDefn == false && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == false && header.inlineEditOnColumnEnabled == false))" title="{{::row[header.id]}}">{{::row[header.id]}}</span>
-                                            <div ng-if="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && ((header.renderDefn == true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == true && header.inlineEditOnColumnEnabled == false))" vx-compile-clone-link="header.cellDefn"></div>
-                                            <div ng-if="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
-                                            <div ng-if="::header.columnIsRowSelect == true">
-                                                <div class="vx-row-select">
-                                                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{::rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}" />
-                                                </div>
-                                            </div>
-                                            <div class="vx-row-edit-container" ng-if="::header.columnIsRowEdit == true">
-                                                <div class="vx-row-edit icon-container" tabindex="0" ax-key="editRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == false && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="vx_row_edit vx_row_sel_{{::rowId}}">
-                                                    <i class="icon icon-edit"></i>
-                                                </div>
-                                                <div class="vx-row-edit icon-container" ax-disabled="vxConfig.invalidRows[row[vxColSettings.primaryId]]" tabindex="0" ax-key="saveRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == true && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="vx_row_save vx_row_sel_{{::rowId}}">
-                                                    <i class="icon icon-save"></i>
-                                                </div>
-                                                <div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[rowId] == true" role="button" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}">
-                                                    <img class="loader-row" ng-src="{{::vxConfig.loaderGifSrc}}" />
-                                                </div>
-                                            </div>
-                                            <span ng-show="::header.columnIsDate == true">{{::row[header.id] | date : header.columnDatePipe}}</span>
-                                        </td>
-                                        <td class="vxBodyRowCell groupCell" ng-if="::row.type == 'groupRow' && !(row.fillEmptyElement == true)" colspan="1">
-                                            <div vx-compile="row.cellDefn"></div>
-                                        </td>
-                                        <td class="vxBodyRowCell groupCell" ng-if="::row.type == 'groupRow'  && !(row.fillEmptyElement == true)" colspan="{{getVisibleHeaderCounts() - 1}}">
-                                            <span class="first">GROUPED BY {{row.colName}} : </span><span class="colname">{{row.value}}</span>
-                                        </td>
-                                    </tr>
+                                    <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
+                                        ng-attr-id="{{::row[vxColSettings.primaryId]}}"
+                                        class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"
+                                        ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection))"
+                                        ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}"
+                                        ng-init="rowId = row[vxColSettings.primaryId]"
+                                        ng-include="'template/vx-grid/vx-grid-row-tmpl-bindonce.html'"></tr>
                                 </tbody>
                                 <tbody class="vxBody" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.bindOnce == true && vxConfig.virtualization == false">
-                                    <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]" ng-attr-id="{{::row[vxColSettings.primaryId]}}" class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow" ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength)" ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}" ng-init="rowId = row[vxColSettings.primaryId]">
-                                        <span class="offscreen" role="rowheader" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{::row[vxConfig.ariaPrimary]}}</span>
-                                        <td colspan="{{::getNonHiddenColCount()}}" ng-if="::row.fillEmptyElement == true" style="padding-left:15px;"><span ng-bind-html="vxConfig.emptyFill"></span></td>
-                                        <td class="vxBodyRowCell {{::header.colClass}}" ng-class="::{'renderedDefn': header.renderDefn == true}" ng-repeat="header in vxConfig.columnDefConfigs" ng-style="::{ 'width' : header.effectiveWidth + 'px' }" ng-if="::header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
-                                            <span ng-show="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && ((header.renderDefn == false && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == false && header.inlineEditOnColumnEnabled == false))" title="{{::row[header.id]}}">{{::row[header.id]}}</span>
-                                            <div ng-if="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && ((header.renderDefn == true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == true && header.inlineEditOnColumnEnabled == false))" vx-compile-clone-link="header.cellDefn"></div>
-                                            <div ng-if="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
-                                            <div ng-if="::header.columnIsRowSelect == true">
-                                                <div class="vx-row-select">
-                                                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{::rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}" />
-                                                </div>
-                                            </div>
-                                            <div class="vx-row-edit-container" ng-if="::header.columnIsRowEdit == true">
-                                                <div class="vx-row-edit icon-container" tabindex="0" ax-key="editRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == false && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="vx_row_edit vx_row_sel_{{::rowId}}">
-                                                    <i class="icon icon-edit"></i>
-                                                </div>
-                                                <div class="vx-row-edit icon-container" ax-disabled="vxConfig.invalidRows[row[vxColSettings.primaryId]]" tabindex="0" ax-key="saveRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == true && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="vx_row_save vx_row_sel_{{::rowId}}">
-                                                    <i class="icon icon-save"></i>
-                                                </div>
-                                                <div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[rowId] == true" role="button" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}">
-                                                    <img class="loader-row" ng-src="{{::vxConfig.loaderGifSrc}}" />
-                                                </div>
-                                            </div>
-                                            <span ng-show="::header.columnIsDate == true">{{::row[header.id] | date : header.columnDatePipe}}</span>
-                                        </td>
-                                        <td class="vxBodyRowCell groupCell" ng-if="::row.type == 'groupRow' && !(row.fillEmptyElement == true)" colspan="1">
-                                            <div vx-compile="row.cellDefn"></div>
-                                        </td>
-                                        <td class="vxBodyRowCell groupCell" ng-if="::row.type == 'groupRow'  && !(row.fillEmptyElement == true)" colspan="{{getVisibleHeaderCounts() - 1}}">
-                                            <span class="first">GROUPED BY {{row.colName}} : </span><span class="colname">{{row.value}}</span>
-                                        </td>
-                                    </tr>
+                                    <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
+                                        ng-attr-id="{{::row[vxColSettings.primaryId]}}"
+                                        class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"
+                                        ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength)"
+                                        ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}"
+                                        ng-init="rowId = row[vxColSettings.primaryId]"
+                                        ng-include="'template/vx-grid/vx-grid-row-tmpl-bindonce.html'"></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -436,5 +325,75 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="vxGridRowTmpl">
+        <td class="offscreen" style="visibility:collapse;" role="rowheader" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{::row[vxConfig.ariaPrimary]}}</td>
+        <td colspan="{{getNonHiddenColCount()}}" ng-if="row.fillEmptyElement == true" style="padding-left:15px;"><span ng-bind-html="vxConfig.emptyFill"></span></td>
+        <td class="vxBodyRowCell {{header.colClass}}" ng-class="{'renderedDefn': header.renderDefn == true || (vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true) }" ng-repeat="header in vxConfig.columnDefConfigs" ng-style="{ 'width' : header.effectiveWidth + 'px' }" ng-if="header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
+            <span ng-if="(header.renderDefn == false && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == false && header.inlineEditOnColumnEnabled == false)" title="{{row[header.id]}}">{{row[header.id]}}</span>
+            <div ng-if="(header.renderDefn == true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == true && header.inlineEditOnColumnEnabled == false)" vx-compile-clone-link="header.cellDefn"></div>
+            <div ng-if="vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
+        </td>
+        <td class="vxBodyRowCell groupCell" ng-if="row.type == 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)" colspan="1">
+            <div vx-compile="row.cellDefn"></div>
+        </td>
+        <td class="vxBodyRowCell groupCell" ng-if="row.type == 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)" colspan="{{getVisibleHeaderCounts() - 1}}">
+            <span class="first">GROUPED BY {{row.colName}} : </span><span class="colname">{{row.value}}</span>
+        </td>
+        <td class="vxBodyRowCell xsCell" ng-if="vxColSettings.xsViewEnabled == true && !(row.fillEmptyElement == true)" ng-class="{ 'rowSelectionEnabled': vxConfig.selectionEnabled == true }">
+            <div class="xsSelectionHolder" vx-compile-clone-link="vxConfig.columnDefConfigs[0].cellDefn" ng-if="vxConfig.selectionEnabled"></div>
+            <div class="xsRowTitleHolder" ax-key="row.xsViewDetails = !row.xsViewDetails">
+                <span ng-if="vxColSettings.xsRowTitleTemplateAvailable == false">{{row[vxColSettings.primaryId]}}</span>
+                <div ng-if="vxColSettings.xsRowTitleTemplateAvailable == true" vx-compile="vxConfig.xsRowTitleTemplate"></div>
+            </div>
+            <div class="xsRowViewToggleHolder" ax-key="row.xsViewDetails = !row.xsViewDetails">
+                <div class="icon-container">
+                    <i class="icon icon-ScrollChevronUpLegacy" ng-show="row.xsViewDetails"></i>
+                    <i class="icon icon-ScrollChevronDownLegacy" ng-show="!row.xsViewDetails"></i>
+                </div>
+            </div>
+            <div class="col-xs-12 xsCellContentHolder" collapse="!row.xsViewDetails">
+                <div class="xsCellContent" ng-repeat="header in vxConfig.columnDefConfigs" ng-if="$index > 0 && header.xsHidden == false && row.type != 'groupRow'">
+                    <div class="col-xs-12 xsCellHeader">{{header.columnName}}</div>
+                    <div class="col-xs-12 xsCellValue">
+                        <span ng-if="header.renderDefn == false">{{row[header.id]}}</span>
+                        <div ng-if="header.renderDefn == true" vx-compile-clone-link="header.cellDefn"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </td>
+    </div>
+    <div id="vxGridRowTmplBindonce">
+        <td class="offscreen" style="visibility:collapse;" role="rowheader" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{::row[vxConfig.ariaPrimary]}}</td>
+        <td colspan="{{::getNonHiddenColCount()}}" ng-if="::row.fillEmptyElement == true" style="padding-left:15px;"><span ng-bind-html="vxConfig.emptyFill"></span></td>
+        <td class="vxBodyRowCell {{::header.colClass}}" ng-class="::{'renderedDefn': header.renderDefn == true}" ng-repeat="header in vxConfig.columnDefConfigs" ng-style="::{ 'width' : header.effectiveWidth + 'px' }" ng-if="::header.hidden == false && row.type != 'groupRow' && vxColSettings.xsViewEnabled == false && !(row.fillEmptyElement == true)">
+            <span ng-show="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && ((header.renderDefn == false && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == false && header.inlineEditOnColumnEnabled == false))" title="{{::row[header.id]}}">{{::row[header.id]}}</span>
+            <div ng-if="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && ((header.renderDefn == true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] != true) || (header.renderDefn == true && header.inlineEditOnColumnEnabled == false))" vx-compile-clone-link="header.cellDefn"></div>
+            <div ng-if="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
+            <div ng-if="::header.columnIsRowSelect == true">
+                <div class="vx-row-select">
+                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{::rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}" />
+                </div>
+            </div>
+            <div class="vx-row-edit-container" ng-if="::header.columnIsRowEdit == true">
+                <div class="vx-row-edit icon-container" tabindex="0" ax-key="editRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == false && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="vx_row_edit vx_row_sel_{{::rowId}}">
+                    <i class="icon icon-edit"></i>
+                </div>
+                <div class="vx-row-edit icon-container" ax-disabled="vxConfig.invalidRows[row[vxColSettings.primaryId]]" tabindex="0" ax-key="saveRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == true && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="vx_row_save vx_row_sel_{{::rowId}}">
+                    <i class="icon icon-save"></i>
+                </div>
+                <div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[rowId] == true" role="button" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}">
+                    <img class="loader-row" ng-src="{{::vxConfig.loaderGifSrc}}" />
+                </div>
+            </div>
+            <span ng-show="::header.columnIsDate == true">{{::row[header.id] | date : header.columnDatePipe}}</span>
+        </td>
+        <td class="vxBodyRowCell groupCell" ng-if="::row.type == 'groupRow' && !(row.fillEmptyElement == true)" colspan="1">
+            <div vx-compile="row.cellDefn"></div>
+        </td>
+        <td class="vxBodyRowCell groupCell" ng-if="::row.type == 'groupRow'  && !(row.fillEmptyElement == true)" colspan="{{getVisibleHeaderCounts() - 1}}">
+            <span class="first">GROUPED BY {{row.colName}} : </span><span class="colname">{{row.value}}</span>
+        </td>
     </div>
 </div>

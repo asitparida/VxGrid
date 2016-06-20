@@ -722,7 +722,7 @@
   margin-bottom: 0;
   text-transform: none; }
 
-.vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input[type="search"] {
+.vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input {
   line-height: 36px;
   height: 36px;
   padding: 0 10px;
@@ -732,19 +732,19 @@
   color: rgba(255, 255, 255, 0.8);
   background: none;
   border: 1px solid rgba(255, 255, 255, 0.6); }
-  .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input[type="search"]:focus, .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input[type="search"]:active {
+  .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input:focus, .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input:active {
     font-style: normal;
     color: white; }
-  .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input[type="search"]::-webkit-input-placeholder {
+  .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input::-webkit-input-placeholder {
     /* Chrome/Opera/Safari */
     color: rgba(255, 255, 255, 0.8); }
-  .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input[type="search"]::-moz-placeholder {
+  .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input::-moz-placeholder {
     /* Firefox 19+ */
     color: rgba(255, 255, 255, 0.8); }
-  .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input[type="search"]:-ms-input-placeholder {
+  .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input:-ms-input-placeholder {
     /* IE 10+ */
     color: rgba(255, 255, 255, 0.8); }
-  .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input[type="search"]:-moz-placeholder {
+  .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input:-moz-placeholder {
     /* Firefox 18- */
     color: rgba(255, 255, 255, 0.8); }
 

@@ -124,6 +124,7 @@
         data: self.sampling(200, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
+        bindOnce:true,
         //initialRowClasses: self.sampleRowClasses,
         rowClassFn: randomRowFunction,
         showTable: false,

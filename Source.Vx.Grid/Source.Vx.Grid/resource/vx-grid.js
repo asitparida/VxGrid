@@ -1290,7 +1290,7 @@
                     var _prevent = false;
                     if (e.keyCode == 40) {
                         //DOWN ARROW PRESS
-                        var focussables = $(e.target).find('[tabindex="0"]');
+                        var focussables = $(e.target).siblings().find('[tabindex="0"]');
                         if (focussables.length > 0)
                             $(focussables[0]).focus();
                     }
@@ -1349,17 +1349,17 @@
                 $scope.upDowKeyDownHandlerHeaderMenuItems = function (e, columnId) {
                     var _prevent = false;
                     if (e.keyCode == 40) {
-                        /* UP ARROW KEY PRESSED */
+                        /* DOWN ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, true);
                         if ($('#' + _elemId).is('[tabindex="0"]')) {
                             $('#' + _elemId).focus();
                         }
                     }
                     else if (e.keyCode == 38) {
-                        /* DOWN ARROW KEY PRESSED */
+                        /* UP ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, false);
                         if (_elemId == null) {
-                            $(e.target).closest('th').focus();
+                            $(e.target).closest('.dropdown').find('button').focus();
                         }
                         else if ($('#' + _elemId).is('[tabindex="0"]')) {
                             $('#' + _elemId).focus();
@@ -1369,7 +1369,7 @@
                         /* ESC KEY PRESSED */
                         if ($scope.vxColSettings.dropdDownOpen[columnId] == true) {
                             $scope.vxColSettings.dropdDownOpen[columnId] = false;
-                            var _elem = $(e.target).closest('th');
+                            var _elem = $(e.target).closest('.dropdown').find('button');
                             if (_elem && _elem.length > 0) {
                                 $(_elem).focus();
                             }

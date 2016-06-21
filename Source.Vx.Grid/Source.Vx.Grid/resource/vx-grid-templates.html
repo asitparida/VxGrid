@@ -233,10 +233,10 @@
                         <div class="col-xs-1 vxH100 visChangers">
                             <div class="col-xs-12 visChangersContainer">
                                 <div class="col-xs-12 visChangersItem zeroPadding">
-                                    <div class="icon-container" role="button" tabindex="{{headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == false ? -1 : 0}}" ng-class="{'disabled' : headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == false}" ax-key="makeVisible(headerSelected)" ng-keydown="upDownKeyPressHandler($event)" aria-label="Make Columns Visible" ax-disabled="headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == false">
+                                    <div class="icon-container" role="button" tabindex="{{headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == false ? -1 : 0}}" ng-class="{'disabled' : headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == false}" ax-key="makeVisible(headerSelected)" ng-keydown="upDownKeyPressHandler($event)" ng-attr-aria-label="Make Column {{headerSelected.columnName}} Visible" ax-disabled="headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == false">
                                         <i class="icon icon-right"></i>
                                     </div>
-                                    <div class="icon-container" role="button" tabindex="{{headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == true ? -1 : 0}}" ng-class="{'disabled' : headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == true}" ax-key="makeHidden(headerSelected)" ng-keydown="upDownKeyPressHandler($event)" aria-label="Make Columns Hidden" ax-disabled="headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == true">
+                                    <div class="icon-container" role="button" tabindex="{{headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == true ? -1 : 0}}" ng-class="{'disabled' : headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == true}" ax-key="makeHidden(headerSelected)" ng-keydown="upDownKeyPressHandler($event)" ng-attr-aria-label="Make Column {{headerSelected.columnName}} Hidden" ax-disabled="headerSelected.visbilityLocked || headerSelected == null || headerSelected.hidden == true">
                                         <i class="icon icon-left"></i>
                                     </div>
                                 </div>
@@ -262,8 +262,8 @@
                                         </div>
                                         <label class="col-xs-12 col-sm-12 col-md-4 colName">{{header.columnName}}</label>
                                         <div class="col-xs-12 col-sm-6 col-md-6">
-                                            <label class="colLabel">Width (in approx. char)</label>
-                                            <input class="inputStyle colInput" ng-model="header.chars" ng-disabled="header.widthLocked" ng-change="widthChanged(header)" />
+                                            <label class="colLabel" ng-attr-for="_mc_{{header.id}}">Width <span class="offscreen"> for column {{header.columnName}}</span> (in approx. char)</label>
+                                            <input class="inputStyle colInput" ng-model="header.chars" ng-disabled="header.widthLocked" ng-change="widthChanged(header)" ng-attr-id="_mc_{{header.id}}" />
                                         </div>
                                         <div class="clearfix"></div>
                                     </div>
@@ -275,10 +275,10 @@
                         <div class="col-xs-1 vxH100 visChangers">
                             <div class="col-xs-12 visChangersContainer">
                                 <div class="col-xs-12 visChangersItem zeroPadding">
-                                    <div class="icon-container" role="button" tabindex="{{headerSelected.orderLocked || headerSelected.hidden || headerSelected == null ? -1 : 0}}" ng-class="{'disabled' : headerSelected.orderLocked || headerSelected.hidden || headerSelected == null}" ax-key="swapAbove(headerSelected)" ng-keydown="upDownKeyPressHandler($event)" aria-label="Move Column Up" ax-disabled="headerSelected.orderLocked || headerSelected.hidden || headerSelected == null">
+                                    <div class="icon-container" role="button" tabindex="{{headerSelected.orderLocked || headerSelected.hidden || headerSelected == null ? -1 : 0}}" ng-class="{'disabled' : headerSelected.orderLocked || headerSelected.hidden || headerSelected == null}" ax-key="swapAbove(headerSelected)" ng-keydown="upDownKeyPressHandler($event)" ng-attr-aria-label="Move Column {{headerSelected.columnName}} Up" ax-disabled="headerSelected.orderLocked || headerSelected.hidden || headerSelected == null">
                                         <i class="icon icon-up"></i>
                                     </div>
-                                    <div class="icon-container" role="button" tabindex="{{headerSelected.orderLocked || headerSelected.hidden || headerSelected == null ? -1 : 0}}" ng-class="{'disabled' : headerSelected.orderLocked || headerSelected.hidden || headerSelected == null}" ax-key="swapBelow(headerSelected)" ng-keydown="upDownKeyPressHandler($event)" aria-label="Move Column Down" ax-disabled="headerSelected.orderLocked || headerSelected.hidden || headerSelected == null">
+                                    <div class="icon-container" role="button" tabindex="{{headerSelected.orderLocked || headerSelected.hidden || headerSelected == null ? -1 : 0}}" ng-class="{'disabled' : headerSelected.orderLocked || headerSelected.hidden || headerSelected == null}" ax-key="swapBelow(headerSelected)" ng-keydown="upDownKeyPressHandler($event)" ng-attr-aria-label="Move Column {{headerSelected.columnName}} Down" ax-disabled="headerSelected.orderLocked || headerSelected.hidden || headerSelected == null">
                                         <i class="icon icon-down"></i>
                                     </div>
                                 </div>

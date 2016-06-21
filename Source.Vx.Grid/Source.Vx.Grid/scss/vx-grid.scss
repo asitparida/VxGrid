@@ -976,6 +976,11 @@
                             outline-offset: -5px;
                             outline-width: thin;
                         }
+
+                        &[disabled]{
+                            opacity:1;
+                            cursor:default;
+                        }
                     }
 
                     ul.dropdown-menu li.loader {

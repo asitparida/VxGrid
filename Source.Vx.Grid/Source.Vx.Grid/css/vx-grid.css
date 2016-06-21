@@ -657,6 +657,9 @@
       outline-style: dotted;
       outline-offset: -5px;
       outline-width: thin; }
+    .vx-grid-related .vxTable .vxHead th .dropdown .dropdown-toggle[disabled] {
+      opacity: 1;
+      cursor: default; }
   .vx-grid-related .vxTable .vxHead th .dropdown ul.dropdown-menu li.loader {
     padding: 15px;
     width: 100%; }

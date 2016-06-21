@@ -738,7 +738,7 @@
                 height: 24px;
                 position: relative;
                 top: 1px;
-                left: -5px;
+                left: -4px;
             }
         }
 
@@ -784,7 +784,7 @@
                 width: 24px;
                 height: 24px;
                 position: relative;
-                top: 1px;
+                top: 8px;
                 left: -5px;
             }
         }
@@ -797,8 +797,8 @@
                 width: 24px;
                 height: 24px;
                 position: relative;
-                top: 1px;
-                left: -5px;
+                top: 4px;
+                left: -4px;
             }
         }
 
@@ -968,6 +968,7 @@
                         font-weight: 300;
                         font-size: 16px;
                         text-shadow: none;
+                        vertical-align:top;
 
                         &:active, &:focus {
                             outline-color: #fff;
@@ -1007,7 +1008,8 @@
                             font-family: inherit;
                             font-weight: 400;
                             display: inline-block;
-                            width: calc(100% - 15px);
+                            max-width: calc(100% - 25px);
+                            margin-right:10px;
                             vertical-align: top;
                             text-overflow: ellipsis;
                             overflow-x: hidden;
@@ -1072,6 +1074,7 @@
                 &.filter-search {
                     input[type="search"] {
                         line-height: 36px;
+                        height: 36px;
                         padding: 0 10px;
                         font-style: italic;
                         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

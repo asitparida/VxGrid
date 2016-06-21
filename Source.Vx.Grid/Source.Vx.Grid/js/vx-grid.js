@@ -37,6 +37,7 @@
         <CONFIG>.xsTemplate                     <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE XS SPECIFIC TEMPLATE
         <CONFIG>.initialRowClasses              <SUPPORTED : Y>    :   <MAP<OBJECT>>    PROVIDE KEY VALUE PAIRS FOR INITIAL ROW CLASSES
         <CONFIG>.rowClassFn                     <SUPPORTED : Y>    :   <FUNCTION>       PROVIDE FUNCTION REFERENCE TO SELF INVOKE WITH ONE PARAM - VX_ROW : FUNCTION VX_SAMPLE_ROWCLASS_FUNC(ROW){}
+        <CONFIG>.bindOnce                       <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE BIND ONCE ROW TMPL
         
         VX GRID COLUMN CONFIG (BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs') IN DIRECTIVE DEFINTION
         -----------------------------------------------------------------------------------------------------
@@ -194,7 +195,7 @@
                         'xsRowTitleTemplateAvailable': false, // STORES WHETHER THE ROW TITLE TEMPLATE IS AVAILABLE FOR XS VIEW
                         'xsSearch': '', // STORES THE CURRENTLY TOKE AGAINST WHICH WE ARE SERACHING ACCROSS THE GRID IN XS VIEW
                         'searchToken': '', // STORES THE CURRENTLY TOKE AGAINST WHICH WE ARE SERACHING ACCROSS THE GRID
-                        'latchExcess': 3, // STORES THE NUMBER OF ROWS WHICH NEED TO BE BROUGHT TO THE VIEW AS A RESULT OF VIRTUALIZATION
+                        'latchExcess': 5, // STORES THE NUMBER OF ROWS WHICH NEED TO BE BROUGHT TO THE VIEW AS A RESULT OF VIRTUALIZATION
                         'inlineEditState': {}, // STORES CURRENT ROW EDIT STATE
                         'colWithInlineEdits': [],
                         'groupKeys': {},
@@ -258,7 +259,7 @@
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
                                 id: 'checkbox', columnName: 'Row Selection', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
-                                headerDefn: '<div class="vx-row-select"><span class="offscreen" id="vx_row_sel_row">Select Row</span><span class="offscreen" id="vx_row_sel_all_row">Select All Rows</span><input class="vx-row-select-toggle" type="checkbox" ng-disabled="vxConfig.noData == true" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" aria-labelledby="vx_row_sel_all_row"  /></div>',
+                                headerDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-disabled="vxConfig.noData == true" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" aria-labelledby="vx_row_sel_all_row"  /></div>',
                                 cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" ng-attr-id="vx_row-sel_in{{::row[vxColSettings.primaryId]}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" /></div>'
                             };
                             $scope.vxConfig.columnDefConfigs.unshift(_selColDefn);
@@ -296,7 +297,8 @@
                         { prop: 'emptyFill', defValue: '<span>No records to display ...</span>' },
                         { prop: 'loaderGifSrc', defValue: '/resource/loaderWhite36.GIF' },
                         { prop: 'ariaPrimary', defValue: $scope.vxColSettings.primaryId },
-                        { prop: 'xsTemplate', defValue: false }
+                        { prop: 'xsTemplate', defValue: false },
+                        { prop: 'bindOnce', defValue: false }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
@@ -1076,8 +1078,8 @@
 
                 /// <summary>GRID FUNCTION : GET COUNT OF NUMBER OF ROWS IN THE GRID EXCEPT THE ROWS USED TO DENOTE GROUP HEADERS</summary>
                 $scope.getAllRowLength = function () {
-                    var len = _.filter($scope.vxConfig.data, function (row) {
-                        return typeof row.type == 'undefined' || row.type == null || row.type.localeCompare('groupRow') != 0
+                    var len = _.filter($scope.vxConfig.vxData, function (row) {
+                        return typeof row.type == 'undefined' || row.type == null || row.type.localeCompare('groupRow') != 0 || row.fillEmptyElement == true
                     }).length;
                     return len;
                 }
@@ -1288,7 +1290,7 @@
                     var _prevent = false;
                     if (e.keyCode == 40) {
                         //DOWN ARROW PRESS
-                        var focussables = $(e.target).find('[tabindex="0"]');
+                        var focussables = $(e.target).siblings().find('[tabindex="0"]');
                         if (focussables.length > 0)
                             $(focussables[0]).focus();
                     }
@@ -1347,17 +1349,17 @@
                 $scope.upDowKeyDownHandlerHeaderMenuItems = function (e, columnId) {
                     var _prevent = false;
                     if (e.keyCode == 40) {
-                        /* UP ARROW KEY PRESSED */
+                        /* DOWN ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, true);
                         if ($('#' + _elemId).is('[tabindex="0"]')) {
                             $('#' + _elemId).focus();
                         }
                     }
                     else if (e.keyCode == 38) {
-                        /* DOWN ARROW KEY PRESSED */
+                        /* UP ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, false);
                         if (_elemId == null) {
-                            $(e.target).closest('th').focus();
+                            $(e.target).closest('.dropdown').find('button').focus();
                         }
                         else if ($('#' + _elemId).is('[tabindex="0"]')) {
                             $('#' + _elemId).focus();
@@ -1367,7 +1369,7 @@
                         /* ESC KEY PRESSED */
                         if ($scope.vxColSettings.dropdDownOpen[columnId] == true) {
                             $scope.vxColSettings.dropdDownOpen[columnId] = false;
-                            var _elem = $(e.target).closest('th');
+                            var _elem = $(e.target).closest('.dropdown').find('button');
                             if (_elem && _elem.length > 0) {
                                 $(_elem).focus();
                             }
@@ -1892,15 +1894,15 @@
                         element.attr('tabindex', 0);
                     }
                     var _watchListeners = [];
-                    scope._origTabindex = 0;
+                    var _origTabindex = 0;
                     _watchListeners.push(scope.$watch(attr['axDisabled'] || attr['ngDisabled'], function (value) {
                         if (value) {
-                            scope._origTabindex = element.attr('tabindex');
+                            _origTabindex = element.attr('tabindex');
                             element.attr('tabindex', -1);
                             element.attr('aria-disabled', true);
                         }
                         else {
-                            element.attr('tabindex', scope._origTabindex);
+                            element.attr('tabindex', 0);
                             element.attr('aria-disabled', false);
                         }
                     }));

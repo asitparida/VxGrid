@@ -496,7 +496,7 @@
       height: 24px;
       position: relative;
       top: 1px;
-      left: -5px; }
+      left: -4px; }
   .vx-grid-related .icon.icon-down {
     background-position-y: -572px; }
     .vx-grid-related .icon.icon-down.white {
@@ -524,7 +524,7 @@
       width: 24px;
       height: 24px;
       position: relative;
-      top: 1px;
+      top: 8px;
       left: -5px; }
   .vx-grid-related .icon.icon-filter {
     background-position-y: -684px; }
@@ -533,8 +533,8 @@
       width: 24px;
       height: 24px;
       position: relative;
-      top: 1px;
-      left: -5px; }
+      top: 4px;
+      left: -4px; }
   .vx-grid-related .icon.icon-trash {
     background-position-y: -658px; }
   .vx-grid-related .icon.icon-search {
@@ -650,7 +650,8 @@
     font-family: inherit;
     font-weight: 300;
     font-size: 16px;
-    text-shadow: none; }
+    text-shadow: none;
+    vertical-align: top; }
     .vx-grid-related .vxTable .vxHead th .dropdown .dropdown-toggle:active, .vx-grid-related .vxTable .vxHead th .dropdown .dropdown-toggle:focus {
       outline-color: #fff;
       outline-style: dotted;
@@ -675,7 +676,8 @@
     font-family: inherit;
     font-weight: 400;
     display: inline-block;
-    width: calc(100% - 15px);
+    max-width: calc(100% - 25px);
+    margin-right: 10px;
     vertical-align: top;
     text-overflow: ellipsis;
     overflow-x: hidden; }
@@ -722,6 +724,7 @@
 
 .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input[type="search"] {
   line-height: 36px;
+  height: 36px;
   padding: 0 10px;
   font-style: italic;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

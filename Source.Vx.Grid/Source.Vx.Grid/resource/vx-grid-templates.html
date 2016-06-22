@@ -82,9 +82,11 @@
                                                     <li tabindex="0" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownSort[header.id] == true" ax-key="sortClick(header)" ng-attr-id="{{header.id}}_sort">
                                                         <span class="sortIndicator" ng-show="vxColSettings.reverse == false && vxColSettings.predicate == header.id"><i class="icon icon-up white"></i></span><span class="sortIndicator" ng-show="vxConfig.reverseSortDirection == true && vxConfig.sortPredicate == header.id"><i class="icon icon-down white"></i></span>Sort
                                                     </li>
+                                                    <!-- UNSPPORTED IN HYBRID MODE-->
                                                     <li tabindex="0" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownGroup[header.id] == true && vxColSettings.groupByColActivated[header.id] == false" ax-key="groupClick(header)" ng-attr-id="{{header.id}}_group">
                                                         <span>Group</span>
                                                     </li>
+                                                    <!-- UNSPPORTED IN HYBRID MODE-->
                                                     <li tabindex="0" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownGroup[header.id] == true && vxColSettings.groupByColActivated[header.id] == true" ax-key="unGroupClick(header)" ng-attr-id="{{header.id}}_ungroup">
                                                         <span>Ungroup</span>
                                                     </li>

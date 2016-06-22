@@ -702,38 +702,47 @@
                         angular.forEach(rows, function (row) {
                             var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow">VX_ALL_CELLS</tr>';
                             var cellHolderTmpl = '<td class="VX_TD_CLASS">VX_CELL_CONTENT</td>';
+                            var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
                             var cellTmplContent = '<span>VX_CELL_TMPL</span>';
                             var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" ng-model="vxColSettings.rowSelected[\'VX_ROW_ID\']" ng-change="rowSelectionChanged(\'VX_ROW_ID\')" ng-disabled="vxColSettings.vxRowSelectionDisable[\'VX_ROW_ID\']" type="checkbox" id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /></div>';
                             var allCells = '';
                             var rowId = row[$scope.vxColSettings.primaryId];
                             var _compile = false;
-                            angular.forEach($scope.vxConfig.columnDefConfigs, function (col) {
-                                var _cellTmpl = '';
-                                var _cellHolder = cellHolderTmpl;
-                                if (col.hidden != true) {
-                                    if (col.columnIsRowSelect != true && col.columnIsDate != true) {
-                                        var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : '';
-                                        _cellTmpl = cellTmplContent;
-                                        _cellTmpl = _cellTmpl.replace('VX_CELL_TMPL', _data);
+                            if ($scope.config.noData != true) {
+                                angular.forEach($scope.vxConfig.columnDefConfigs, function (col) {
+                                    var _cellTmpl = '';
+                                    var _cellHolder = cellHolderTmpl;
+                                    if (col.hidden != true) {
+                                        if (col.columnIsRowSelect != true && col.columnIsDate != true) {
+                                            var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : '';
+                                            _cellTmpl = cellTmplContent;
+                                            _cellTmpl = _cellTmpl.replace('VX_CELL_TMPL', _data);
+                                        }
+                                        else if (col.columnIsDate == true) {
+                                            var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
+                                            var _dtData = $filter('date')(_data, col.columnDatePipe);
+                                            _cellTmpl = cellTmplContent;
+                                            _cellTmpl = _cellTmpl.replace('VX_CELL_TMPL', _dtData);
+                                        }
+                                        else if (col.columnIsRowSelect == true) {
+                                            var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
+                                            var _rowSelectData = $scope.vxColSettings.rowSelected[rowId];
+                                            _cellTmpl = cellTmplRowSelect;
+                                            _cellTmpl = _cellTmpl.replaceAll('VX_ROW_ID', rowId);
+                                            _cellTmpl = _cellTmpl.replace('VX_ROW_SEL_VAL', _rowSelectData);
+                                            _compile = _compile || true;
+                                        }
+                                        _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
+                                        allCells = allCells + _cellHolder;
                                     }
-                                    else if (col.columnIsDate == true) {
-                                        var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
-                                        var _dtData = $filter('date')(_data, col.columnDatePipe);
-                                        _cellTmpl = cellTmplContent;
-                                        _cellTmpl = _cellTmpl.replace('VX_CELL_TMPL', _dtData);
-                                    }
-                                    else if (col.columnIsRowSelect == true) {
-                                        var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
-                                        var _rowSelectData = $scope.vxColSettings.rowSelected[rowId];
-                                        _cellTmpl = cellTmplRowSelect;
-                                        _cellTmpl = _cellTmpl.replaceAll('VX_ROW_ID', rowId);
-                                        _cellTmpl = _cellTmpl.replace('VX_ROW_SEL_VAL', _rowSelectData);
-                                        _compile = _compile || true;
-                                    }
-                                    _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
-                                    allCells = allCells + _cellHolder;
-                                }
-                            });
+                                });
+                            }
+                            else {
+                                var _nonHiddenColLength = $scope.getNonHiddenColCount();
+                                emptyRowTempl = emptyRowTempl.replace('VX_NON_HIDDEN_COL_LEN', _nonHiddenColLength);
+                                emptyRowTempl = emptyRowTempl.replace('VX_EMPTYFILL', $scope.vxConfig.emptyFill);
+                                allCells = emptyRowTempl;
+                            }
                             rowTmpl = rowTmpl.replace('VX_ROW_ID', rowId);
                             rowTmpl = rowTmpl.replaceAll('VX_ALL_CELLS', allCells);
                             $scope.compileAppend(rowTmpl, rowId, _compile);

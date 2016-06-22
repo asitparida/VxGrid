@@ -107,7 +107,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 vxTableContainer ms-datatable ang-dt zeroPadding scrollTableContainer" ng-class="{ 'settingsMenuOpen': vxColSettings.menu, 'attrPaneOpen': vxConfig.showGridStats || vxConfig.showGridOptions, 'pageEnabled': vxColSettings.vxPageEnabled}" du-scroll-container style="margin-top:0;" ng-style="{'min-width':getvxTableContainerWidth()}">
+                <div class="col-md-12 vxTableContainer ms-datatable ang-dt zeroPadding scrollTableContainer" 
+                     ng-class="{ 'settingsMenuOpen': vxColSettings.menu, 'attrPaneOpen': vxConfig.showGridStats || vxConfig.showGridOptions, 'pageEnabled': vxColSettings.vxPageEnabled}" 
+                     du-scroll-container 
+                     style="margin-top:0;" 
+                     ng-style="{'min-width':getvxTableContainerWidth()}"
+                     ng-attr-id="_vxScrollContainer{{vxConfig.id}}">
                     <div class='row marg0'>
                         <div class="col-xs-12 vxTableHolder pad0">
                             <div class="offscreen">
@@ -142,24 +147,26 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxColSettings.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.bindOnce == false && vxConfig.virtualization == true">
+                                <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxColSettings.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.hybrid == false && vxConfig.bindOnce == false && vxConfig.virtualization == true">
                                     <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
                                         ng-attr-id="{{row[vxColSettings.primaryId]}}"
                                         class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"
                                         ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection))"
+                                        ng-init="rowId = row[vxColSettings.primaryId]"
                                         ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}"
                                         ng-include="'template/vx-grid/vx-grid-row-tmpl.html'"></tr>
                                 </tbody>
-                                <tbody class="vxBody" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.bindOnce == false && vxConfig.virtualization == false">
+                                <tbody class="vxBody" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.hybrid == false && vxConfig.bindOnce == false && vxConfig.virtualization == false">
                                     <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
                                         ng-attr-id="{{row[vxColSettings.primaryId]}}"
                                         class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"
                                         ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength )"
+                                        ng-init="rowId = row[vxColSettings.primaryId]"
                                         ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}"
                                         ng-include="'template/vx-grid/vx-grid-row-tmpl.html'"></tr>
                                 </tbody>
                                 <!-- vxConfig.bindOnce == true -->
-                                <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxColSettings.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.bindOnce == true && vxConfig.virtualization == true">
+                                <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxColSettings.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.hybrid == false && vxConfig.bindOnce == true && vxConfig.virtualization == true">
                                     <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
                                         ng-attr-id="{{::row[vxColSettings.primaryId]}}"
                                         class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"
@@ -168,7 +175,7 @@
                                         ng-init="rowId = row[vxColSettings.primaryId]"
                                         ng-include="'template/vx-grid/vx-grid-row-tmpl-bindonce.html'"></tr>
                                 </tbody>
-                                <tbody class="vxBody" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.bindOnce == true && vxConfig.virtualization == false">
+                                <tbody class="vxBody" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.hybrid == false && vxConfig.bindOnce == true && vxConfig.virtualization == false">
                                     <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
                                         ng-attr-id="{{::row[vxColSettings.primaryId]}}"
                                         class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"
@@ -176,7 +183,10 @@
                                         ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}"
                                         ng-init="rowId = row[vxColSettings.primaryId]"
                                         ng-include="'template/vx-grid/vx-grid-row-tmpl-bindonce.html'"></tr>
+                                    <tr ng-attr-id="{{::row[vxColSettings.primaryId]}}"
+                                        class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"></tr>
                                 </tbody>
+                                <tbody class="vxBody" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.hybrid == true" ng-attr-id="_vxHybrid{{vxConfig.id}}"></tbody>
                             </table>
                             <span class="offscreen">
                                 <span class="offscreen" style="visibility:collapse;" role="rowheader" ng-repeat="row in vxConfig.vxFilteredData" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{::row[vxConfig.ariaPrimary]}}</span>
@@ -336,7 +346,7 @@
             <div ng-if="header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
             <div ng-if="header.columnIsRowSelect == true">
                 <div class="vx-row-select">
-                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{rowId}}" />
+                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{rowId}}" />
                 </div>
             </div>
             <div class="vx-row-edit-container" ng-if="header.columnIsRowEdit == true">
@@ -384,7 +394,7 @@
             <div ng-if="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
             <div ng-if="::header.columnIsRowSelect == true">
                 <div class="vx-row-select">
-                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{::rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}" />
+                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{::rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}" />
                 </div>
             </div>
             <div class="vx-row-edit-container" ng-if="::header.columnIsRowEdit == true">

@@ -148,7 +148,7 @@
                 config: '=', // EXPECTS DIRECTIVE SCOPED OBJECT FOR CONFIG MAPS AND DRIVE GRID BEHAVIOUR ACCORDINGLY
                 scrollParent: '=' // EXEPECTS DIRECTIVE SCOPED OBJECT FOR NOTIFYING WHICH DIV TO TRIGGER VIRTULIZED SCROLL ON
             },
-            controller: ["$scope", "$uibModal", "$sce", "$timeout", "$rootScope", "$window", "$filter", "$q", function ($scope, $modal, $sce, $timeout, $rootScope, $window, $filter, $q) {
+            controller: ["$scope", "$uibModal", "$sce", "$timeout", "$rootScope", "$window", "$filter", "$q", "$compile", function ($scope, $modal, $sce, $timeout, $rootScope, $window, $filter, $q, $compile) {
                 $scope.vxColSettings = {};
                 $scope.posLeft = 1;
                 $scope.posTop = 0;
@@ -204,8 +204,16 @@
                         'filterSearchToken': {}, //
                         'saveInProgress': {} // STORES WHETHER A CREATE/EDIT/DELETE OPERATION IS IN PROGRESS
                     };
+                    var start = new Date();
+                    var end = new Date();
+                    var dt = new Date();
+                    console.log('isnide method 1', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
+                    $scope.vxConfig = $scope.config;
+                    end = new Date();
+                    dt = new Date();
+                    console.log('isnide method 2', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
+                    console.log(1, end.getTime() - start.getTime());
 
-                    $scope.vxConfig = angular.copy($scope.config);
                     /* GETTING / SETTING PRIMARY COLUMN*/
                     var _primaryColDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.primary == true });
                     var primaryId = '_uid';
@@ -252,13 +260,15 @@
                             $scope.vxColSettings.inlineEditState[rowId] = false;
                         });
                     }
+                    end = new Date();
+                    console.log(2, end.getTime() - start.getTime());
                     /* ENBALE ROW SELECTION */
                     if ($scope.vxConfig.selectionEnabled == true) {
                         /* ADDING CHECKBOX COLUMN DEFINITION */
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('checkbox') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
-                                id: 'checkbox', columnName: 'Row Selection', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
+                                id: 'checkbox', columnName: 'Row Selection', columnIsRowSelect: true, renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
                                 headerDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-disabled="vxConfig.noData == true" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" aria-labelledby="vx_row_sel_all_row"  /></div>',
                                 cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" ng-attr-id="vx_row-sel_in{{::row[vxColSettings.primaryId]}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" /></div>'
                             };
@@ -271,6 +281,8 @@
                             $scope.vxColSettings.vxRowSelectionDisable[rowId] = false;
                         });
                     }
+                    end = new Date();
+                    console.log(3, end.getTime() - start.getTime());
                     $scope.multiBoxFilters = [];
                     var _propDefns = [
                         { prop: 'enableDropdownsInHeader', defValue: false },
@@ -298,7 +310,8 @@
                         { prop: 'loaderGifSrc', defValue: '/resource/loaderWhite36.GIF' },
                         { prop: 'ariaPrimary', defValue: $scope.vxColSettings.primaryId },
                         { prop: 'xsTemplate', defValue: false },
-                        { prop: 'bindOnce', defValue: false }
+                        { prop: 'bindOnce', defValue: false },
+                        { prop: 'hybrid', defValue: false }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
@@ -310,6 +323,8 @@
                         $scope.vxColSettings.xsViewEnabled = true && $scope.vxConfig.xsTemplate;
                         $scope.vxColSettings.latchExcess = 5;
                     }
+                    end = new Date();
+                    console.log(4, end.getTime() - start.getTime());
                     $scope.vxColSettings.selectAllOnRenderAll = $scope.vxConfig.selectAllOnRenderAll;
                     _.each($scope.vxConfig.columnDefConfigs, function (col) {
                         /* SET DEAFULTS FOR COLUMNS */
@@ -333,7 +348,9 @@
                             { prop: 'inlineEditValidation', defValue: false },
                             { prop: 'editDefn', defValue: null },
                             { prop: 'editDefnTemplate', defValue: null },
-                            { prop: 'headTabIndex', defValue: 0 }
+                            { prop: 'headTabIndex', defValue: 0 },
+                            { prop: 'columnIsRowSelect', defValue: false },
+                            { prop: 'columnIsDate', defValue: false }
                         ];
                         _.each(_propDefns, function (propDefn) {
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
@@ -394,7 +411,8 @@
 
                         }
                     });
-
+                    end = new Date();
+                    console.log(5, end.getTime() - start.getTime());
                     $scope.vxConfig.columnDefConfigs = $scope.calculateEffectiveWidths($scope.vxConfig.columnDefConfigs);
                     if (typeof $scope.vxConfig.multiSelectionDependentCol !== 'undefined'
                         && $scope.vxConfig.multiSelectionDependentCol != null
@@ -610,6 +628,104 @@
                     $scope.$emit('vxGridSettingsBuilt', {
                         'id': $scope.vxConfig.id
                     });
+                    end = new Date();
+                    console.log(6, end.getTime() - start.getTime());
+                    var _hybridContainer = null;
+                    var _scrollContainer = null;
+                    var _rowHeight = 48;
+                    var _excess = 5;
+                    var _lastIndexCount = 0;
+                    var _lastScrollDown = false;
+                    var _lastScrollTop = 0;
+
+                    //PREP FOR HYBRID MODE
+                    $scope.prepHybrid = function () {
+                        _hybridContainer = angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id));
+                        _scrollContainer = angular.element(document.getElementById('_vxScrollContainer' + $scope.vxConfig.id));
+                        var _height = _scrollContainer.height();
+                        var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
+                        var _rows = _.first($scope.vxConfig.vxData, _initRowCount);
+                        $scope.appendRows(_rows);
+                        _lastIndexCount = _lastIndexCount + _initRowCount;
+                        _scrollContainer.on('scroll', function () {
+                            $scope.debPep();
+                        });
+                    }
+
+                    $scope.prepForScrollInsertion = function () {
+                        var diff = _hybridContainer.height() - (_scrollContainer.height() + _scrollContainer.scrollTop());
+                        if (_scrollContainer.scrollTop() > _lastScrollTop) {
+                            if (diff < 0)
+                                diff = 0;
+                            if (diff < _rowHeight && _lastIndexCount < $scope.vxConfig.vxData.length) {
+                                var _initRowCount = _excess;
+                                var _restRows = _.rest($scope.vxConfig.vxData, _lastIndexCount);
+                                var _rows = _.first(_restRows, _initRowCount);
+                                _lastIndexCount = _lastIndexCount + _initRowCount;
+                                $scope.appendRows(_rows);
+                                _scrollContainer.scrollTo(0, _scrollContainer.scrollTop() - 48);
+                            }
+                        }                        
+                        _lastScrollTop = _scrollContainer.scrollTop();
+                    }
+
+                    $scope.debPep = _.debounce($scope.prepForScrollInsertion, 10);                  
+
+                    $scope.compileAppend = function (rowTmpl, id, flag) {
+                        _hybridContainer.append(rowTmpl);
+                        if (flag) {
+                            var _row = angular.element(document.getElementById(id));
+                            $compile(_row.contents())($scope);
+                        }
+                    }
+
+                    $scope.appendRows = function (rows) {
+                        angular.forEach(rows, function (row) {
+                            var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow">VX_ALL_CELLS</tr>';
+                            var cellHolderTmpl = '<td class="VX_TD_CLASS">VX_CELL_CONTENT</td>';
+                            var cellTmplContent = '<span>VX_CELL_TMPL</span>';
+                            var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" ng-model="vxColSettings.rowSelected[\'VX_ROW_ID\']" ng-change="rowSelectionChanged(\'VX_ROW_ID\')" ng-disabled="vxColSettings.vxRowSelectionDisable[\'VX_ROW_ID\']" type="checkbox" id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /></div>';
+                            var allCells = '';
+                            var rowId = row[$scope.vxColSettings.primaryId];
+                            var _compile = false;
+                            angular.forEach($scope.vxConfig.columnDefConfigs, function (col) {
+                                var _cellTmpl = '';
+                                var _cellHolder = cellHolderTmpl;
+                                if (col.hidden != true) {
+                                    if (col.columnIsRowSelect != true && col.columnIsDate != true) {
+                                        var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : '';
+                                        _cellTmpl = cellTmplContent;
+                                        _cellTmpl = _cellTmpl.replace('VX_CELL_TMPL', _data);
+                                    }
+                                    else if (col.columnIsDate == true) {
+                                        var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
+                                        var _dtData = $filter('date')(_data, col.columnDatePipe);
+                                        _cellTmpl = cellTmplContent;
+                                        _cellTmpl = _cellTmpl.replace('VX_CELL_TMPL', _dtData);
+                                    }
+                                    else if (col.columnIsRowSelect == true) {
+                                        var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
+                                        var _rowSelectData = $scope.vxColSettings.rowSelected[rowId];
+                                        _cellTmpl = cellTmplRowSelect;
+                                        _cellTmpl = _cellTmpl.replaceAll('VX_ROW_ID', rowId);
+                                        _cellTmpl = _cellTmpl.replace('VX_ROW_SEL_VAL', _rowSelectData);
+                                        _compile = _compile || true;
+                                    }
+                                    _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
+                                    allCells = allCells + _cellHolder;
+                                }
+                            });
+                            rowTmpl = rowTmpl.replace('VX_ROW_ID', rowId);
+                            rowTmpl = rowTmpl.replaceAll('VX_ALL_CELLS', allCells);
+                            $scope.compileAppend(rowTmpl, rowId, _compile);
+                        });
+                    }
+
+                    end = new Date();
+                    console.log(7, end.getTime() - start.getTime());
+                    if ($scope.vxConfig.hybrid) {
+                        $timeout($scope.prepHybrid, 100);
+                    }
                 }
 
                 /// <summary>GRID FUNCTION : START THE PROCEDURE TO EDIT AN ROW</summary>
@@ -1120,7 +1236,7 @@
                 $scope.allRowSelectionChanged = function () {
                     var toggleTo = $scope.vxColSettings.allRowSelected;
                     if (toggleTo == true) {
-                        _.each($scope.vxConfig.vxFilteredData, function (row) {
+                        _.each($scope.vxConfig.vxData, function (row) {
                             if (row.fillEmptyElement != true) {
                                 var pid = row[$scope.vxColSettings.primaryId];
                                 if ($scope.vxColSettings.rowSelected[pid] == false && toggleTo == true) {
@@ -1147,8 +1263,10 @@
                 }
 
                 /// <summary>GRID FUNCTION : HANDLE SELECTION TOGGLE EVENT FOR A ROW CHECKBOX</summary>
-                $scope.rowSelectionChanged = function (row) {
-                    var pid = row[$scope.vxColSettings.primaryId];
+                $scope.rowSelectionChanged = function (rowId) {
+                    var pid = rowId;
+                    var row = _.find($scope.vxConfig.vxData, function (_row) { return _row[$scope.vxColSettings.primaryId] == rowId });
+                    console.log(row);
                     var result = { 'key': row[$scope.vxConfig.onSelectionReturnCol], 'value': $scope.vxColSettings.rowSelected[pid], '_pKey': pid };
                     var proceed = true;
                     if ($scope.vxColSettings.rowSelected[pid] == true && $scope.vxColSettings.multiSelColDependent == true) {
@@ -1703,12 +1821,12 @@
 
                 /// <summary>GRID FUNCTION : CHANGE ROW CLASSES BASED ON ROW DATA RECIEVED</summary>
                 $scope.changeRowClass = function (data) {
-                     for (var prop in data) {
-                         $scope.vxColSettings.vxRowClass[prop] = data[prop];
-                     }
-                     if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-                         $scope.$apply();
-                     }
+                    for (var prop in data) {
+                        $scope.vxColSettings.vxRowClass[prop] = data[prop];
+                    }
+                    if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                        $scope.$apply();
+                    }
                 }
 
                 /// <summary>GRID EVENT : LISTEN TO ASK FOR RESETTING OW CLASSES</summary>
@@ -1749,6 +1867,8 @@
                         $scope.config.noData = false;
                     $scope.config.vxData = angular.copy(n);
                     console.log($scope.config.vxData.length);
+                    var dt = new Date();
+                    console.log('start', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
                     $scope.resetVxInstance();
                 });
 

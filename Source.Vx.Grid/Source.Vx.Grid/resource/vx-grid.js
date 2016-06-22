@@ -211,7 +211,10 @@
                     var end = new Date();
                     var dt = new Date();
                     console.log('isnide method 1', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
-                    $scope.vxConfig = $scope.config;
+                    if($scope.config.hybrid == true)
+                        $scope.vxConfig = $scope.config;
+                    else
+                        $scope.vxConfig = angular.copy($scope.config);
                     end = new Date();
                     dt = new Date();
                     console.log('isnide method 2', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());

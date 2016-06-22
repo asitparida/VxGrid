@@ -638,6 +638,14 @@
                     var _lastScrollDown = false;
                     var _lastScrollTop = 0;
 
+                    $scope.resetHybridGrid = function () {
+                        _lastIndexCount = 0;
+                        _lastScrollDown = false;
+                        _lastScrollTop = 0;
+                        _hybridContainer.empty();
+                        $scope.prepHybrid();
+                    }
+
                     //PREP FOR HYBRID MODE
                     $scope.prepHybrid = function () {
                         _hybridContainer = angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id));
@@ -1138,6 +1146,12 @@
                                 $scope.vxConfig.sortPredicate = _colDefn.id;
                             $scope.vxColSettings.reverseSettings[_colDefn.id] = !$scope.vxColSettings.reverseSettings[_colDefn.id];
                             $scope.vxConfig.reverseSortDirection = $scope.vxColSettings.reverseSettings[_colDefn.id];
+                            if ($scope.vxConfig.hybrid == true) {
+                                $scope.vxConfig.vxData = _.sortBy($scope.vxConfig.vxData, $scope.vxConfig.sortPredicate);
+                                if ($scope.vxConfig.reverseSortDirection == true)
+                                    $scope.vxConfig.vxData.reverse();
+                                $scope.resetHybridGrid();
+                            }
                         }
                     }
                 }
@@ -1404,17 +1418,15 @@
                 }
 
                 /// <summary>GRID FUNCTION : FUNCTION TO MOVE FOCUS TO FIRST ITEM IN MENU</summary>
-                $scope.upDownKeyDownHandlerHeaderMenu = function (e) {
-                    var _prevent = false;
-                    if (e.keyCode == 40) {
+                $scope.upDownKeyDownHandlerHeaderMenu = function (e) {                    
+                    if (e.keyCode != 40) {
+                        return;
+                    }
+                    else if (e.keyCode == 40) {
                         //DOWN ARROW PRESS
                         var focussables = $(e.target).siblings().find('[tabindex="0"]');
                         if (focussables.length > 0)
                             $(focussables[0]).focus();
-                    }
-                    if (_prevent) {
-                        e.stopPropagation();
-                        e.preventDefault();
                     }
                 }
 
@@ -1466,6 +1478,8 @@
                 /// <summary>GRID FUNCTION : FUNCTION TO HELP UP DOWN KEY STROKE MOVEMENTS IN MENU</summary>
                 $scope.upDowKeyDownHandlerHeaderMenuItems = function (e, columnId) {
                     var _prevent = false;
+                    if (e.keyCode != 40 && e.keyCode != 38 && e.keyCode != 27)
+                        return;
                     if (e.keyCode == 40) {
                         /* DOWN ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, true);

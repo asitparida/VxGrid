@@ -249,7 +249,7 @@
     self.secondSample = function () {
         self.vxSampleConfig.pagination = false;
         self.secondSampleActive = true;
-        self.vxSampleConfig.data = self.sampling(10, 'Coho Vineyard 222');
+        self.vxSampleConfig.data = self.sampling(3000, 'Coho Vineyard 222');
     }
 
     self.singleSample = function () {

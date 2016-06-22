@@ -649,7 +649,6 @@
                         _lastIndexCount = 0;
                         _lastScrollDown = false;
                         _lastScrollTop = 0;
-                        _hybridContainer.empty();
                         $scope.prepHybrid();
                     }
 
@@ -657,6 +656,7 @@
                     $scope.prepHybrid = function () {
                         _hybridContainer = angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id));
                         _scrollContainer = angular.element(document.getElementById('_vxScrollContainer' + $scope.vxConfig.id));
+                        _hybridContainer.empty();
                         var _height = _scrollContainer.height();
                         var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
                         var _rows = _.first($scope.vxConfig.vxData, _initRowCount);
@@ -1906,6 +1906,7 @@
                     if (n.length == 0) {
                         n = [{ 'fillEmptyElement': true }];
                         $scope.config.noData = true;
+                        angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id)).empty();
                     }
                     else
                         $scope.config.noData = false;

@@ -731,7 +731,11 @@
 
                     end = new Date();
                     console.log(7, end.getTime() - start.getTime());
-                    if ($scope.vxConfig.hybrid) {
+                    console.log($scope.vxConfig.vxFilteredData);
+                    if ($scope.vxConfig.hybrid == true) {
+                        //$scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData;
+                        end = new Date();
+                        console.log(8, end.getTime() - start.getTime());
                         $timeout($scope.prepHybrid, 100);
                     }
                 }
@@ -1343,6 +1347,10 @@
                         }
                         $scope.vxColSettings.colFiltersActivated[header.id] = true;
                     }
+                    if ($scope.vxConfig.hybrid == true) {
+                        $scope.vxConfig.vxData = $filter('vxGridMultiBoxFilters')($scope._origData, $scope.multiBoxFilters);
+                        $scope.resetHybridGrid();
+                    }
                 }
 
                 /// <summary>GRID FUNCTION : HANDLE CLICK EVENT WHEN A COLUMN FILTER IS BEING CLEARED</summary>
@@ -1357,6 +1365,10 @@
                         }
                         $scope.multiBoxFilters = _.reject($scope.multiBoxFilters, function (mbFilter) { return mbFilter.col.localeCompare(header.id) == 0 });
                         $scope.vxColSettings.colFiltersActivated[header.id] = false;
+                    }
+                    if ($scope.vxConfig.hybrid == true) {
+                        $scope.vxConfig.vxData = $filter('vxGridMultiBoxFilters')($scope._origData, $scope.multiBoxFilters);
+                        $scope.resetHybridGrid();
                     }
                 }
 
@@ -1880,24 +1892,26 @@
                     else
                         $scope.config.noData = false;
                     $scope.config.vxData = angular.copy(n);
-                    console.log($scope.config.vxData.length);
+                    $scope._origData = _.clone(n);
                     var dt = new Date();
                     console.log('start', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
                     $scope.resetVxInstance();
                 });
 
                 /// <summary>GRID WATCH : LISTEN TO CHANGES IN FILTERED DATA COLLECTION AN ACCODRIDNGLY RESET PAGES IF PAGINATION ENABLED</summary>
-                $scope.$watchCollection('vxConfig.vxFilteredData', function (n) {
-                    if (n.length >= 0) {
-                        /* PROCESS FOR PAGINATION IF VIRTUALIZATION IS FALSE */
-                        if ($scope.vxConfig.pagination == true) {
-                            $scope.vxColSettings.pages = _.range(Math.ceil(n.length / parseInt($scope.vxConfig.pageLength)));
-                            $scope.vxColSettings.vxPageEnabled = $scope.vxColSettings.pages.length > 1;
-                            $scope.vxColSettings.activePage = 0;
-                            $scope.vxColSettings.vxPageStartPosition = 0;
+                if ($scope.config.hybrid != true) {
+                    $scope.$watchCollection('vxConfig.vxFilteredData', function (n) {
+                        if (n.length >= 0) {
+                            /* PROCESS FOR PAGINATION IF VIRTUALIZATION IS FALSE */
+                            if ($scope.vxConfig.pagination == true) {
+                                $scope.vxColSettings.pages = _.range(Math.ceil(n.length / parseInt($scope.vxConfig.pageLength)));
+                                $scope.vxColSettings.vxPageEnabled = $scope.vxColSettings.pages.length > 1;
+                                $scope.vxColSettings.activePage = 0;
+                                $scope.vxColSettings.vxPageStartPosition = 0;
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 $scope.getvxTableContainerWidth = function () {
                     var elem = angular.element($(element).find('.vx-scroller')[0]);

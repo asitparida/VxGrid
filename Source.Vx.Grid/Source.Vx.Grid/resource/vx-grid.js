@@ -205,6 +205,7 @@
                         'allRowSelected': false, // STORES THE STATE FOR ALL ROW SELECTIONS COMPOSED TO ONE PLACE
                         'allRowSelectionDisabled': false, // STORES WHETHER TO ALLOW OR INHIBIT ALL ROW SELECTIONS
                         'filterSearchToken': {}, //
+                        'enteredSearchToken': {}, //
                         'saveInProgress': {} // STORES WHETHER A CREATE/EDIT/DELETE OPERATION IS IN PROGRESS
                     };
                     var start = new Date();
@@ -1042,6 +1043,19 @@
                     }
                 }
 
+                $scope.filtTokenChange = function (id) {
+                    $scope.vxColSettings.filterSearchToken[id] = $scope.vxColSettings.enteredSearchToken[id];
+                }
+
+                $scope.debFiltTokenChange = _.debounce($scope.filtTokenChange, 10);
+
+                $scope.filterTokenChnagedRapid = function (id) {
+                    if ($scope.vxColSettings.enteredSearchToken[id] == '')
+                        $scope.vxColSettings.filterSearchToken[id] = '';
+                    else
+                        $scope.debFiltTokenChange(id);
+                }
+
                 /// <summary>GRID FUNCTION : CHECK IF HEADER NAME IS VALID</summary>
                 $scope.isValidHeaderName = function (header, name) {
                     return header.renderHeadDefn == false && typeof name !== 'undefined' && name != null && name != '';
@@ -1551,7 +1565,7 @@
                 $scope.upDowKeyDownHandlerHeaderMenuItems = function (e, columnId) {
                     var _prevent = false;
                     if (e.keyCode != 40 && e.keyCode != 38 && e.keyCode != 27)
-                        return;
+                        return false;
                     if (e.keyCode == 40) {
                         /* DOWN ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, true);
@@ -1948,6 +1962,8 @@
 
                 /// <summary>GRID WATCH : LISTEN TO CHANGES IN DATA AND ACCORDINGLY RESET INSTANCE</summary>
                 $scope.$watchCollection('config.data', function (n) {
+                    var dt = new Date();
+                    console.log('before start', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
                     if (n.length == 0) {
                         n = [{ 'fillEmptyElement': true }];
                         $scope.config.noData = true;
@@ -1955,10 +1971,15 @@
                     }
                     else
                         $scope.config.noData = false;
-                    $scope.config.vxData = angular.copy(n);
-                    $scope._origData = _.clone(n);
-                    var dt = new Date();
+                    if ($scope.config.hybrid == true) {
+                        $scope.config.vxData = _.clone(n);
+                        $scope._origData = _.clone(n);
+                    }
+                    else
+                        $scope.config.vxData = angular.copy(n);
+                    dt = new Date();
                     console.log('start', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
+                    delete $scope.vxConfig;
                     $scope.resetVxInstance();
                 });
 

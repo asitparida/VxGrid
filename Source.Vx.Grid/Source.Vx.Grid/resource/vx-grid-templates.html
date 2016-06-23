@@ -23,7 +23,13 @@
                         <label class="statTitle">All</label>
                         <label class="statValue">{{getAllRowLength() | vxNumberFixedLen:2}}</label>
                         <label class="statTitle" ng-class="{ 'disabled' : multiBoxFilters.length == 0}">Filtered</label>
-                        <label class="statValue" ng-class="{ 'disabled' : multiBoxFilters.length == 0}"><span ng-if="multiBoxFilters.length > 0">{{vxConfig.vxFilteredData.length | vxNumberFixedLen:2}}</span><span ng-if="multiBoxFilters.length == 0">00</span></label>
+                        <label class="statValue" ng-class="{ 'disabled' : multiBoxFilters.length == 0}">
+                            <span ng-if="multiBoxFilters.length > 0">
+                                <span ng-if="vxConfig.hybrid != true">{{vxConfig.vxFilteredData.length | vxNumberFixedLen:2}}</span>
+                                <span ng-if="vxConfig.hybrid == true">{{vxConfig.vxData.length | vxNumberFixedLen:2}}</span>
+                            </span>
+                            <span ng-if="multiBoxFilters.length == 0">00</span>
+                        </label>
                         <label class="statTitle" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}">Selected</label>
                         <label class="statValue" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}">{{vxColSettings.multiSelected.length | vxNumberFixedLen:2}}</label>
                     </div>
@@ -68,14 +74,14 @@
                             <table class="vxTable">
                                 <thead class="vxHead">
                                     <tr class="vxHeadRow">
-                                        <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" title="{{header.columnName}}" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" tabindex="-1" ng-attr-id="vxHeadSt_{{$index}}" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)" ng-style="{ 'width' : header.effectiveWidth + 'px' }">
-                                            <div class="dropdown" data-container="body" ng-if="header.renderHeadDefn == false" ng-class="{ 'open' : vxColSettings.dropdDownOpen[header.id] == true}">
-                                                <button class="btn btn-default dropdown-toggle" ng-attr-id="ddMenu_{{header.id}}" ng-attr-aria-expanded="{{vxColSettings.dropdDownOpen[header.id] == true}}" ng-attr-tabindex="{{vxConfig.noData == false ? header.headTabIndex : -1}}" ng-click="headerClick(header, $event)" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)" ng-disabled="vxConfig.data.length == 0">
-                                                    <span class="colTitle">{{header.columnName}}</span>
+                                        <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" title="{{header.columnName}}" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" tabindex="-1" ng-attr-id="vxHeadSt_{{$index}}" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false" ng-style="{ 'width' : header.effectiveWidth + 'px' }">
+                                            <div class="dropdown" data-container="body" ng-if="::header.renderHeadDefn == false" ng-class="{ 'open' : vxColSettings.dropdDownOpen[header.id] == true}">
+                                                <button class="btn btn-default dropdown-toggle" ng-attr-id="ddMenu_{{::header.id}}" ng-attr-aria-expanded="{{vxColSettings.dropdDownOpen[header.id] == true}}" ng-attr-tabindex="{{vxConfig.noData == false ? header.headTabIndex : -1}}" ng-click="headerClick(header, $event)" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)" ng-disabled="vxConfig.data.length == 0">
+                                                    <span class="colTitle">{{::header.columnName}}</span>
                                                     <span class="ddCaret" aria-hidden="true" ng-show="vxColSettings.colFiltersActivated[header.id] != true && vxColSettings.dropdDownEnabled[header.id] == true && vxConfig.data.length >= 1"><i class="icon icon-ScrollChevronDownLegacy white"></i></span>
                                                     <span class="ddCaret" aria-hidden="true" ng-show="vxColSettings.colFiltersActivated[header.id] == true && vxColSettings.dropdDownEnabled[header.id] == true && vxConfig.data.length >= 1"><i class="icon icon-filter white"></i></span>
                                                 </button>
-                                                <ul class="dropdown-menu" aria-labelledby="ddMenu_{{header.id}}" data-container="body" ng-keydown="upDowKeyDownHandlerHeaderMenuItems($event, header.id)">
+                                                <ul class="dropdown-menu" aria-labelledby="ddMenu_{{::header.id}}" data-container="body" ng-keydown="upDowKeyDownHandlerHeaderMenuItems($event, header.id)">
                                                     <li tabindex="-1" class="loader" ng-if="vxColSettings.dropdDownLoaded[header.id] == false">
                                                         <img class="dropDownLoader" ng-src="{{vxConfig.loaderGifSrc}}" alt="dropdown addition in progress" />
                                                     </li>
@@ -94,10 +100,10 @@
                                                         <span class="indicator"><i class="icon icon-filter white"></i></span>Clear All Filters
                                                     </li>
                                                     <li class="filter-search" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && header.ddFiltersWithSearch == true">
-                                                        <input class="search-input" tabindex="0" type="search" placeholder="Search In Filters" aria-label="search for filters in column {{header.columnName}}" ng-model="vxColSettings.filterSearchToken[header.id]" ng-attr-id="{{header.id}}_searchfilters" />
+                                                        <input class="search-input" tabindex="0" type="search" placeholder="Search In Filters" aria-label="search for filters in column {{::header.columnName}}" ng-model="vxColSettings.enteredSearchToken[header.id]" ng-attr-id="{{header.id}}_searchfilters" ng-change="filterTokenChnagedRapid(header.id)" />
                                                     </li>
                                                     <li class="filter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && filter.disabled == false" ng-repeat="filter in vxColSettings.colFilterPairs[header.id] | filter:vxColSettings.filterSearchToken[header.id]">
-                                                        <input class="filter-toggle" tabindex="0" type="checkbox" ng-model="vxColSettings.colFiltersStatus[filter.key]" ng-change="filterClick(header, filter)" ng-attr-id="{{header.id}}_filter_{{$index}}" /><label class="filterItemTitle" ng-attr-for="{{header.id}}_filter_{{$index}}"><span ng-if="filter.filterDefnAvailable == false"><span class="offscreen">{{header.columnName}} filter </span> {{filter.name}}</span><span ng-if="filter.filterDefnAvailable == true" vx-compile="filter.filterDefn"></span></label>
+                                                        <input class="filter-toggle" tabindex="0" type="checkbox" ng-model="vxColSettings.colFiltersStatus[filter.key]" ng-change="filterClick(header, filter)" ng-attr-id="{{::header.id}}_filter_{{::$index}}" /><label class="filterItemTitle" ng-attr-for="{{::header.id}}_filter_{{::$index}}"><span ng-if="filter.filterDefnAvailable == false"><span class="offscreen">{{::header.columnName}} filter </span> {{::filter.name}}</span><span ng-if="filter.filterDefnAvailable == true" vx-compile="filter.filterDefn"></span></label>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -109,10 +115,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 vxTableContainer ms-datatable ang-dt zeroPadding scrollTableContainer" 
-                     ng-class="{ 'settingsMenuOpen': vxColSettings.menu, 'attrPaneOpen': vxConfig.showGridStats || vxConfig.showGridOptions, 'pageEnabled': vxColSettings.vxPageEnabled}" 
-                     du-scroll-container 
-                     style="margin-top:0;" 
+                <div class="col-md-12 vxTableContainer ms-datatable ang-dt zeroPadding scrollTableContainer"
+                     ng-class="{ 'settingsMenuOpen': vxColSettings.menu, 'attrPaneOpen': vxConfig.showGridStats || vxConfig.showGridOptions, 'pageEnabled': vxColSettings.vxPageEnabled}"
+                     du-scroll-container
+                     style="margin-top:0;"
                      ng-style="{'min-width':getvxTableContainerWidth()}"
                      ng-attr-id="_vxScrollContainer{{vxConfig.id}}">
                     <div class='row marg0'>
@@ -127,7 +133,7 @@
                                 <thead class="vxHead">
                                     <tr class="vxHeadRow">
                                         <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" ng-attr-id="vxHead_{{$index}}" ng-style="{ 'width' : header.effectiveWidth + 'px' }" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false" scope="col">
-                                            <span class="noDdTitle offscreen">{{header.columnName}}</span>
+                                            <span class="noDdTitle offscreen">{{::header.columnName}}</span>
                                         </th>
                                         <th class="vxHeadRowCell" ng-if="vxColSettings.xsViewEnabled == true">
                                             <div class="search-container pull-left input-group">
@@ -236,7 +242,7 @@
                                         <div class="col-xs-2 col-sm-2 col-md-1">
                                             <label class="colLabel xl" ng-if="header.visbilityLocked == true"><i class="icon icon-blockedLegacy" tooltip="Visbility Locked"></i></label>
                                         </div>
-                                        <label class="col-xs-10 col-sm-10 col-md-10 colName">{{header.columnName}}</label>
+                                        <label class="col-xs-10 col-sm-10 col-md-10 colName">{{::header.columnName}}</label>
                                         <div class="clearfix"></div>
                                     </div>
                                     <div class="clearfix"></div>
@@ -274,9 +280,9 @@
                                                 <label class="colLabel xl" ng-if="header.widthLocked == true"><span class="icon icon-trim red" tooltip="Width Locked"></span></label>
                                             </div>
                                         </div>
-                                        <label class="col-xs-12 col-sm-12 col-md-4 colName">{{header.columnName}}</label>
+                                        <label class="col-xs-12 col-sm-12 col-md-4 colName">{{::header.columnName}}</label>
                                         <div class="col-xs-12 col-sm-6 col-md-6">
-                                            <label class="colLabel" ng-attr-for="_mc_{{header.id}}">Width <span class="offscreen"> for column {{header.columnName}}</span> (in approx. char)</label>
+                                            <label class="colLabel" ng-attr-for="_mc_{{header.id}}">Width <span class="offscreen"> for column {{::header.columnName}}</span> (in approx. char)</label>
                                             <input class="inputStyle colInput" ng-model="header.chars" ng-disabled="header.widthLocked" ng-change="widthChanged(header)" ng-attr-id="_mc_{{header.id}}" />
                                         </div>
                                         <div class="clearfix"></div>

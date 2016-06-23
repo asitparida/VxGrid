@@ -90,6 +90,7 @@
                 rec.users = ['asparida', 'prasadne', 'ruprawat'];
                 rec.userAlias = _.sample(rec.users);
                 rec.mid = i + j;
+                rec.locked = _.sample([true, false]);
                 self.sampleRowClasses[rec.laborId] = rec.locked == true ? 'row-even' : 'row-odd';
                 _samples.push(rec);
             });

@@ -738,7 +738,7 @@
                                             _compile = _compile || true;
                                         }
                                         else if (col.renderHybridCellDefn == true) {
-                                            _cellTmpl = $scope.vxConfig.hybridCellDefn(row, col);
+                                            _cellTmpl = $scope.vxConfig.hybridCellDefn(row, col) || '';
                                         }
                                         _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
                                         allCells = allCells + _cellHolder;

@@ -38,6 +38,7 @@
         <CONFIG>.initialRowClasses              <SUPPORTED : Y>    :   <MAP<OBJECT>>    PROVIDE KEY VALUE PAIRS FOR INITIAL ROW CLASSES
         <CONFIG>.rowClassFn                     <SUPPORTED : Y>    :   <FUNCTION>       PROVIDE FUNCTION REFERENCE TO SELF INVOKE WITH ONE PARAM - VX_ROW : FUNCTION VX_SAMPLE_ROWCLASS_FUNC(ROW){}
         <CONFIG>.bindOnce                       <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE BIND ONCE ROW TMPL
+        <CONFIG>.hybrid                         <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE ZEN MODE - JS ONLY
         
         VX GRID COLUMN CONFIG (BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs') IN DIRECTIVE DEFINTION
         -----------------------------------------------------------------------------------------------------
@@ -58,6 +59,8 @@
         <COLUMN>.inlineEditOnColumnEnabled      <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE COLUMN INLINE EDITING
         <COLUMN>.editDefn                       <SUPPORTED : Y>    :   <STRING>    SET CUSTOM CELL TEMPLATE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY
         <COLUMN>.editDefnTemplate               <SUPPORTED : Y>    :   <STRING>    SET EDIT TEMPLATE TYPE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY - SUPPORTED TYPES - 'INPUT', 'TEXTAREA'
+        <COLUMN>.columnIsDate                   <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE NATIVE DATE SUPPORT; SET <CONFIG>.renderDefn TO TRUE FOR THIS COLUMN
+        <COLUMN>.columnDatePipe                 <SUPPORTED : Y>    :   <STRING>    SET TO THE DATE FORMAT; USE VALUE FROM ANGULAR DATE FILTER PIPE 
 
         VX GRID EVENTS
         ----------------------
@@ -148,7 +151,7 @@
                 config: '=', // EXPECTS DIRECTIVE SCOPED OBJECT FOR CONFIG MAPS AND DRIVE GRID BEHAVIOUR ACCORDINGLY
                 scrollParent: '=' // EXEPECTS DIRECTIVE SCOPED OBJECT FOR NOTIFYING WHICH DIV TO TRIGGER VIRTULIZED SCROLL ON
             },
-            controller: ["$scope", "$uibModal", "$sce", "$timeout", "$rootScope", "$window", "$filter", "$q", function ($scope, $modal, $sce, $timeout, $rootScope, $window, $filter, $q) {
+            controller: ["$scope", "$uibModal", "$sce", "$timeout", "$rootScope", "$window", "$filter", "$q", "$compile", function ($scope, $modal, $sce, $timeout, $rootScope, $window, $filter, $q, $compile) {
                 $scope.vxColSettings = {};
                 $scope.posLeft = 1;
                 $scope.posTop = 0;
@@ -202,10 +205,22 @@
                         'allRowSelected': false, // STORES THE STATE FOR ALL ROW SELECTIONS COMPOSED TO ONE PLACE
                         'allRowSelectionDisabled': false, // STORES WHETHER TO ALLOW OR INHIBIT ALL ROW SELECTIONS
                         'filterSearchToken': {}, //
+                        'enteredSearchToken': {}, //
                         'saveInProgress': {} // STORES WHETHER A CREATE/EDIT/DELETE OPERATION IS IN PROGRESS
                     };
+                    var start = new Date();
+                    var end = new Date();
+                    var dt = new Date();
+                    console.log('isnide method 1', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
+                    if ($scope.config.hybrid == true)
+                        $scope.vxConfig = $scope.config;
+                    else
+                        $scope.vxConfig = angular.copy($scope.config);
+                    end = new Date();
+                    dt = new Date();
+                    console.log('isnide method 2', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
+                    console.log(1, end.getTime() - start.getTime());
 
-                    $scope.vxConfig = angular.copy($scope.config);
                     /* GETTING / SETTING PRIMARY COLUMN*/
                     var _primaryColDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.primary == true });
                     var primaryId = '_uid';
@@ -225,8 +240,8 @@
                         _.each($scope.vxConfig.vxData, function (row, index) { row.primaryId = index });
                     }
                     $scope.vxColSettings.primaryId = primaryId;
-                    /* ENBALE ROW EDITING INLINE */
-                    if ($scope.vxConfig.inlineEditingEnabled == true) {
+                    /* ENBALE ROW EDITING INLINE */ /* UNSUPPORTED IN HYBRID MODE */
+                    if ($scope.vxConfig.inlineEditingEnabled == true && $scope.vxConfig.hybrid != true) {
                         /* ADDING CHECKBOX COLUMN DEFINITION */
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('inlinediting') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
@@ -252,13 +267,15 @@
                             $scope.vxColSettings.inlineEditState[rowId] = false;
                         });
                     }
+                    end = new Date();
+                    console.log(2, end.getTime() - start.getTime());
                     /* ENBALE ROW SELECTION */
                     if ($scope.vxConfig.selectionEnabled == true) {
                         /* ADDING CHECKBOX COLUMN DEFINITION */
                         var col = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare('checkbox') == 0 });
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
-                                id: 'checkbox', columnName: 'Row Selection', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
+                                id: 'checkbox', columnName: 'Row Selection', columnIsRowSelect: true, renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
                                 headerDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-disabled="vxConfig.noData == true" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" aria-labelledby="vx_row_sel_all_row"  /></div>',
                                 cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" ng-attr-id="vx_row-sel_in{{::row[vxColSettings.primaryId]}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" /></div>'
                             };
@@ -271,6 +288,8 @@
                             $scope.vxColSettings.vxRowSelectionDisable[rowId] = false;
                         });
                     }
+                    end = new Date();
+                    console.log(3, end.getTime() - start.getTime());
                     $scope.multiBoxFilters = [];
                     var _propDefns = [
                         { prop: 'enableDropdownsInHeader', defValue: false },
@@ -298,18 +317,21 @@
                         { prop: 'loaderGifSrc', defValue: '/resource/loaderWhite36.GIF' },
                         { prop: 'ariaPrimary', defValue: $scope.vxColSettings.primaryId },
                         { prop: 'xsTemplate', defValue: false },
-                        { prop: 'bindOnce', defValue: false }
+                        { prop: 'bindOnce', defValue: false },
+                        { prop: 'hybrid', defValue: false }
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
                             $scope.vxConfig[propDefn.prop] = propDefn.defValue;
                     });
-                    $scope.vxColSettings.vxRowClass = $scope.vxConfig['initialRowClasses'];
+                    $scope.vxColSettings.vxRowClass = $scope.vxConfig['initialRowClasses'] || {};
                     // SETTING XS VIEW BASED PROPERTIES BASED ON WINDOW WIDTH
                     if ($scope.getWindowDimensions().w < 768) {
                         $scope.vxColSettings.xsViewEnabled = true && $scope.vxConfig.xsTemplate;
                         $scope.vxColSettings.latchExcess = 5;
                     }
+                    end = new Date();
+                    console.log(4, end.getTime() - start.getTime());
                     $scope.vxColSettings.selectAllOnRenderAll = $scope.vxConfig.selectAllOnRenderAll;
                     _.each($scope.vxConfig.columnDefConfigs, function (col) {
                         /* SET DEAFULTS FOR COLUMNS */
@@ -333,7 +355,10 @@
                             { prop: 'inlineEditValidation', defValue: false },
                             { prop: 'editDefn', defValue: null },
                             { prop: 'editDefnTemplate', defValue: null },
-                            { prop: 'headTabIndex', defValue: 0 }
+                            { prop: 'headTabIndex', defValue: 0 },
+                            { prop: 'columnIsRowSelect', defValue: false },
+                            { prop: 'columnIsDate', defValue: false },
+                            { prop: 'renderHybridCellDefn', defValue: false }
                         ];
                         _.each(_propDefns, function (propDefn) {
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
@@ -368,7 +393,8 @@
                             col.cellDefn = col.cellDefn.replaceAll("VX_ROW", "row");
                             col.cellDefn = col.cellDefn.replaceAll("VX_CONFIG", "vxConfig")
                         }
-                        if (col.inlineEditOnColumnEnabled == true) {
+                        /* UNSUPPORTED IN HYBRID MODE */
+                        if (col.inlineEditOnColumnEnabled == true && $scope.vxConfig.hybrid != true) {
                             if (col.editDefn == '' || col.editDefn == null)
                                 col.editDefn = '<input class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />';
                             col.editDefn = col.editDefn.replaceAll("VX_ROW_POINT", "row[vxColSettings.primaryId]");
@@ -394,7 +420,8 @@
 
                         }
                     });
-
+                    end = new Date();
+                    console.log(5, end.getTime() - start.getTime());
                     $scope.vxConfig.columnDefConfigs = $scope.calculateEffectiveWidths($scope.vxConfig.columnDefConfigs);
                     if (typeof $scope.vxConfig.multiSelectionDependentCol !== 'undefined'
                         && $scope.vxConfig.multiSelectionDependentCol != null
@@ -407,8 +434,8 @@
                                         && $scope.vxConfig.xsRowTitleTemplate != '') {
                         $scope.vxColSettings.xsRowTitleTemplateAvailable = true;
                     }
-                    /* GENERATE TEMPLATE IF NOT AVAILBLE FOR NEW ROW */
-                    if ($scope.vxConfig.inlineAddRowEnabled == true) {
+                    /* GENERATE TEMPLATE IF NOT AVAILBLE FOR NEW ROW */ /* UNSUPPORTED IN HYBRID MODE */
+                    if ($scope.vxConfig.inlineAddRowEnabled == true && $scope.vxConfig.hybrid != true) {
                         if (typeof $scope.vxConfig.newRowTemplate === 'undefined' || $scope.vxConfig.newRowTemplate == null || $scope.vxConfig.newRowTemplate == {} || $scope.vxConfig.newRowTemplate == '') {
                             var newRowTemplate = angular.copy($scope.vxConfig.data[0]);
                             _.each($scope.vxConfig.columnDefConfigs, function (col) {
@@ -450,15 +477,18 @@
                     /// <summary>CONFIG EXTENSION TO GET CURRENT STATE OF DIFFERENT COUNTS</summary>
                     /// <returns type="OBJECT" />
                     $scope.config.getVxCounts = function () {
-                        if (typeof $scope.vxConfig !== 'undefined' && $scope.vxConfig != null && $scope.vxConfig != {} && $scope.vxConfig.id !== 'undefined' && $scope.vxConfig.id != null && $scope.vxConfig.id != {})
-                            return {
+                        if (typeof $scope.vxConfig !== 'undefined' && $scope.vxConfig != null && $scope.vxConfig != {} && $scope.vxConfig.id !== 'undefined' && $scope.vxConfig.id != null && $scope.vxConfig.id != {}) {
+                            var res = {
                                 'id': $scope.vxConfig.id,
                                 'data': {
                                     'vxAllDataLength': $scope.getAllRowLength(),
-                                    'vxFilteredDataLength': $scope.multiBoxFilters.length > 0 ? $scope.vxConfig.vxFilteredData.length : 0,
+                                    'vxFilteredDataLength': $scope.multiBoxFilters.length > 0 ? ($scope.vxConfig.hybrid != true ? $scope.vxConfig.vxFilteredData.length : $scope.vxConfig.vxData.length) : 0,
                                     'vxSelectedDataLength': $scope.vxColSettings.multiSelected.length
                                 }
                             }
+                            console.log(res);
+                            return res;
+                        }
                         else
                             return undefined;
                     }
@@ -548,6 +578,9 @@
                                     });
                                 }
                                 _newStates.push(_dRow);
+                                if ($scope.vxConfig.hybrid == true) {
+                                    $scope.hybridUpdateRows(_newStates);
+                                }
                             }
                         });
                         return _newStates;
@@ -610,6 +643,156 @@
                     $scope.$emit('vxGridSettingsBuilt', {
                         'id': $scope.vxConfig.id
                     });
+                    end = new Date();
+                    console.log(6, end.getTime() - start.getTime());
+
+                    /// <summary> STATIC MAPS FOR ENABLING HYBRID MODE SUPPORT</summary>
+                    var _hybridContainer = null;
+                    var _scrollContainer = null;
+                    var _rowHeight = 48;
+                    var _excess = 5;
+                    var _lastIndexCount = 0;
+                    var _lastScrollDown = false;
+                    var _lastScrollTop = 0;
+
+                    /// <summary>GRID FUNCTION : UPDATE ROWS</summary>
+                    $scope.hybridUpdateRows = function (rows) {
+                        angular.forEach(rows, function (row) {
+                            var _result = $scope.hybridGetRowTmpl(row);
+                            var rowElement = angular.element(document.getElementById(_result.rowId));
+                            rowElement.empty();
+                            rowElement.replaceWith(_result.rowTmpl);
+                            if (_result.compile) {
+                                $compile(rowElement.contents())($scope);
+                            }
+                        });
+                    }
+
+                    /// <summary>GRID FUNCTION : TO RESET THE HYBRID SCROLL WHEN SORT OR FILTER OR GROUP AFFECTED</summary>
+                    $scope.resetHybridGrid = function () {
+                        _lastIndexCount = 0;
+                        _lastScrollDown = false;
+                        _lastScrollTop = 0;
+                        $scope.prepHybrid();
+                    }
+
+                    /// <summary>GRID FUNCTION : TO PREP THE GRID FOR FIRST TIME INITIATIONS FOR HYBRID MODE</summary>
+                    $scope.prepHybrid = function () {
+                        _hybridContainer = angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id));
+                        _scrollContainer = angular.element(document.getElementById('_vxScrollContainer' + $scope.vxConfig.id));
+                        _hybridContainer.empty();
+                        var _height = _scrollContainer.height();
+                        var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
+                        var _rows = _.first($scope.vxConfig.vxData, _initRowCount);
+                        $scope.appendRows(_rows);
+                        _lastIndexCount = _lastIndexCount + _initRowCount;
+                        _scrollContainer.on('scroll', function () {
+                            $scope.debPep();
+                        });
+                    }
+
+                    /// <summary>GRID FUNCTION : PREPEARE AND INSERT ROWS WHEN SCROLL DOWN WHEN IN HYBRID MODE</summary>
+                    $scope.prepForScrollInsertion = function () {
+                        var diff = _hybridContainer.height() - (_scrollContainer.height() + _scrollContainer.scrollTop());
+                        if (_scrollContainer.scrollTop() > _lastScrollTop) {
+                            if (diff < 0)
+                                diff = 0;
+                            if (diff < _rowHeight && _lastIndexCount < $scope.vxConfig.vxData.length) {
+                                var _initRowCount = _excess;
+                                var _restRows = _.rest($scope.vxConfig.vxData, _lastIndexCount);
+                                var _rows = _.first(_restRows, _initRowCount);
+                                _lastIndexCount = _lastIndexCount + _initRowCount;
+                                $scope.appendRows(_rows);
+                                _scrollContainer.scrollTo(0, _scrollContainer.scrollTop() - 48);
+                            }
+                        }
+                        _lastScrollTop = _scrollContainer.scrollTop();
+                    }
+
+                    /// <summary>GRID FUNCTION : DEBOUNCED VERSION FOR THE PREPFORSCROLLINDERSTION</summary>
+                    $scope.debPep = _.debounce($scope.prepForScrollInsertion, 10);
+
+                    /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
+                    $scope.compileAppend = function (rowTmpl, id, flag) {
+                        _hybridContainer.append(rowTmpl);
+                        if (flag) {
+                            var _row = angular.element(document.getElementById(id));
+                            $compile(_row.contents())($scope);
+                        }
+                    }
+
+                    $scope.hybridGetRowTmpl = function (row) {
+                        var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow VX_ROW_CLASSES ">VX_ALL_CELLS</tr>';
+                        var cellHolderTmpl = '<td class="VX_TD_CLASS">VX_CELL_CONTENT</td>';
+                        var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
+                        var cellTmplContent = '<span title="VX_CELL_TMPL">VX_CELL_TMPL</span>';
+                        var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" ng-model="vxColSettings.rowSelected[\'VX_ROW_ID\']" ng-change="rowSelectionChanged(\'VX_ROW_ID\')" ng-disabled="vxColSettings.vxRowSelectionDisable[\'VX_ROW_ID\']" type="checkbox" id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /></div>';
+                        var allCells = '';
+                        var _classes = '';
+                        var rowId = row[$scope.vxColSettings.primaryId];
+                        var _compile = false;
+                        if ($scope.config.noData != true) {
+                            angular.forEach($scope.vxConfig.columnDefConfigs, function (col) {
+                                var _cellTmpl = '';
+                                var _cellHolder = cellHolderTmpl;
+                                if (col.hidden != true) {
+                                    if (col.renderHybridCellDefn != true && col.columnIsRowSelect != true && col.columnIsDate != true) {
+                                        var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : '';
+                                        _cellTmpl = cellTmplContent;
+                                        _cellTmpl = _cellTmpl.replaceAll('VX_CELL_TMPL', _data);
+                                    }
+                                    else if (col.renderHybridCellDefn != true && col.columnIsDate == true) {
+                                        var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
+                                        var _dtData = $filter('date')(_data, col.columnDatePipe);
+                                        _cellTmpl = cellTmplContent;
+                                        _cellTmpl = _cellTmpl.replaceAll('VX_CELL_TMPL', _dtData);
+                                    }
+                                    else if (col.renderHybridCellDefn != true && col.columnIsRowSelect == true) {
+                                        var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
+                                        var _rowSelectData = $scope.vxColSettings.rowSelected[rowId];
+                                        _cellTmpl = cellTmplRowSelect;
+                                        _cellTmpl = _cellTmpl.replaceAll('VX_ROW_ID', rowId);
+                                        _cellTmpl = _cellTmpl.replace('VX_ROW_SEL_VAL', _rowSelectData);
+                                        _compile = _compile || true;
+                                    }
+                                    else if (col.renderHybridCellDefn == true) {
+                                        _cellTmpl = $scope.vxConfig.hybridCellDefn(row, col) || '';
+                                    }
+                                    _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
+                                    allCells = allCells + _cellHolder;
+                                }
+                            });
+                        }
+                        else {
+                            var _nonHiddenColLength = $scope.getNonHiddenColCount();
+                            emptyRowTempl = emptyRowTempl.replace('VX_NON_HIDDEN_COL_LEN', _nonHiddenColLength);
+                            emptyRowTempl = emptyRowTempl.replace('VX_EMPTYFILL', $scope.vxConfig.emptyFill);
+                            allCells = emptyRowTempl;
+                        }
+                        _classes = _classes + $scope.vxConfig.rowClassFn(row) + ' ' + $scope.vxColSettings.vxRowClass[rowId];
+                        rowTmpl = rowTmpl.replace('VX_ROW_CLASSES', _classes);
+                        rowTmpl = rowTmpl.replace('VX_ROW_ID', rowId);
+                        rowTmpl = rowTmpl.replaceAll('VX_ALL_CELLS', allCells);
+                        return { 'rowTmpl': rowTmpl, 'rowId': rowId, 'compile': _compile };
+                    }
+
+                    /// <summary>GRID FUNCTION : PREP ROWS FOR APPEND ROWS TO CONTAINER WHEN IN HYBRID MODE</summary>
+                    $scope.appendRows = function (rows) {
+                        angular.forEach(rows, function (row) {
+                            var _result = $scope.hybridGetRowTmpl(row);
+                            $scope.compileAppend(_result.rowTmpl, _result.rowId, _result.compile);
+                        });
+                    }
+
+                    end = new Date();
+                    console.log(7, end.getTime() - start.getTime());
+                    console.log($scope.vxConfig.vxFilteredData);
+                    if ($scope.vxConfig.hybrid == true) {
+                        //$scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData;
+                        end = new Date();
+                        console.log(8, end.getTime() - start.getTime());
+                        $timeout($scope.prepHybrid, 100);
+                    }
                 }
 
                 /// <summary>GRID FUNCTION : START THE PROCEDURE TO EDIT AN ROW</summary>
@@ -860,6 +1043,19 @@
                     }
                 }
 
+                $scope.filtTokenChange = function (id) {
+                    $scope.vxColSettings.filterSearchToken[id] = $scope.vxColSettings.enteredSearchToken[id];
+                }
+
+                $scope.debFiltTokenChange = _.debounce($scope.filtTokenChange, 10);
+
+                $scope.filterTokenChnagedRapid = function (id) {
+                    if ($scope.vxColSettings.enteredSearchToken[id] == '')
+                        $scope.vxColSettings.filterSearchToken[id] = '';
+                    else
+                        $scope.debFiltTokenChange(id);
+                }
+
                 /// <summary>GRID FUNCTION : CHECK IF HEADER NAME IS VALID</summary>
                 $scope.isValidHeaderName = function (header, name) {
                     return header.renderHeadDefn == false && typeof name !== 'undefined' && name != null && name != '';
@@ -918,7 +1114,8 @@
                                         $scope.vxColSettings.dropDownSort[_colDefn.id] = true;
                                         _colDefn.idCollection.push(_colDefn.id + '_sort');
                                     }
-                                    if (_colDefn.ddGroup == true) {
+                                    /* GROUP OPERATION */ /* UNSUPPORTED IN HYBRID MODE */
+                                    if (_colDefn.ddGroup == true && $scope.vxConfig.hybrid != true) {
                                         $scope.vxColSettings.dropDownGroup[_colDefn.id] = true;
                                         _colDefn.idCollection.push(_colDefn.id + '_group');
                                         _colDefn.idCollection.push(_colDefn.id + '_ungroup');
@@ -1022,6 +1219,13 @@
                                 $scope.vxConfig.sortPredicate = _colDefn.id;
                             $scope.vxColSettings.reverseSettings[_colDefn.id] = !$scope.vxColSettings.reverseSettings[_colDefn.id];
                             $scope.vxConfig.reverseSortDirection = $scope.vxColSettings.reverseSettings[_colDefn.id];
+                            /// <summary>HYBRID MODE SUPPORT</summary>
+                            if ($scope.vxConfig.hybrid == true) {
+                                $scope.vxConfig.vxData = _.sortBy($scope.vxConfig.vxData, $scope.vxConfig.sortPredicate);
+                                if ($scope.vxConfig.reverseSortDirection == true)
+                                    $scope.vxConfig.vxData.reverse();
+                                $scope.resetHybridGrid();
+                            }
                         }
                     }
                 }
@@ -1078,6 +1282,8 @@
 
                 /// <summary>GRID FUNCTION : GET COUNT OF NUMBER OF ROWS IN THE GRID EXCEPT THE ROWS USED TO DENOTE GROUP HEADERS</summary>
                 $scope.getAllRowLength = function () {
+                    if ($scope.vxConfig.hybrid == true)
+                        return $scope._origData.length;
                     var len = _.filter($scope.vxConfig.vxData, function (row) {
                         return typeof row.type == 'undefined' || row.type == null || row.type.localeCompare('groupRow') != 0 || row.fillEmptyElement == true
                     }).length;
@@ -1120,7 +1326,7 @@
                 $scope.allRowSelectionChanged = function () {
                     var toggleTo = $scope.vxColSettings.allRowSelected;
                     if (toggleTo == true) {
-                        _.each($scope.vxConfig.vxFilteredData, function (row) {
+                        _.each($scope.vxConfig.vxData, function (row) {
                             if (row.fillEmptyElement != true) {
                                 var pid = row[$scope.vxColSettings.primaryId];
                                 if ($scope.vxColSettings.rowSelected[pid] == false && toggleTo == true) {
@@ -1147,8 +1353,10 @@
                 }
 
                 /// <summary>GRID FUNCTION : HANDLE SELECTION TOGGLE EVENT FOR A ROW CHECKBOX</summary>
-                $scope.rowSelectionChanged = function (row) {
-                    var pid = row[$scope.vxColSettings.primaryId];
+                $scope.rowSelectionChanged = function (rowId) {
+                    var pid = rowId;
+                    var row = _.find($scope.vxConfig.vxData, function (_row) { return _row[$scope.vxColSettings.primaryId] == rowId });
+                    console.log(row);
                     var result = { 'key': row[$scope.vxConfig.onSelectionReturnCol], 'value': $scope.vxColSettings.rowSelected[pid], '_pKey': pid };
                     var proceed = true;
                     if ($scope.vxColSettings.rowSelected[pid] == true && $scope.vxColSettings.multiSelColDependent == true) {
@@ -1211,6 +1419,11 @@
                         }
                         $scope.vxColSettings.colFiltersActivated[header.id] = true;
                     }
+                    /// <summary>HYBRID MODE SUPPORT</summary>
+                    if ($scope.vxConfig.hybrid == true) {
+                        $scope.vxConfig.vxData = $filter('vxGridMultiBoxFilters')($scope._origData, $scope.multiBoxFilters);
+                        $scope.resetHybridGrid();
+                    }
                 }
 
                 /// <summary>GRID FUNCTION : HANDLE CLICK EVENT WHEN A COLUMN FILTER IS BEING CLEARED</summary>
@@ -1225,6 +1438,11 @@
                         }
                         $scope.multiBoxFilters = _.reject($scope.multiBoxFilters, function (mbFilter) { return mbFilter.col.localeCompare(header.id) == 0 });
                         $scope.vxColSettings.colFiltersActivated[header.id] = false;
+                    }
+                    /// <summary>HYBRID MODE SUPPORT</summary>
+                    if ($scope.vxConfig.hybrid == true) {
+                        $scope.vxConfig.vxData = $filter('vxGridMultiBoxFilters')($scope._origData, $scope.multiBoxFilters);
+                        $scope.resetHybridGrid();
                     }
                 }
 
@@ -1287,16 +1505,14 @@
 
                 /// <summary>GRID FUNCTION : FUNCTION TO MOVE FOCUS TO FIRST ITEM IN MENU</summary>
                 $scope.upDownKeyDownHandlerHeaderMenu = function (e) {
-                    var _prevent = false;
-                    if (e.keyCode == 40) {
+                    if (e.keyCode != 40) {
+                        return;
+                    }
+                    else if (e.keyCode == 40) {
                         //DOWN ARROW PRESS
                         var focussables = $(e.target).siblings().find('[tabindex="0"]');
                         if (focussables.length > 0)
                             $(focussables[0]).focus();
-                    }
-                    if (_prevent) {
-                        e.stopPropagation();
-                        e.preventDefault();
                     }
                 }
 
@@ -1348,6 +1564,8 @@
                 /// <summary>GRID FUNCTION : FUNCTION TO HELP UP DOWN KEY STROKE MOVEMENTS IN MENU</summary>
                 $scope.upDowKeyDownHandlerHeaderMenuItems = function (e, columnId) {
                     var _prevent = false;
+                    if (e.keyCode != 40 && e.keyCode != 38 && e.keyCode != 27)
+                        return false;
                     if (e.keyCode == 40) {
                         /* DOWN ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, true);
@@ -1522,6 +1740,9 @@
                         /* GET MODIFIED CHANGES FOPR CONFIG */
                         data = $scope.calculateEffectiveWidths(data);
                         $scope.vxConfig.columnDefConfigs = data;
+                        if ($scope.vxConfig.hybrid == true) {
+                            $scope.resetHybridGrid();
+                        }
                         $scope.$emit('vxGridSettingsChanged', { 'id': $scope.vxConfig.id, 'data': data });
                     }, function (data) {
                     });
@@ -1703,12 +1924,12 @@
 
                 /// <summary>GRID FUNCTION : CHANGE ROW CLASSES BASED ON ROW DATA RECIEVED</summary>
                 $scope.changeRowClass = function (data) {
-                     for (var prop in data) {
-                         $scope.vxColSettings.vxRowClass[prop] = data[prop];
-                     }
-                     if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-                         $scope.$apply();
-                     }
+                    for (var prop in data) {
+                        $scope.vxColSettings.vxRowClass[prop] = data[prop];
+                    }
+                    if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                        $scope.$apply();
+                    }
                 }
 
                 /// <summary>GRID EVENT : LISTEN TO ASK FOR RESETTING OW CLASSES</summary>
@@ -1741,29 +1962,41 @@
 
                 /// <summary>GRID WATCH : LISTEN TO CHANGES IN DATA AND ACCORDINGLY RESET INSTANCE</summary>
                 $scope.$watchCollection('config.data', function (n) {
+                    var dt = new Date();
+                    console.log('before start', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
                     if (n.length == 0) {
                         n = [{ 'fillEmptyElement': true }];
                         $scope.config.noData = true;
+                        angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id)).empty();
                     }
                     else
                         $scope.config.noData = false;
-                    $scope.config.vxData = angular.copy(n);
-                    console.log($scope.config.vxData.length);
+                    if ($scope.config.hybrid == true) {
+                        $scope.config.vxData = _.clone(n);
+                        $scope._origData = _.clone(n);
+                    }
+                    else
+                        $scope.config.vxData = angular.copy(n);
+                    dt = new Date();
+                    console.log('start', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
+                    delete $scope.vxConfig;
                     $scope.resetVxInstance();
                 });
 
                 /// <summary>GRID WATCH : LISTEN TO CHANGES IN FILTERED DATA COLLECTION AN ACCODRIDNGLY RESET PAGES IF PAGINATION ENABLED</summary>
-                $scope.$watchCollection('vxConfig.vxFilteredData', function (n) {
-                    if (n.length >= 0) {
-                        /* PROCESS FOR PAGINATION IF VIRTUALIZATION IS FALSE */
-                        if ($scope.vxConfig.pagination == true) {
-                            $scope.vxColSettings.pages = _.range(Math.ceil(n.length / parseInt($scope.vxConfig.pageLength)));
-                            $scope.vxColSettings.vxPageEnabled = $scope.vxColSettings.pages.length > 1;
-                            $scope.vxColSettings.activePage = 0;
-                            $scope.vxColSettings.vxPageStartPosition = 0;
+                if ($scope.config.hybrid != true) {
+                    $scope.$watchCollection('vxConfig.vxFilteredData', function (n) {
+                        if (n.length >= 0) {
+                            /* PROCESS FOR PAGINATION IF VIRTUALIZATION IS FALSE */
+                            if ($scope.vxConfig.pagination == true) {
+                                $scope.vxColSettings.pages = _.range(Math.ceil(n.length / parseInt($scope.vxConfig.pageLength)));
+                                $scope.vxColSettings.vxPageEnabled = $scope.vxColSettings.pages.length > 1;
+                                $scope.vxColSettings.activePage = 0;
+                                $scope.vxColSettings.vxPageStartPosition = 0;
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 $scope.getvxTableContainerWidth = function () {
                     var elem = angular.element($(element).find('.vx-scroller')[0]);

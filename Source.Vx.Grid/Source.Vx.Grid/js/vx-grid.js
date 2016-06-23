@@ -481,7 +481,7 @@
                                 'id': $scope.vxConfig.id,
                                 'data': {
                                     'vxAllDataLength': $scope.getAllRowLength(),
-                                    'vxFilteredDataLength': $scope.multiBoxFilters.length > 0 ? $scope.vxConfig.vxFilteredData.length : 0,
+                                    'vxFilteredDataLength': $scope.multiBoxFilters.length > 0 ? ($scope.vxConfig.hybrid != true ? $scope.vxConfig.vxFilteredData.length : $scope.vxConfig.vxData.length) : 0,
                                     'vxSelectedDataLength': $scope.vxColSettings.multiSelected.length
                                 }
                             }
@@ -1244,6 +1244,8 @@
 
                 /// <summary>GRID FUNCTION : GET COUNT OF NUMBER OF ROWS IN THE GRID EXCEPT THE ROWS USED TO DENOTE GROUP HEADERS</summary>
                 $scope.getAllRowLength = function () {
+                    if ($scope.vxConfig.hybrid == true)
+                        return $scope._origData.length;
                     var len = _.filter($scope.vxConfig.vxData, function (row) {
                         return typeof row.type == 'undefined' || row.type == null || row.type.localeCompare('groupRow') != 0 || row.fillEmptyElement == true
                     }).length;

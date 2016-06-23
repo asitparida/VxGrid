@@ -211,7 +211,7 @@
                     var end = new Date();
                     var dt = new Date();
                     console.log('isnide method 1', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
-                    if($scope.config.hybrid == true)
+                    if ($scope.config.hybrid == true)
                         $scope.vxConfig = $scope.config;
                     else
                         $scope.vxConfig = angular.copy($scope.config);
@@ -323,7 +323,7 @@
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
                             $scope.vxConfig[propDefn.prop] = propDefn.defValue;
                     });
-                    $scope.vxColSettings.vxRowClass = $scope.vxConfig['initialRowClasses'];
+                    $scope.vxColSettings.vxRowClass = $scope.vxConfig['initialRowClasses'] || {};
                     // SETTING XS VIEW BASED PROPERTIES BASED ON WINDOW WIDTH
                     if ($scope.getWindowDimensions().w < 768) {
                         $scope.vxColSettings.xsViewEnabled = true && $scope.vxConfig.xsTemplate;
@@ -356,7 +356,8 @@
                             { prop: 'editDefnTemplate', defValue: null },
                             { prop: 'headTabIndex', defValue: 0 },
                             { prop: 'columnIsRowSelect', defValue: false },
-                            { prop: 'columnIsDate', defValue: false }
+                            { prop: 'columnIsDate', defValue: false },
+                            { prop: 'renderHybridCellDefn', defValue: false }
                         ];
                         _.each(_propDefns, function (propDefn) {
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
@@ -684,12 +685,12 @@
                                 $scope.appendRows(_rows);
                                 _scrollContainer.scrollTo(0, _scrollContainer.scrollTop() - 48);
                             }
-                        }                        
+                        }
                         _lastScrollTop = _scrollContainer.scrollTop();
                     }
 
                     /// <summary>GRID FUNCTION : DEBOUNCED VERSION FOR THE PREPFORSCROLLINDERSTION</summary>
-                    $scope.debPep = _.debounce($scope.prepForScrollInsertion, 10);                  
+                    $scope.debPep = _.debounce($scope.prepForScrollInsertion, 10);
 
                     /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
                     $scope.compileAppend = function (rowTmpl, id, flag) {
@@ -703,12 +704,13 @@
                     /// <summary>GRID FUNCTION : PREP ROWS FOR APPEND ROWS TO CONTAINER WHEN IN HYBRID MODE</summary>
                     $scope.appendRows = function (rows) {
                         angular.forEach(rows, function (row) {
-                            var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow">VX_ALL_CELLS</tr>';
+                            var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow VX_ROW_CLASSES ">VX_ALL_CELLS</tr>';
                             var cellHolderTmpl = '<td class="VX_TD_CLASS">VX_CELL_CONTENT</td>';
                             var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
                             var cellTmplContent = '<span>VX_CELL_TMPL</span>';
                             var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" ng-model="vxColSettings.rowSelected[\'VX_ROW_ID\']" ng-change="rowSelectionChanged(\'VX_ROW_ID\')" ng-disabled="vxColSettings.vxRowSelectionDisable[\'VX_ROW_ID\']" type="checkbox" id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /></div>';
                             var allCells = '';
+                            var _classes = '';
                             var rowId = row[$scope.vxColSettings.primaryId];
                             var _compile = false;
                             if ($scope.config.noData != true) {
@@ -716,24 +718,27 @@
                                     var _cellTmpl = '';
                                     var _cellHolder = cellHolderTmpl;
                                     if (col.hidden != true) {
-                                        if (col.columnIsRowSelect != true && col.columnIsDate != true) {
+                                        if (col.renderHybridCellDefn != true && col.columnIsRowSelect != true && col.columnIsDate != true) {
                                             var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : '';
                                             _cellTmpl = cellTmplContent;
                                             _cellTmpl = _cellTmpl.replace('VX_CELL_TMPL', _data);
                                         }
-                                        else if (col.columnIsDate == true) {
+                                        else if (col.renderHybridCellDefn != true && col.columnIsDate == true) {
                                             var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
                                             var _dtData = $filter('date')(_data, col.columnDatePipe);
                                             _cellTmpl = cellTmplContent;
                                             _cellTmpl = _cellTmpl.replace('VX_CELL_TMPL', _dtData);
                                         }
-                                        else if (col.columnIsRowSelect == true) {
+                                        else if (col.renderHybridCellDefn != true && col.columnIsRowSelect == true) {
                                             var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
                                             var _rowSelectData = $scope.vxColSettings.rowSelected[rowId];
                                             _cellTmpl = cellTmplRowSelect;
                                             _cellTmpl = _cellTmpl.replaceAll('VX_ROW_ID', rowId);
                                             _cellTmpl = _cellTmpl.replace('VX_ROW_SEL_VAL', _rowSelectData);
                                             _compile = _compile || true;
+                                        }
+                                        else if (col.renderHybridCellDefn == true) {
+                                            _cellTmpl = $scope.vxConfig.hybridCellDefn(row, col);
                                         }
                                         _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
                                         allCells = allCells + _cellHolder;
@@ -746,6 +751,8 @@
                                 emptyRowTempl = emptyRowTempl.replace('VX_EMPTYFILL', $scope.vxConfig.emptyFill);
                                 allCells = emptyRowTempl;
                             }
+                            _classes = _classes + $scope.vxConfig.rowClassFn(row) + ' ' + $scope.vxColSettings.vxRowClass[rowId];
+                            rowTmpl = rowTmpl.replace('VX_ROW_CLASSES', _classes);
                             rowTmpl = rowTmpl.replace('VX_ROW_ID', rowId);
                             rowTmpl = rowTmpl.replaceAll('VX_ALL_CELLS', allCells);
                             $scope.compileAppend(rowTmpl, rowId, _compile);
@@ -1457,7 +1464,7 @@
                 }
 
                 /// <summary>GRID FUNCTION : FUNCTION TO MOVE FOCUS TO FIRST ITEM IN MENU</summary>
-                $scope.upDownKeyDownHandlerHeaderMenu = function (e) {                    
+                $scope.upDownKeyDownHandlerHeaderMenu = function (e) {
                     if (e.keyCode != 40) {
                         return;
                     }

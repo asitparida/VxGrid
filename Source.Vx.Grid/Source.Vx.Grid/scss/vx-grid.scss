@@ -77,6 +77,8 @@
                 -webkit-overflow-scrolling: touch;
                 -ms-overflow-style: -ms-autohiding-scrollbar;
                 -webkit-transition: height 0.3s ease-in-out 0s;
+                -moz-transition: height 0.3s ease-in-out 0s;
+                -o-transition: height 0.3s ease-in-out 0s;
                 transition: height 0.3s ease-in-out 0s;
 
                 &.pageEnabled {
@@ -160,6 +162,8 @@
                                 font-weight: 400;
                                 font-size: medium;
                                 padding: 0;
+                                -ms-text-overflow: ellipsis;
+                                -o-text-overflow: ellipsis;
                                 text-overflow: ellipsis;
                                 white-space: normal;
                                 -ms-word-break: break-all;
@@ -247,6 +251,8 @@
                     .vxHead .vxHeadRow th {
                         padding: 0 10px 5px 0;
                         height: 60px;
+                        -ms-text-overflow: ellipsis;
+                        -o-text-overflow: ellipsis;
                         text-overflow: ellipsis;
                         white-space: nowrap;
                         -ms-word-break: break-all;
@@ -259,6 +265,8 @@
                             padding: 0 5px;
                             height: 48px;
                             overflow: hidden;
+                            -ms-text-overflow: ellipsis;
+                            -o-text-overflow: ellipsis;
                             text-overflow: ellipsis;
                             white-space: nowrap;
                             -ms-word-break: break-all;
@@ -443,6 +451,8 @@
             .vxHead .vxHeadRow th {
                 padding: 0 10px;
                 height: 48px;
+                -ms-text-overflow: ellipsis;
+                -o-text-overflow: ellipsis;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 -ms-word-break: break-all;
@@ -454,6 +464,8 @@
                     padding: 0 10px;
                     height: 48px;
                     overflow: hidden;
+                    -ms-text-overflow: ellipsis;
+                    -o-text-overflow: ellipsis;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     -ms-word-break: break-all;
@@ -585,6 +597,8 @@
 
     .vxTableContainer {
         -webkit-transition: height 0.3s ease-in-out 0s;
+        -moz-transition: height 0.3s ease-in-out 0s;
+        -o-transition: height 0.3s ease-in-out 0s;
         transition: height 0.3s ease-in-out 0s;
 
         &.scrollTableContainer {
@@ -615,6 +629,8 @@
             z-index: 999;
             margin-top: 0;
             -webkit-transition: top 0.3s ease-in-out 0s;
+            -moz-transition: top 0.3s ease-in-out 0s;
+            -o-transition: top 0.3s ease-in-out 0s;
             transition: top 0.3s ease-in-out 0s;
             padding: 0;
             /*&:not(.scrollDupHeaderAdded) {
@@ -631,6 +647,8 @@
             }*/
             .vxTableHolder {
                 -webkit-transition: left 0.3s ease-out 0s;
+                -moz-transition: left 0.3s ease-out 0s;
+                -o-transition: left 0.3s ease-out 0s;
                 transition: left 0.3s ease-out 0s;
             }
         }
@@ -853,6 +871,16 @@
 
             input[type="checkbox"] {
                 cursor: pointer;
+                will-change: auto;
+                -moz-transform: translateZ(0);
+                -ms-transform: translateZ(0);
+                -o-transform: translateZ(0);
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0);
+                outline-color: transparent;
+                outline-offset: 5px;
+                outline-style: dotted;
+                outline-width: thin;
 
                 &:focus, &:active {
                     outline-color: #000;
@@ -968,7 +996,7 @@
                         font-weight: 300;
                         font-size: 16px;
                         text-shadow: none;
-                        vertical-align:top;
+                        vertical-align: top;
 
                         &:active, &:focus {
                             outline-color: #fff;
@@ -977,9 +1005,9 @@
                             outline-width: thin;
                         }
 
-                        &[disabled]{
-                            opacity:1;
-                            cursor:default;
+                        &[disabled] {
+                            opacity: 1;
+                            cursor: default;
                         }
                     }
 
@@ -1014,8 +1042,10 @@
                             font-weight: 400;
                             display: inline-block;
                             max-width: calc(100% - 25px);
-                            margin-right:10px;
+                            margin-right: 10px;
                             vertical-align: top;
+                            -ms-text-overflow: ellipsis;
+                            -o-text-overflow: ellipsis;
                             text-overflow: ellipsis;
                             overflow-x: hidden;
                         }
@@ -1036,6 +1066,8 @@
                     font-weight: 400;
                     width: 100%;
                     vertical-align: top;
+                    -ms-text-overflow: ellipsis;
+                    -o-text-overflow: ellipsis;
                     text-overflow: ellipsis;
                     overflow-x: hidden;
                     display: block;
@@ -1052,6 +1084,7 @@
                     font-size: 16px;
                     width: 100%;
                     white-space: normal;
+                    -ms-word-break: break-all;
                     word-break: break-all;
                 }
             }
@@ -1070,6 +1103,7 @@
                         font-weight: 400;
                         font-size: medium;
                         width: calc(100% - 30px);
+                        -ms-word-break: break-all;
                         word-break: break-all;
                         margin-bottom: 0;
                         text-transform: none;
@@ -1150,6 +1184,8 @@
                             &.desc {
                                 -ms-transform: rotate(180deg);
                                 -webkit-transform: rotate(180deg);
+                                -moz-transform: rotate(180deg);
+                                -o-transform: rotate(180deg);
                                 transform: rotate(180deg);
                             }
                         }
@@ -1401,6 +1437,7 @@
                     color: #303030;
                     margin: 0;
                     line-height: 40px;
+                    -ms-word-break: break-all;
                     word-break: break-all;
                 }
 

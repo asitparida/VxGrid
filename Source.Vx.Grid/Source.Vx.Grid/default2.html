@@ -72,20 +72,22 @@
         }
 
         .invalidField {
-            border:1px solid #bb0000 !important;
+            border: 1px solid #bb0000 !important;
         }
 
         .dtPickerClass {
             overflow: visible !important;
             padding: 0 10px !important;
         }
+
             .dtPickerClass p.input-group {
-                margin-bottom:0;
+                margin-bottom: 0;
             }
+
                 .dtPickerClass p.input-group input {
-                    border:none;
-                    padding:6px 0;
-                    box-shadow:none;
+                    border: none;
+                    padding: 6px 0;
+                    box-shadow: none;
                 }
 
         .row-even {
@@ -97,32 +99,41 @@
         }
 
         tr.row-fn-locked {
-            background:rgba(255,0,0, 0.05);
+            background: rgba(255,0,0, 0.05);
         }
-
     </style>
 </head>
 <body ng-controller="vxSampleController as sample">
-    <div class="container btns">
-        <button class="btn btn-primary sample" ng-click="sample.emptyData()"> Empty Data</button>
-        <button class="btn btn-primary sample" ng-click="sample.reloadDataPage()">Reload Data Page</button>
-        <button class="btn btn-primary sample" ng-click="sample.reloadDataVirtual()" ng-disabled="sample.secondSampleActive == false">Reload Data Virtual</button>
-        <button class="btn btn-primary sample" ng-click="sample.secondSample()" ng-disabled="sample.secondSampleActive == true">Reload Data Virtual Sample 2</button>
-        <button class="btn btn-primary sample" ng-click="sample.singleSample()">Single Sample</button>
-        <button class="btn btn-primary sample" ng-click="sample.consoleLogData()">Console Log Data</button>
-        <button class="btn btn-primary sample" ng-click="sample.openManageColumns()">Open Manage Columns</button>
-        <button class="btn btn-primary sample" ng-click="sample.logIDs()">Log Selected</button>
-        <button class="btn btn-primary sample" ng-click="sample.logEditedIDs()">Log Edited</button>
-        <button class="btn btn-primary sample" ng-click="sample.modRows()">Modify Row Data</button>
-        <button class="btn btn-primary sample" ng-click="sample.selectProg()">Select Sample</button>
-        <button class="btn btn-primary sample" ng-click="sample.deselectProg()">Deselect Sample</button>
-        <button class="btn btn-primary sample" ng-click="sample.sortByCol()">Sort By Customer</button>
-        <button class="btn btn-primary sample" ng-click="sample.resetCustCol()">Reset Customer Filters</button>
-        <button class="btn btn-primary sample" ng-click="sample.consoleLogFiltered()">Console Log Filtered</button>
-        <button class="btn btn-primary sample" ng-click="sample.toggleRowClasses()">Toggle Row Classes</button>
+    <div class="row" style="padding: 15px;">
+        <div class="btns">
+            <button class="btn btn-primary sample" ng-click="sample.emptyData()"> Empty Data</button>
+            <button class="btn btn-primary sample" ng-click="sample.reloadDataPage()">Reload Data Page</button>
+            <button class="btn btn-primary sample" ng-click="sample.reloadDataVirtual()" ng-disabled="sample.secondSampleActive == false">Reload Data Virtual</button>
+            <button class="btn btn-primary sample" ng-click="sample.secondSample()" ng-disabled="sample.secondSampleActive == true">Reload Data Virtual Sample 2</button>
+            <button class="btn btn-primary sample" ng-click="sample.singleSample()">Single Sample</button>
+            <button class="btn btn-primary sample" ng-click="sample.consoleLogData()">Console Log Data</button>
+            <button class="btn btn-primary sample" ng-click="sample.openManageColumns()">Open Manage Columns</button>
+            <button class="btn btn-primary sample" ng-click="sample.logIDs()">Log Selected</button>
+            <button class="btn btn-primary sample" ng-click="sample.logEditedIDs()">Log Edited</button>
+            <button class="btn btn-primary sample" ng-click="sample.modRows()">Modify Row Data</button>
+            <button class="btn btn-primary sample" ng-click="sample.selectProg()">Select Sample</button>
+            <button class="btn btn-primary sample" ng-click="sample.deselectProg()">Deselect Sample</button>
+            <button class="btn btn-primary sample" ng-click="sample.sortByCol()">Sort By Customer</button>
+            <button class="btn btn-primary sample" ng-click="sample.resetCustCol()">Reset Customer Filters</button>
+            <button class="btn btn-primary sample" ng-click="sample.consoleLogFiltered()">Console Log Filtered</button>
+            <button class="btn btn-primary sample" ng-click="sample.toggleRowClasses()">Toggle Row Classes</button>
+            <button class="btn btn-primary sample" ng-click="sample.changeMLConfig()">Chnage Option 1 Config</button>
+        </div>
     </div>
-    <div class="vxSample container" style="">
-        <vx-grid config="sample.vxSampleConfig" scroll-parent="'.vxSample .vxTableContainer'"></vx-grid>
+    <div class="row" style="padding:15px;">
+        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" ng-repeat="field in sample.fields">
+            <ml-select config="field.config"></ml-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="vxSample container" style="">
+            <vx-grid config="sample.vxSampleConfig" scroll-parent="'.vxSample .vxTableContainer'"></vx-grid>
+        </div>
     </div>
 </body>
 </html>

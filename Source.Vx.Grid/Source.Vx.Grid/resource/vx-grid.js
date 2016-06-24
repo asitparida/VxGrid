@@ -137,6 +137,17 @@
         return s4() + s4() + "_" + s4();
     }
 
+    window.requestAnimFrame = (function () {
+        return window.requestAnimationFrame ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame ||
+          window.oRequestAnimationFrame ||
+          window.msRequestAnimationFrame ||
+          function (/* function */ callback, /* DOMElement */ element) {
+              window.setTimeout(callback, 1000 / 60);
+          };
+    })();
+
     /// <summary>DEPEDENCIES</summary>
     /// <summary module="ngSanitize">TO ENABLE/SANITIZE TEMPLATES</summary>
     /// <summary module="ui.bootstrap">USING ANGULAR BOOTSTRAP MODALS</summary>
@@ -713,7 +724,7 @@
                     $scope.debPep = _.debounce($scope.prepForScrollInsertion, 10);
 
                     /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
-                    $scope.compileAppend = function (rowTmpl, id, flag) {
+                    $scope.compileAppend = function(rowTmpl, id, flag) {
                         _hybridContainer.append(rowTmpl);
                         if (flag) {
                             var _row = angular.element(document.getElementById(id));
@@ -780,7 +791,9 @@
                     $scope.appendRows = function (rows) {
                         angular.forEach(rows, function (row) {
                             var _result = $scope.hybridGetRowTmpl(row);
-                            $scope.compileAppend(_result.rowTmpl, _result.rowId, _result.compile);
+                            requestAnimFrame(function () {
+                                $scope.compileAppend(_result.rowTmpl, _result.rowId, _result.compile);
+                            });
                         });
                     }
 
@@ -1282,6 +1295,8 @@
 
                 /// <summary>GRID FUNCTION : GET COUNT OF NUMBER OF ROWS IN THE GRID EXCEPT THE ROWS USED TO DENOTE GROUP HEADERS</summary>
                 $scope.getAllRowLength = function () {
+                    if ($scope.config.noData)
+                        return 0;
                     if ($scope.vxConfig.hybrid == true)
                         return $scope._origData.length;
                     var len = _.filter($scope.vxConfig.vxData, function (row) {

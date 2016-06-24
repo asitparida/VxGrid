@@ -66,6 +66,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="default2.html" />
+    <Content Include="dist\js\ml-select.directive.js" />
+    <Content Include="dist\min\css\multiselect.css" />
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="dist\min\js\vx.grid.min.js" />
     <Content Include="images\1.PNG" />
@@ -80,6 +83,7 @@
     <Content Include="images\8.PNG" />
     <Content Include="images\9.PNG" />
     <Content Include="lib\ui-bootstrap-tpls-1.1.1.min.js" />
+    <Content Include="ml-select.tmpl.html" />
     <Content Include="packages.config" />
     <Content Include="package.json" />
     <Content Include="resource\angular-vs-repeat.js" />

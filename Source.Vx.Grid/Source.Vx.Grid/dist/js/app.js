@@ -378,4 +378,9 @@
         return _smaple;
     }
 
+    self.changeMLConfig = function () {
+        self.fields[0].selected = {};
+        self.fields[0].config.options = sampleData(200, 150);
+    }
+
 }]);

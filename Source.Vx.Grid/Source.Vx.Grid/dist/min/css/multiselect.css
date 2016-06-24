@@ -499,6 +499,10 @@
         width: 100%;
         left: -1px;
         border-color: #007667;
+        max-height: 50vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
     }
 
         .ml-select ul.dropdown-menu li {

@@ -33,7 +33,7 @@
                 self.options = [];
                 self.selectedOptions = [];
                 self.initialized = false;
-                self.ddShow = false;
+                self.showItems = false;
                 self.headerText = '';
                 self._id = _GUID();
                 self._allSelected = false;
@@ -108,8 +108,8 @@
                     self.processForSelectAll();
                 }
                 self.open = function () {
-                    if (self.ddShow == false)
-                        self.ddShow = true;
+                    if (self.showItems == false)
+                        self.showItems = true;
                 }
                 self.init = function () {
                     self.options = [];
@@ -122,6 +122,7 @@
                         self.options.push(option);
                     });
                     self.checkOptionsAgain();
+                    self.showItems = false;
                     if (self.initialized == false) {
                         $scope.$watch('multiSelectCtrl.config.selectedOptions', function (newvalue, oldvalue) {
                             if ($scope.multiSelectCtrl.initialized)

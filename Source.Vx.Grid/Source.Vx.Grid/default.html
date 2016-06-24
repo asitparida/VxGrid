@@ -103,7 +103,7 @@
     </style>
 </head>
 <body ng-controller="vxSampleController as sample">
-    <div class="container btns">
+    <div class="container btns" ng-if="false">
         <button class="btn btn-primary sample" ng-click="sample.emptyData()"> Empty Data</button>
         <button class="btn btn-primary sample" ng-click="sample.reloadDataPage()">Reload Data Page</button>
         <button class="btn btn-primary sample" ng-click="sample.reloadDataVirtual()" ng-disabled="sample.secondSampleActive == false">Reload Data Virtual</button>
@@ -121,6 +121,7 @@
         <button class="btn btn-primary sample" ng-click="sample.consoleLogFiltered()">Console Log Filtered</button>
         <button class="btn btn-primary sample" ng-click="sample.toggleRowClasses()">Toggle Row Classes</button>
     </div>
+    <p>*Testing hybrid mode : Some features may not work.</p>
     <div class="vxSample container" style="">
         <vx-grid config="sample.vxSampleConfig" scroll-parent="'.vxSample .vxTableContainer'"></vx-grid>
     </div>

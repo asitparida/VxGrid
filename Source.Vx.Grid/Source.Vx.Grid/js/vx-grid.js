@@ -1477,7 +1477,14 @@
                         $scope.clearSelection();
                     }
                     $scope.emitArray = [];
-                    _.each($scope.vxConfig.vxFilteredData, function (row) {
+                    var _set = '';
+                    if ($scope.vxConfig.hybrid != true) {
+                        _set = 'vxFilteredData';
+                    }
+                    else if ($scope.vxConfig.hybrid = true) {
+                        _set = 'vxData';
+                    }
+                    _.each($scope.vxConfig[_set], function (row) {
                         if ($scope.vxColSettings.multiSelColDependent == false || ($scope.vxColSettings.multiSelColDependent == true && row[$scope.vxConfig.multiSelectionDependentCol] == false)) {
                             $scope.vxColSettings.rowSelected[row[$scope.vxColSettings.primaryId]] = true;
                             var pid = row[$scope.vxColSettings.primaryId];

@@ -101,9 +101,9 @@
         }
 
     </style>
-</head>
+</head>\
 <body ng-controller="vxSampleController as sample">
-    <div class="container btns" ng-if="false">
+    <div class="container btns" ng-if="true">
         <button class="btn btn-primary sample" ng-click="sample.emptyData()"> Empty Data</button>
         <button class="btn btn-primary sample" ng-click="sample.reloadDataPage()">Reload Data Page</button>
         <button class="btn btn-primary sample" ng-click="sample.reloadDataVirtual()" ng-disabled="sample.secondSampleActive == false">Reload Data Virtual</button>
@@ -120,6 +120,7 @@
         <button class="btn btn-primary sample" ng-click="sample.resetCustCol()">Reset Customer Filters</button>
         <button class="btn btn-primary sample" ng-click="sample.consoleLogFiltered()">Console Log Filtered</button>
         <button class="btn btn-primary sample" ng-click="sample.toggleRowClasses()">Toggle Row Classes</button>
+        <button class="btn btn-primary sample" ng-click="sample.deleteRows()">Sampel Delete Hybrid Rows</button>
     </div>
     <p>*Testing hybrid mode : Some features may not work.</p>
     <div class="vxSample container" style="">

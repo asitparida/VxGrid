@@ -819,7 +819,11 @@
                         angular.forEach(rowIds, function (id) {
                             var rowElement = angular.element(document.getElementById(id));
                             rowElement.remove();
+                            $scope.vxColSettings.inlineEditState[id] = false;
+                            $scope.vxColSettings.rowSelected[id] = false;
+                            $scope.vxColSettings.saveInProgress[id] = false;
                         });
+                        $scope.vxColSettings.multiSelected = _.difference($scope.vxColSettings.multiSelected, rowIds);
                     });
                     
                 }

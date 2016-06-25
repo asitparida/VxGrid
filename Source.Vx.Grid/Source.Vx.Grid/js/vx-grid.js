@@ -692,19 +692,15 @@
                     $scope.prepHybrid = function () {
                         _hybridContainer = angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id));
                         _scrollContainer = angular.element(document.getElementById('_vxScrollContainer' + $scope.vxConfig.id));
-                        if (!_hybridContainer || !_scrollContainer)
-                            return;
                         _hybridContainer.empty();
-                        if (_scrollContainer) {
-                            var _height = _scrollContainer.height();
-                            var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
-                            var _rows = _.first($scope.vxConfig.vxData, _initRowCount);
-                            $scope.appendRows(_rows);
-                            _lastIndexCount = _lastIndexCount + _initRowCount;
-                            _scrollContainer.on('scroll', function () {
-                                $scope.debPep();
-                            });
-                        }
+                        var _height = _scrollContainer.height();
+                        var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
+                        var _rows = _.first($scope.vxConfig.vxData, _initRowCount);
+                        $scope.appendRows(_rows);
+                        _lastIndexCount = _lastIndexCount + _initRowCount;
+                        _scrollContainer.on('scroll', function () {
+                            $scope.debPep();
+                        });
 
                     }
 
@@ -803,9 +799,7 @@
                     $scope.appendRows = function (rows) {
                         angular.forEach(rows, function (row) {
                             var _result = $scope.hybridGetRowTmpl(row);
-                            requestAnimFrame(function () {
-                                $scope.compileAppend(_result.rowTmpl, _result.rowId, _result.compile);
-                            });
+                            $scope.compileAppend(_result.rowTmpl, _result.rowId, _result.compile);
                         });
                     }
 
@@ -818,6 +812,16 @@
                         console.log(8, end.getTime() - start.getTime());
                         $timeout($scope.prepHybrid, 100);
                     }
+                }
+
+                $scope.config.hybridDeleteRows = function (rowIds) {
+                    window.requestAnimFrame(function () {
+                        angular.forEach(rowIds, function (id) {
+                            var rowElement = angular.element(document.getElementById(id));
+                            rowElement.remove();
+                        });
+                    });
+                    
                 }
 
                 /// <summary>GRID FUNCTION : START THE PROCEDURE TO EDIT AN ROW</summary>

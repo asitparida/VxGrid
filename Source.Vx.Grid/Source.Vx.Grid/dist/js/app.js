@@ -315,6 +315,12 @@
         self.vxSampleConfig.data = self.sampling(20, 'Coho Vineyard 333');
     }
 
+    self.deleteRows = function () {
+        var _ids = [];
+        _ids.push(self._origCopy[1].laborId);
+        self.vxSampleConfig.hybridDeleteRows(_ids);
+    }
+
     self.consoleLogData = function () {
         console.log(self.vxSampleConfig.getData());
         console.log(self.vxSampleConfig.getActiveDataSet());

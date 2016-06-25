@@ -369,6 +369,7 @@
                             { prop: 'headTabIndex', defValue: 0 },
                             { prop: 'columnIsRowSelect', defValue: false },
                             { prop: 'columnIsDate', defValue: false },
+                            { prop: 'columnDatePipe', defValue: 'dd/MM/yyyy' },
                             { prop: 'renderHybridCellDefn', defValue: false }
                         ];
                         _.each(_propDefns, function (propDefn) {
@@ -691,44 +692,52 @@
                     $scope.prepHybrid = function () {
                         _hybridContainer = angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id));
                         _scrollContainer = angular.element(document.getElementById('_vxScrollContainer' + $scope.vxConfig.id));
-                        _hybridContainer.empty();
-                        var _height = _scrollContainer.height();
-                        var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
-                        var _rows = _.first($scope.vxConfig.vxData, _initRowCount);
-                        $scope.appendRows(_rows);
-                        _lastIndexCount = _lastIndexCount + _initRowCount;
-                        _scrollContainer.on('scroll', function () {
-                            $scope.debPep();
-                        });
+                        if (_hybridContainer)
+                            _hybridContainer.empty();
+                        if (_scrollContainer) {
+                            var _height = _scrollContainer.height();
+                            var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
+                            var _rows = _.first($scope.vxConfig.vxData, _initRowCount);
+                            $scope.appendRows(_rows);
+                            _lastIndexCount = _lastIndexCount + _initRowCount;
+                            _scrollContainer.on('scroll', function () {
+                                $scope.debPep();
+                            });
+                        }
+
                     }
 
                     /// <summary>GRID FUNCTION : PREPEARE AND INSERT ROWS WHEN SCROLL DOWN WHEN IN HYBRID MODE</summary>
                     $scope.prepForScrollInsertion = function () {
-                        var diff = _hybridContainer.height() - (_scrollContainer.height() + _scrollContainer.scrollTop());
-                        if (_scrollContainer.scrollTop() > _lastScrollTop) {
-                            if (diff < 0)
-                                diff = 0;
-                            if (diff < _rowHeight && _lastIndexCount < $scope.vxConfig.vxData.length) {
-                                var _initRowCount = _excess;
-                                var _restRows = _.rest($scope.vxConfig.vxData, _lastIndexCount);
-                                var _rows = _.first(_restRows, _initRowCount);
-                                _lastIndexCount = _lastIndexCount + _initRowCount;
-                                $scope.appendRows(_rows);
-                                _scrollContainer.scrollTo(0, _scrollContainer.scrollTop() - 48);
+                        if (_scrollContainer && _hybridContainer) {
+                            var diff = _hybridContainer.height() - (_scrollContainer.height() + _scrollContainer.scrollTop());
+                            if (_scrollContainer.scrollTop() > _lastScrollTop) {
+                                if (diff < 0)
+                                    diff = 0;
+                                if (diff < _rowHeight && _lastIndexCount < $scope.vxConfig.vxData.length) {
+                                    var _initRowCount = _excess;
+                                    var _restRows = _.rest($scope.vxConfig.vxData, _lastIndexCount);
+                                    var _rows = _.first(_restRows, _initRowCount);
+                                    _lastIndexCount = _lastIndexCount + _initRowCount;
+                                    $scope.appendRows(_rows);
+                                    _scrollContainer.scrollTo(0, _scrollContainer.scrollTop() - 48);
+                                }
                             }
+                            _lastScrollTop = _scrollContainer.scrollTop();
                         }
-                        _lastScrollTop = _scrollContainer.scrollTop();
                     }
 
                     /// <summary>GRID FUNCTION : DEBOUNCED VERSION FOR THE PREPFORSCROLLINDERSTION</summary>
                     $scope.debPep = _.debounce($scope.prepForScrollInsertion, 10);
 
                     /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
-                    $scope.compileAppend = function(rowTmpl, id, flag) {
-                        _hybridContainer.append(rowTmpl);
-                        if (flag) {
-                            var _row = angular.element(document.getElementById(id));
-                            $compile(_row.contents())($scope);
+                    $scope.compileAppend = function (rowTmpl, id, flag) {
+                        if (_hybridContainer) {
+                            _hybridContainer.append(rowTmpl);
+                            if (flag) {
+                                var _row = angular.element(document.getElementById(id));
+                                $compile(_row.contents())($scope);
+                            }
                         }
                     }
 
@@ -746,6 +755,7 @@
                             angular.forEach($scope.vxConfig.columnDefConfigs, function (col) {
                                 var _cellTmpl = '';
                                 var _cellHolder = cellHolderTmpl;
+                                var _cellClass = '';
                                 if (col.hidden != true) {
                                     if (col.renderHybridCellDefn != true && col.columnIsRowSelect != true && col.columnIsDate != true) {
                                         var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : '';
@@ -760,15 +770,16 @@
                                     }
                                     else if (col.renderHybridCellDefn != true && col.columnIsRowSelect == true) {
                                         var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
-                                        var _rowSelectData = $scope.vxColSettings.rowSelected[rowId];
+                                        var _rowSelectData = $scope.vxColSettings.rowSelected[rowId] || false;
                                         _cellTmpl = cellTmplRowSelect;
                                         _cellTmpl = _cellTmpl.replaceAll('VX_ROW_ID', rowId);
                                         _cellTmpl = _cellTmpl.replace('VX_ROW_SEL_VAL', _rowSelectData);
                                         _compile = _compile || true;
                                     }
-                                    else if (col.renderHybridCellDefn == true) {
+                                    else if (col.renderHybridCellDefn == true && typeof $scope.vxConfig.hybridCellDefn === 'function') {
                                         _cellTmpl = $scope.vxConfig.hybridCellDefn(row, col) || '';
                                     }
+                                    _cellHolder = _cellHolder.replace('VX_TD_CLASS', _cellClass);
                                     _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
                                     allCells = allCells + _cellHolder;
                                 }
@@ -780,7 +791,11 @@
                             emptyRowTempl = emptyRowTempl.replace('VX_EMPTYFILL', $scope.vxConfig.emptyFill);
                             allCells = emptyRowTempl;
                         }
-                        _classes = _classes + $scope.vxConfig.rowClassFn(row) + ' ' + $scope.vxColSettings.vxRowClass[rowId];
+                        if (typeof $scope.vxConfig.hybridCellDefn === 'function') {
+                            _classes = _classes + $scope.vxConfig.rowClassFn(row);
+                        }
+                        _classes = _classes + ' ' + (typeof $scope.vxColSettings.vxRowClass[rowId] !== 'undefined' ? $scope.vxColSettings.vxRowClass[rowId] : '');
+                        _classes = _classes.trim();
                         rowTmpl = rowTmpl.replace('VX_ROW_CLASSES', _classes);
                         rowTmpl = rowTmpl.replace('VX_ROW_ID', rowId);
                         rowTmpl = rowTmpl.replaceAll('VX_ALL_CELLS', allCells);

@@ -692,8 +692,9 @@
                     $scope.prepHybrid = function () {
                         _hybridContainer = angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id));
                         _scrollContainer = angular.element(document.getElementById('_vxScrollContainer' + $scope.vxConfig.id));
-                        if (_hybridContainer)
-                            _hybridContainer.empty();
+                        if (!_hybridContainer || !_scrollContainer)
+                            return;
+                        _hybridContainer.empty();
                         if (_scrollContainer) {
                             var _height = _scrollContainer.height();
                             var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
@@ -709,22 +710,20 @@
 
                     /// <summary>GRID FUNCTION : PREPEARE AND INSERT ROWS WHEN SCROLL DOWN WHEN IN HYBRID MODE</summary>
                     $scope.prepForScrollInsertion = function () {
-                        if (_scrollContainer && _hybridContainer) {
-                            var diff = _hybridContainer.height() - (_scrollContainer.height() + _scrollContainer.scrollTop());
-                            if (_scrollContainer.scrollTop() > _lastScrollTop) {
-                                if (diff < 0)
-                                    diff = 0;
-                                if (diff < _rowHeight && _lastIndexCount < $scope.vxConfig.vxData.length) {
-                                    var _initRowCount = _excess;
-                                    var _restRows = _.rest($scope.vxConfig.vxData, _lastIndexCount);
-                                    var _rows = _.first(_restRows, _initRowCount);
-                                    _lastIndexCount = _lastIndexCount + _initRowCount;
-                                    $scope.appendRows(_rows);
-                                    _scrollContainer.scrollTo(0, _scrollContainer.scrollTop() - 48);
-                                }
+                        var diff = _hybridContainer.height() - (_scrollContainer.height() + _scrollContainer.scrollTop());
+                        if (_scrollContainer.scrollTop() > _lastScrollTop) {
+                            if (diff < 0)
+                                diff = 0;
+                            if (diff < _rowHeight && _lastIndexCount < $scope.vxConfig.vxData.length) {
+                                var _initRowCount = _excess;
+                                var _restRows = _.rest($scope.vxConfig.vxData, _lastIndexCount);
+                                var _rows = _.first(_restRows, _initRowCount);
+                                _lastIndexCount = _lastIndexCount + _initRowCount;
+                                $scope.appendRows(_rows);
+                                _scrollContainer.scrollTo(0, _scrollContainer.scrollTop() - 48);
                             }
-                            _lastScrollTop = _scrollContainer.scrollTop();
                         }
+                        _lastScrollTop = _scrollContainer.scrollTop();
                     }
 
                     /// <summary>GRID FUNCTION : DEBOUNCED VERSION FOR THE PREPFORSCROLLINDERSTION</summary>
@@ -732,12 +731,10 @@
 
                     /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
                     $scope.compileAppend = function (rowTmpl, id, flag) {
-                        if (_hybridContainer) {
-                            _hybridContainer.append(rowTmpl);
-                            if (flag) {
-                                var _row = angular.element(document.getElementById(id));
-                                $compile(_row.contents())($scope);
-                            }
+                        _hybridContainer.append(rowTmpl);
+                        if (flag) {
+                            var _row = angular.element(document.getElementById(id));
+                            $compile(_row.contents())($scope);
                         }
                     }
 

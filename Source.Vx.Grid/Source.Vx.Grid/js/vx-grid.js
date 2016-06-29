@@ -827,7 +827,7 @@
                         });
                         $scope.vxColSettings.multiSelected = _.difference($scope.vxColSettings.multiSelected, rowIds);
                     });
-                    
+
                 }
 
                 /// <summary>GRID FUNCTION : START THE PROCEDURE TO EDIT AN ROW</summary>
@@ -2013,10 +2013,11 @@
                 $scope.$watchCollection('config.data', function (n) {
                     var dt = new Date();
                     console.log('before start', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
-                    if (n.length == 0) {
+                    if (typeof n !== 'undefined' && n.length == 0) {
                         n = [{ 'fillEmptyElement': true }];
                         $scope.config.noData = true;
-                        angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id)).empty();
+                        if ($scope.config.hybrid == true)
+                            angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id)).empty();
                     }
                     else
                         $scope.config.noData = false;

@@ -736,7 +736,7 @@
                     }
 
                     $scope.hybridGetRowTmpl = function (row) {
-                        var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow VX_ROW_CLASSES ">VX_ALL_CELLS</tr>';
+                        var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow vs-repeat-repeated-element VX_ROW_CLASSES ">VX_ALL_CELLS</tr>';
                         var cellHolderTmpl = '<td class="vxBodyRowCell VX_TD_CLASS">VX_CELL_CONTENT</td>';
                         var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
                         var cellTmplContent = '<span title="VX_CELL_TMPL">VX_CELL_TMPL</span>';

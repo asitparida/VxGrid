@@ -1882,16 +1882,24 @@
                     var element = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
                     $timeout(function () {
                         $(element).animate({ scrollTop: 0 }, 500);
-                    }, 100);
+                    }, 10);
                 }
 
                 /// <summary>GRID FUNCTION : SCROLL DOWN 60PX IN THE GRID</summary>
                 $scope.justScrollDown = function () {
                     var element = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
                     var _scrollTop = $(element).scrollTop() || 0;
-                    $timeout(function () {
-                        $(element).animate({ scrollTop: _scrollTop + 96 }, 500);
-                    }, 100);
+                    if ($scope.vxConfig.hybrid == false) {
+                        $timeout(function () {
+                            $(element).animate({ scrollTop: _scrollTop + 96 }, 33);
+                        }, 10);
+                    }
+                    else if ($scope.vxConfig.hybrid == true) {
+                        $scope.prepForScrollInsertion();
+                        $timeout(function () {
+                            $(element).animate({ scrollTop: _scrollTop + 100 }, 300);
+                        }, 10);
+                    }
                 }
 
                 /// <summary>GRID FUNCTION : SHOW SCROLL DOWN ARROW ICON WHEN CONDITION SATISFIED - SCROLL NEEDED</summary>

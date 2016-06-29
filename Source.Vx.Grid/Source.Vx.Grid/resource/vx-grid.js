@@ -370,7 +370,8 @@
                             { prop: 'columnIsRowSelect', defValue: false },
                             { prop: 'columnIsDate', defValue: false },
                             { prop: 'columnDatePipe', defValue: 'dd/MM/yyyy' },
-                            { prop: 'renderHybridCellDefn', defValue: false }
+                            { prop: 'renderHybridCellDefn', defValue: false },
+                            { prop: 'hybridCompile', defValue: false }
                         ];
                         _.each(_propDefns, function (propDefn) {
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
@@ -771,6 +772,7 @@
                                     }
                                     else if (col.renderHybridCellDefn == true && typeof $scope.vxConfig.hybridCellDefn === 'function') {
                                         _cellTmpl = $scope.vxConfig.hybridCellDefn(row, col) || '';
+                                        _compile = _compile || col.hybridCompile;
                                     }
                                     _cellHolder = _cellHolder.replace('VX_TD_CLASS', _cellClass);
                                     _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
@@ -1087,6 +1089,11 @@
                         $scope.vxColSettings.filterSearchToken[id] = '';
                     else
                         $scope.debFiltTokenChange(id);
+                }
+
+                $scope.filterKeyDown = function ($event, id) {
+                    console.log(id);
+                    console.log($event.keyCode);
                 }
 
                 /// <summary>GRID FUNCTION : CHECK IF HEADER NAME IS VALID</summary>

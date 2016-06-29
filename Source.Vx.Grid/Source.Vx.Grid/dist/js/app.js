@@ -87,8 +87,10 @@
                 rec.dt10 = rec.dt;
                 rec.engagement = _.sample([customer, 'Fist Up Consultants']),
                 rec.assignment = record.transferFromAssignment,
-                rec.users = ['asparida', 'prasadne', 'ruprawat', 'asparida1', 'prasadne1', 'ruprawat1', 'asparida2', 'prasadne2', 'ruprawat2'];
+                rec.users = ['asparida', 'prasadne', 'ruprawat'];
                 rec.userAlias = _.sample(rec.users);
+                rec.userAlias = rec.userAlias + (i % 20);
+                //console.log(rec.userAlias);
                 rec.mid = i + j;
                 rec.locked = _.sample([true, false]);
                 self.sampleRowClasses[rec.laborId] = rec.locked == true ? 'row-even' : 'row-odd';
@@ -119,7 +121,7 @@
         inlineDeleteOverrideEnabled: false,
         showGridStats: false,
         showGridOptions: true,
-        data: self.sampling(1500, 'Coho Vineyard 1111'),
+        data: self.sampling(200, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
         bindOnce: false,
@@ -173,13 +175,13 @@
             { id: 'customer', columnName: 'Customer', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, inlineEditOnColumnEnabled: true, hidden: false, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: true, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, hidden: false, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'assignment', columnName: 'Assignment', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false },
-            { id: 'category', columnName: 'Category', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span>{{VX_DATA_POINT.name}}</span>", cellDefn: '<span>{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" ng-options="item.name for item in row.categories" ng-model="row[\'category\']"></select>', inlineEditOnColumnEnabled: true, renderHybridCellDefn: true },
-            { id: 'userAlias', columnName: 'User', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false, cellDefn: '<select class="selectStyleSampleA" ng-model="row.userAlias" ng-options="user for user in row.users"><option value="">Select an option </option> </select>', ddFiltersWithSearch: true },
+            { id: 'category', columnName: 'Category', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span>{{VX_DATA_POINT.name}}</span>", cellDefn: '<span>{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" ng-options="item.name for item in row.categories" ng-model="row[\'category\']"></select>', inlineEditOnColumnEnabled: true, renderHybridCellDefn: true, hybridCompile: true },
+            { id: 'userAlias', columnName: 'User', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, hidden: false, cellDefn: '<select class="selectStyleSampleA" ng-model="row.userAlias" ng-options="user for user in row.users"><option value="">Select an option </option> </select>', ddFiltersWithSearch: true },
             { id: 'labor', columnName: 'Labor', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
             { id: 'timezone', columnName: 'Timezone', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
             { id: 'status', columnName: 'Status', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
             { id: 'mid', columnName: 'MID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false },
-            { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, primary: true, hidden: false, widthLocked: true, orderLocked: false, visbilityLocked: true }
+            { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, dropDownEnabled: false, ddGroup: false, ddFilters: true, ddFiltersWithSearch: true, primary: true, hidden: false, widthLocked: true, orderLocked: false, visbilityLocked: true }
         ]
     };
     self.secondSampleActive = false;
@@ -192,7 +194,7 @@
     }
 
     function hybridCellDefn(row, col) {
-        var tmpl = '<span>VX_DATA_POINT</span>';
+        var tmpl = '<span ng-attr-sam="{{vxConfig.hybrid}}">VX_DATA_POINT</span>';
         if (col.id == 'category')
             tmpl = tmpl.replace('VX_DATA_POINT', row[col.id].name || '');
         if (col.id == 'link') {

@@ -370,7 +370,8 @@
                             { prop: 'columnIsRowSelect', defValue: false },
                             { prop: 'columnIsDate', defValue: false },
                             { prop: 'columnDatePipe', defValue: 'dd/MM/yyyy' },
-                            { prop: 'renderHybridCellDefn', defValue: false }
+                            { prop: 'renderHybridCellDefn', defValue: false },
+                            { prop: 'hybridCompile', defValue: false }
                         ];
                         _.each(_propDefns, function (propDefn) {
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
@@ -735,8 +736,8 @@
                     }
 
                     $scope.hybridGetRowTmpl = function (row) {
-                        var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow VX_ROW_CLASSES ">VX_ALL_CELLS</tr>';
-                        var cellHolderTmpl = '<td class="VX_TD_CLASS">VX_CELL_CONTENT</td>';
+                        var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow vs-repeat-repeated-element VX_ROW_CLASSES ">VX_ALL_CELLS</tr>';
+                        var cellHolderTmpl = '<td class="vxBodyRowCell VX_TD_CLASS">VX_CELL_CONTENT</td>';
                         var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
                         var cellTmplContent = '<span title="VX_CELL_TMPL">VX_CELL_TMPL</span>';
                         var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" ng-model="vxColSettings.rowSelected[\'VX_ROW_ID\']" ng-change="rowSelectionChanged(\'VX_ROW_ID\')" ng-disabled="vxColSettings.vxRowSelectionDisable[\'VX_ROW_ID\']" type="checkbox" id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /></div>';
@@ -771,6 +772,7 @@
                                     }
                                     else if (col.renderHybridCellDefn == true && typeof $scope.vxConfig.hybridCellDefn === 'function') {
                                         _cellTmpl = $scope.vxConfig.hybridCellDefn(row, col) || '';
+                                        _compile = _compile || col.hybridCompile;
                                     }
                                     _cellHolder = _cellHolder.replace('VX_TD_CLASS', _cellClass);
                                     _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
@@ -825,7 +827,7 @@
                         });
                         $scope.vxColSettings.multiSelected = _.difference($scope.vxColSettings.multiSelected, rowIds);
                     });
-                    
+
                 }
 
                 /// <summary>GRID FUNCTION : START THE PROCEDURE TO EDIT AN ROW</summary>
@@ -1087,6 +1089,11 @@
                         $scope.vxColSettings.filterSearchToken[id] = '';
                     else
                         $scope.debFiltTokenChange(id);
+                }
+
+                $scope.filterKeyDown = function ($event, id) {
+                    console.log(id);
+                    console.log($event.keyCode);
                 }
 
                 /// <summary>GRID FUNCTION : CHECK IF HEADER NAME IS VALID</summary>
@@ -1875,16 +1882,24 @@
                     var element = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
                     $timeout(function () {
                         $(element).animate({ scrollTop: 0 }, 500);
-                    }, 100);
+                    }, 10);
                 }
 
                 /// <summary>GRID FUNCTION : SCROLL DOWN 60PX IN THE GRID</summary>
                 $scope.justScrollDown = function () {
                     var element = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
                     var _scrollTop = $(element).scrollTop() || 0;
-                    $timeout(function () {
-                        $(element).animate({ scrollTop: _scrollTop + 96 }, 500);
-                    }, 100);
+                    if ($scope.vxConfig.hybrid == false) {
+                        $timeout(function () {
+                            $(element).animate({ scrollTop: _scrollTop + 96 }, 33);
+                        }, 10);
+                    }
+                    else if ($scope.vxConfig.hybrid == true) {
+                        $scope.prepForScrollInsertion();
+                        $timeout(function () {
+                            $(element).animate({ scrollTop: _scrollTop + 100 }, 300);
+                        }, 10);
+                    }
                 }
 
                 /// <summary>GRID FUNCTION : SHOW SCROLL DOWN ARROW ICON WHEN CONDITION SATISFIED - SCROLL NEEDED</summary>
@@ -2006,10 +2021,11 @@
                 $scope.$watchCollection('config.data', function (n) {
                     var dt = new Date();
                     console.log('before start', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
-                    if (n.length == 0) {
+                    if (typeof n !== 'undefined' && n.length == 0) {
                         n = [{ 'fillEmptyElement': true }];
                         $scope.config.noData = true;
-                        angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id)).empty();
+                        if ($scope.config.hybrid == true)
+                            angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id)).empty();
                     }
                     else
                         $scope.config.noData = false;

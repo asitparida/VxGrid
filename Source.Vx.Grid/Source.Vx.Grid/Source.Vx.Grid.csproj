@@ -82,6 +82,7 @@
     <Content Include="images\7.PNG" />
     <Content Include="images\8.PNG" />
     <Content Include="images\9.PNG" />
+    <Content Include="lib\angular-fng.min.js" />
     <Content Include="lib\ui-bootstrap-tpls-1.1.1.min.js" />
     <Content Include="ml-select.tmpl.html" />
     <Content Include="packages.config" />

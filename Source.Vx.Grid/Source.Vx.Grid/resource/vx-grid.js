@@ -2024,7 +2024,7 @@
                     if (typeof n !== 'undefined' && n.length == 0) {
                         n = [{ 'fillEmptyElement': true }];
                         $scope.config.noData = true;
-                        if ($scope.config.hybrid == true)
+                        if ($scope.config.hybrid == true && typeof $scope.vxConfig !== 'undefined')
                             angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id)).empty();
                     }
                     else

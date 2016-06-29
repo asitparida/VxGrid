@@ -737,7 +737,7 @@
 
                     $scope.hybridGetRowTmpl = function (row) {
                         var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow VX_ROW_CLASSES ">VX_ALL_CELLS</tr>';
-                        var cellHolderTmpl = '<td class="VX_TD_CLASS">VX_CELL_CONTENT</td>';
+                        var cellHolderTmpl = '<td class="vxBodyRowCell VX_TD_CLASS">VX_CELL_CONTENT</td>';
                         var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
                         var cellTmplContent = '<span title="VX_CELL_TMPL">VX_CELL_TMPL</span>';
                         var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" ng-model="vxColSettings.rowSelected[\'VX_ROW_ID\']" ng-change="rowSelectionChanged(\'VX_ROW_ID\')" ng-disabled="vxColSettings.vxRowSelectionDisable[\'VX_ROW_ID\']" type="checkbox" id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /></div>';

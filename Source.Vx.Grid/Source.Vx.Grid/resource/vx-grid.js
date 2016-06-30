@@ -1091,6 +1091,12 @@
                         $scope.debFiltTokenChange(id);
                 }
 
+                $scope.filterAssignVar = function (id) {
+                    var _input = angular.element(document.getElementById(id + '_searchfilters'));
+                    if (typeof _input !== 'undefined' && _input.length > 0)
+                        $scope.vxColSettings.filterSearchToken[id] = _input[0].value;
+                }
+
                 $scope.filterKeyDown = function ($event, id) {
                     console.log(id);
                     console.log($event.keyCode);
@@ -1173,7 +1179,7 @@
                                                 if (typeof ret.value !== 'undefined' && ret.value != null && ret.value != {} && typeof ret.value != 'object' && typeof ret.value != 'number' && typeof ret.value != 'boolean') {
                                                     ret.value = ret.value.trim();
                                                 }
-                                                else if (typeof ret.value == 'boolean') { 
+                                                else if (typeof ret.value == 'boolean') {
                                                     ret.value = ret.value.toString().trim();
                                                 }
                                                 else if (Object.prototype.toString.call(ret.value) === '[object Date]') {

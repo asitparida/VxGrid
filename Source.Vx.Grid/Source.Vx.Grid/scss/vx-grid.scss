@@ -1117,10 +1117,12 @@
                         padding: 0 10px;
                         font-style: italic;
                         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                        width: 100%;
+                        width: calc(100% - 38px);
                         color: rgba(255,255,255,0.80);
                         background: none;
                         border: 1px solid rgba(255,255,255, 0.60);
+                        will-change:auto;
+                        transform:translateZ(0);
 
                         &:focus,
                         &:active {
@@ -1142,6 +1144,19 @@
 
                         &:-moz-placeholder { /* Firefox 18- */
                             color: rgba(255,255,255,0.80);
+                        }
+                    }
+
+                    .icon-container{
+                        &.filter-activator{
+                            width:36px;
+                            height:36px;
+                            line-height:36px;
+                            display:inline-block;
+                            margin:0;
+                            color:#fff;
+                            border: 1px solid rgba(255,255,255, 0.60);
+                            float:right;
                         }
                     }
                 }

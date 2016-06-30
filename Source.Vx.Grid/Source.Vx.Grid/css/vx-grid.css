@@ -765,10 +765,12 @@
   padding: 0 10px;
   font-style: italic;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  width: 100%;
+  width: calc(100% - 38px);
   color: rgba(255, 255, 255, 0.8);
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.6); }
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  will-change: auto;
+  transform: translateZ(0); }
   .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input[type="search"]:focus, .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input[type="search"]:active {
     font-style: normal;
     color: white; }
@@ -784,6 +786,16 @@
   .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search input[type="search"]:-moz-placeholder {
     /* Firefox 18- */
     color: rgba(255, 255, 255, 0.8); }
+
+.vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filter-search .icon-container.filter-activator {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  display: inline-block;
+  margin: 0;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  float: right; }
 
 .vx-grid-related .vxTable .vxHead ul.dropdown-menu li.filterClear.disabled {
   opacity: 0.60;

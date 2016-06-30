@@ -1170,8 +1170,11 @@
                                             $scope.vxColSettings.colFilterPairs[_colDefn.id] = [];
                                             var uniqed = _.uniq(_.map($scope.vxConfig.vxData, function (item) {
                                                 var ret = { 'value': item[_colDefn.id], 'type': '' };
-                                                if (typeof ret.value !== 'undefined' && ret.value != null && ret.value != {} && typeof ret.value != 'object' && typeof ret.value != 'number') {
+                                                if (typeof ret.value !== 'undefined' && ret.value != null && ret.value != {} && typeof ret.value != 'object' && typeof ret.value != 'number' && typeof ret.value != 'boolean') {
                                                     ret.value = ret.value.trim();
+                                                }
+                                                else if (typeof ret.value == 'boolean') { 
+                                                    ret.value = ret.value.toString().trim();
                                                 }
                                                 else if (Object.prototype.toString.call(ret.value) === '[object Date]') {
                                                     ret.value = ret.value.getTime();

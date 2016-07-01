@@ -125,7 +125,7 @@
         jsonEditorEnabled: false,
         vxFilteredData: [],
         bindOnce: false,
-        hybrid: true,
+        hybrid: false,
         //initialRowClasses: self.sampleRowClasses,
         rowClassFn: randomRowFunction,
         hybridCellDefn: hybridCellDefn,

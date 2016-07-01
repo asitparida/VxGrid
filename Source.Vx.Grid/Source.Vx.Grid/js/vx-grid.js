@@ -1092,7 +1092,7 @@
                 }
 
                 $scope.filterAssignVar = function (id) {
-                    var _input = angular.element(document.getElementById(id + '_searchfilters'));
+                    var _input = angular.element(document.getElementById(id + '_searchfilters_' + $scope.vxConfig.id));
                     if (typeof _input !== 'undefined' && _input.length > 0)
                         $scope.vxColSettings.filterSearchToken[id] = _input[0].value;
                 }
@@ -1169,7 +1169,7 @@
                                     /* FILTER OPERATION */
                                     if (_colDefn.ddFilters == true) {
                                         _colDefn.idCollection.push(_colDefn.id + '_clearfilters');
-                                        _colDefn.idCollection.push(_colDefn.id + '_searchfilters');
+                                        _colDefn.idCollection.push(_colDefn.id + '_searchfilters_' + $scope.vxConfig.id);
                                         /*  POPULATE LIST OF FILTERS*/
                                         if (filterListForColAvailable == false) {
                                             $scope.vxColSettings.dropDownFilters[_colDefn.id] = true;
@@ -1489,6 +1489,13 @@
                         }
                         $scope.multiBoxFilters = _.reject($scope.multiBoxFilters, function (mbFilter) { return mbFilter.col.localeCompare(header.id) == 0 });
                         $scope.vxColSettings.colFiltersActivated[header.id] = false;
+                        $scope.vxColSettings.filterSearchToken[header.id] = '';
+                    }
+                    if ($scope.vxColSettings.filterSearchToken[header.id] != '') {
+                        $scope.vxColSettings.filterSearchToken[header.id] = '';
+                        var _input = angular.element(document.getElementById(header.id + '_searchfilters_' + $scope.vxConfig.id));
+                        if (typeof _input !== 'undefined' && _input.length > 0)
+                            _input[0].value = '';
                     }
                     /// <summary>HYBRID MODE SUPPORT</summary>
                     if ($scope.vxConfig.hybrid == true) {

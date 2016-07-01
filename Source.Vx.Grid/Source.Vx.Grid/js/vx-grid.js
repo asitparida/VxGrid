@@ -668,6 +668,20 @@
                     var _lastScrollDown = false;
                     var _lastScrollTop = 0;
 
+                    $scope.config.hybridDeleteRows = function (rowIds) {
+                        window.requestAnimFrame(function () {
+                            angular.forEach(rowIds, function (id) {
+                                var rowElement = angular.element(document.getElementById(id));
+                                rowElement.remove();
+                                $scope.vxColSettings.inlineEditState[id] = false;
+                                $scope.vxColSettings.rowSelected[id] = false;
+                                $scope.vxColSettings.saveInProgress[id] = false;
+                            });
+                            $scope.vxColSettings.multiSelected = _.difference($scope.vxColSettings.multiSelected, rowIds);
+                        });
+
+                    }
+
                     /// <summary>GRID FUNCTION : UPDATE ROWS</summary>
                     $scope.hybridUpdateRows = function (rows) {
                         angular.forEach(rows, function (row) {
@@ -814,20 +828,6 @@
                         console.log(8, end.getTime() - start.getTime());
                         $timeout($scope.prepHybrid, 100);
                     }
-                }
-
-                $scope.config.hybridDeleteRows = function (rowIds) {
-                    window.requestAnimFrame(function () {
-                        angular.forEach(rowIds, function (id) {
-                            var rowElement = angular.element(document.getElementById(id));
-                            rowElement.remove();
-                            $scope.vxColSettings.inlineEditState[id] = false;
-                            $scope.vxColSettings.rowSelected[id] = false;
-                            $scope.vxColSettings.saveInProgress[id] = false;
-                        });
-                        $scope.vxColSettings.multiSelected = _.difference($scope.vxColSettings.multiSelected, rowIds);
-                    });
-
                 }
 
                 /// <summary>GRID FUNCTION : START THE PROCEDURE TO EDIT AN ROW</summary>

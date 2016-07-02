@@ -161,7 +161,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxColSettings.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.hybrid == false && vxConfig.bindOnce == false && vxConfig.virtualization == true">
+                                <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxConfig.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.hybrid == false && vxConfig.bindOnce == false && vxConfig.virtualization == true">
                                     <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
                                         ng-attr-id="{{row[vxColSettings.primaryId]}}"
                                         class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"
@@ -180,7 +180,7 @@
                                         ng-include="'template/vx-grid/vx-grid-row-tmpl.html'"></tr>
                                 </tbody>
                                 <!-- vxConfig.bindOnce == true -->
-                                <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxColSettings.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.hybrid == false && vxConfig.bindOnce == true && vxConfig.virtualization == true">
+                                <tbody class="vxBody" vs-repeat vs-options="{latch: true}" vs-scroll-parent="{{scrollParent}}" vs-excess="{{vxConfig.latchExcess}}" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.hybrid == false && vxConfig.bindOnce == true && vxConfig.virtualization == true">
                                     <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
                                         ng-attr-id="{{::row[vxColSettings.primaryId]}}"
                                         class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"

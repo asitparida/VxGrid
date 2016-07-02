@@ -209,7 +209,6 @@
                         'xsRowTitleTemplateAvailable': false, // STORES WHETHER THE ROW TITLE TEMPLATE IS AVAILABLE FOR XS VIEW
                         'xsSearch': '', // STORES THE CURRENTLY TOKE AGAINST WHICH WE ARE SERACHING ACCROSS THE GRID IN XS VIEW
                         'searchToken': '', // STORES THE CURRENTLY TOKE AGAINST WHICH WE ARE SERACHING ACCROSS THE GRID
-                        'latchExcess': 5, // STORES THE NUMBER OF ROWS WHICH NEED TO BE BROUGHT TO THE VIEW AS A RESULT OF VIRTUALIZATION
                         'inlineEditState': {}, // STORES CURRENT ROW EDIT STATE
                         'colWithInlineEdits': [],
                         'groupKeys': {},
@@ -329,7 +328,8 @@
                         { prop: 'ariaPrimary', defValue: $scope.vxColSettings.primaryId },
                         { prop: 'xsTemplate', defValue: false },
                         { prop: 'bindOnce', defValue: false },
-                        { prop: 'hybrid', defValue: false }
+                        { prop: 'hybrid', defValue: false },
+                        { prop: 'latchExcess', defValue: 5 },   // STORES THE NUMBER OF ROWS WHICH NEED TO BE BROUGHT TO THE VIEW AS A RESULT OF VIRTUALIZATION
                     ];
                     _.each(_propDefns, function (propDefn) {
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
@@ -339,7 +339,7 @@
                     // SETTING XS VIEW BASED PROPERTIES BASED ON WINDOW WIDTH
                     if ($scope.getWindowDimensions().w < 768) {
                         $scope.vxColSettings.xsViewEnabled = true && $scope.vxConfig.xsTemplate;
-                        $scope.vxColSettings.latchExcess = 5;
+                        $scope.vxConfig.latchExcess = 5;
                     }
                     end = new Date();
                     console.log(4, end.getTime() - start.getTime());
@@ -663,7 +663,7 @@
                     var _hybridContainer = null;
                     var _scrollContainer = null;
                     var _rowHeight = 48;
-                    var _excess = 5;
+                    var _excess = $scope.vxConfig.latchExcess;
                     var _lastIndexCount = 0;
                     var _lastScrollDown = false;
                     var _lastScrollTop = 0;

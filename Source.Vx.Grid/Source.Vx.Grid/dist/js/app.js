@@ -121,6 +121,7 @@
         inlineDeleteOverrideEnabled: false,
         showGridStats: false,
         showGridOptions: true,
+        latchExcess:20,
         data: self.sampling(200, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],

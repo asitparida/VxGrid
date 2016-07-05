@@ -75,7 +75,7 @@
                     new Date(2015, 01, 11, 0, 0, 0, 0),
                     new Date(2015, 01, 09, 0, 0, 0, 0),
                 ]);
-                rec.dt1 = rec.dt;
+                rec.dt1 = _.sample([rec.dt, null]);
                 rec.dt2 = rec.dt;
                 rec.dt3 = rec.dt;
                 rec.dt4 = rec.dt;
@@ -121,6 +121,7 @@
         inlineDeleteOverrideEnabled: false,
         showGridStats: false,
         showGridOptions: true,
+        latchExcess:20,
         data: self.sampling(200, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],

@@ -774,7 +774,7 @@
                                         var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
                                         var _dtData = $filter('date')(_data, col.columnDatePipe);
                                         _cellTmpl = cellTmplContent;
-                                        _cellTmpl = _cellTmpl.replaceAll('VX_CELL_TMPL', _dtData);
+                                        _cellTmpl = _cellTmpl.replaceAll('VX_CELL_TMPL', typeof _dtData === 'undefined' || _dtData == null ? '' : _dtData);
                                     }
                                     else if (col.renderHybridCellDefn != true && col.columnIsRowSelect == true) {
                                         var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;

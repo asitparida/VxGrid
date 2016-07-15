@@ -27,6 +27,7 @@
         <CONFIG>.inlineAddRowEnabled			<SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLING ADDING ROW
         <CONFIG>.inlineSaveOverrideEnabled		<SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLING SAVE ROW OVEVRRIDE
         <CONFIG>.inlineDeleteOverrideEnabled	<SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLING SAVE DELETE OVEVRRIDE
+        <CONFIG>.allRowsInDefaultEdit	        <SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE FOR ENABLING OPENING ALL ROWS IN EDIT MODE BY DEFAULT
         <CONFIG>.newRowTemplate			        <SUPPORTED : Y>    :   <STRING>         SET TO NEW TEMPLATE
         <CONFIG>.jsonEditorEnabled			    <SUPPORTED : Y>    :   <BOOLEAN>        SET TO TRUE TO ENABLE JSON EDITOR
         <CONFIG>.sortPredicate			        <SUPPORTED : Y>    :   <STRING>         SET TO COLUMN_DEF_ID FOR DEFAULT SORTING BY THAT COLUMN
@@ -274,7 +275,7 @@
                         /* SEETING ALL ROW SELECTIONS TO FALSE */
                         _.each($scope.vxConfig.vxData, function (row, index) {
                             var rowId = row[$scope.vxColSettings.primaryId];
-                            $scope.vxColSettings.inlineEditState[rowId] = false;
+                            $scope.vxColSettings.inlineEditState[rowId] = $scope.config.allRowsInDefaultEdit || false;
                         });
                     }
                     end = new Date();
@@ -319,6 +320,7 @@
                         { prop: 'inlineDeletingEnabled', defValue: false },
                         { prop: 'inlineSaveOverrideEnabled', defValue: false },
                         { prop: 'inlineDeleteOverrideEnabled', defValue: false },
+                        { prop: 'allRowsInDefaultEdit', defValue: false },
                         { prop: 'jsonEditorEnabled', defValue: false },
                         { prop: 'allRowsSelectionEnabled', defValue: false },
                         { prop: 'sortPredicate', defValue: $scope.vxColSettings.primaryId },

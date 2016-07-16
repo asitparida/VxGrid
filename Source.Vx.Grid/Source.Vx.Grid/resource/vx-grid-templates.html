@@ -31,7 +31,8 @@
                             <span ng-if="multiBoxFilters.length == 0">00</span>
                         </label>
                         <label class="statTitle" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}">Selected</label>
-                        <label class="statValue" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}">{{vxColSettings.multiSelected.length | vxNumberFixedLen:2}}</label>
+                        <label class="statValue" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" ng-if="vxConfig.hybrid == false">{{vxColSettings.multiSelected.length | vxNumberFixedLen:2}}</label>
+                        <label class="statValue" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" ng-if="vxConfig.hybrid == true" ng-attr-id="_vxMulLength{{vxConfig.id}}">00</label>
                     </div>
                     <div class="vxTableOperations pull-right zeroPaddingRight" ng-if="vxConfig.showGridOptions">
                         <div class="search-container pull-left input-group">

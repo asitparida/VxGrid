@@ -69,6 +69,7 @@
                 rec.categories = self.categories;
                 rec.category = _.sample(rec.categories);
                 rec.customer = record.transferFromCustomer;
+                rec.customer = rec.customer + rec.index;
                 rec.dt = _.sample([
                     new Date(2015, 01, 07, 0, 0, 0, 0),
                     new Date(2015, 01, 01, 0, 0, 0, 0),
@@ -85,9 +86,10 @@
                 rec.dt8 = rec.dt;
                 rec.dt9 = rec.dt;
                 rec.dt10 = rec.dt;
-                rec.engagement = _.sample([customer, 'Fist Up Consultants']),
+                rec.engagement = _.sample([customer, 'Fist Up Consultants', 'Coco Cola', 'Pepsi', 'NS78-RTY-5676677-67', 'NS78-RTY-5676677-67-Co-Co-fifgytf', 'Pepsi46456', 'NhffugycfftyfyS78-RTY-5676677-67', 'NS78-RTY-5676bghcvfgcfdtfcfr677-67-Co-Co-fifgytf']),
+                rec.engagement = rec.engagement + rec.index;
                 rec.assignment = record.transferFromAssignment,
-                rec.users = ['asparida', 'prasadne', 'ruprawat'];
+                rec.users = ['asparida', 'prasadne', 'ruprawat', 'asparida1', 'prasadne1', 'ruprawat1', 'asparida2', 'prasadne2', 'ruprawat2', 'asparida3', 'prasadne3', 'ruprawat3'];
                 rec.userAlias = _.sample(rec.users);
                 rec.userAlias = rec.userAlias + (i % 20);
                 //console.log(rec.userAlias);
@@ -124,11 +126,11 @@
         showGridStats: true,
         showGridOptions: true,
         latchExcess: 20,
-        data: self.sampling(100, 'Coho Vineyard 1111'),
+        data: self.sampling(200, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
         bindOnce: false,
-        hybrid: true,
+        hybrid: false,
         //initialRowClasses: self.sampleRowClasses,
         rowClassFn: randomRowFunction,
         hybridCellDefn: hybridCellDefn,
@@ -182,8 +184,8 @@
             { id: 'customer', columnName: 'Customer', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, inlineEditOnColumnEnabled: true, hidden: false, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: true, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, hidden: false, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'assignment', columnName: 'Assignment', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false },
-            { id: 'category', columnName: 'Category', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span>{{VX_DATA_POINT.name}}</span>", cellDefn: '<span>{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" ng-options="item.name for item in row.categories" ng-model="row[\'category\']"></select>', inlineEditOnColumnEnabled: true, renderHybridCellDefn: true, hybridCompile: true },
-            { id: 'userAlias', columnName: 'User', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, hidden: false, cellDefn: '<select class="selectStyleSampleA" ng-model="row.userAlias" ng-options="user for user in row.users"><option value="">Select an option </option> </select>', ddFiltersWithSearch: true },
+            { id: 'category', columnName: 'Category', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span>{{VX_DATA_POINT.name}}</span>", cellDefn: '<span>{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" ng-options="item.name for item in row.categories" ng-disabled="vxColSettings.inlineEditState[VX_ROW_POINT] == true" ng-model="row[\'category\']"></select>', inlineEditOnColumnEnabled: true, renderHybridCellDefn: true, hybridCompile: true },
+            { id: 'userAlias', columnName: 'User', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, hidden: false, cellDefn: '<select class="selectStyleSampleA" ng-model="row.userAlias" ng-options="user for user in row.users" ng-disabled="vxColSettings.inlineEditState[VX_ROW_POINT] == true"><option value="">Select an option </option> </select>', ddFiltersWithSearch: true },
             { id: 'labor', columnName: 'Labor', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
             { id: 'timezone', columnName: 'Timezone', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
             { id: 'status', columnName: 'Status', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },

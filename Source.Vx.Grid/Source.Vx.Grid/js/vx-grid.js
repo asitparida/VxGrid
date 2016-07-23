@@ -383,6 +383,7 @@
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
                                 col[propDefn.prop] = propDefn.defValue;
                         });
+                        console.log(col['filterLimit']);
                         col.effectiveWidth = col.width;
                         col.idCollection = [];
                         var _propDefnLocks = [
@@ -1229,6 +1230,7 @@
                 /// <param name="header" type="Object">HEADER OBJECT ASSOCIATED WITH THE CLICK</param>
                 /// <param name="E" type="Event"></param>
                 $scope.headerClick = function (header, e) {
+                    console.log(header);
                     var proceed = true;
                     var target = $(e.target);
                     if (typeof target !== 'undefined' && target != null & target.length > 0) {
@@ -1341,6 +1343,7 @@
                                             }
                                         }
                                         lastScroll[_colDefn.id] = 0;
+                                        header.filterLimit = 10;
                                         var _ddElement = angular.element(document.getElementById($scope.vxConfig.id + '-dropdwon-menu-' + _colDefn.id));
                                         _ddElement.on('scroll', function (e) {
                                             var _colDefnId = _colDefn.id;

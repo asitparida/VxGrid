@@ -630,6 +630,12 @@
                                         $(_element).prop('checked', true);
                                     }
                                 }
+                                if ($scope.vxConfig.hybrid == true) {
+                                    var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                                    if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                        $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                                    }
+                                }
                             }
                         });
                         return _modIds;
@@ -650,6 +656,12 @@
                                     var _element = angular.element(document.getElementById('vx_row-sel_in_' + _id));
                                     if (typeof _element !== 'undefined' && _element != null && _element.length > 0) {
                                         $(_element).prop('checked', false);
+                                    }
+                                }
+                                if ($scope.vxConfig.hybrid == true) {
+                                    var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                                    if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                        $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
                                     }
                                 }
                             }
@@ -704,6 +716,12 @@
                                 $scope.vxColSettings.saveInProgress[id] = false;
                             });
                             $scope.vxColSettings.multiSelected = _.difference($scope.vxColSettings.multiSelected, rowIds);
+                            if ($scope.vxConfig.hybrid == true) {
+                                var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                                if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                    $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                                }
+                            }
                         });
 
                     }
@@ -1023,6 +1041,12 @@
                             }
                         });
                         $scope.vxColSettings.multiSelected = [];
+                        if ($scope.vxConfig.hybrid == true) {
+                            var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                            if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                            }
+                        }
                     }
                 }
 
@@ -1043,6 +1067,12 @@
                         $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (mid) { id.localeCompare(mid) == 0 });
                         $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId].localeCompare(id) == 0 });
                         $scope.$emit('vxGridRowEditRevert', { 'id': $scope.vxConfig.id, 'data': cRow });
+                        if ($scope.vxConfig.hybrid == true) {
+                            var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                            if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                            }
+                        }
                     }
                     else {
                         var oRow = _.find($scope.vxConfig.data, function (row) { return row[$scope.vxColSettings.primaryId] == id; })
@@ -1061,6 +1091,12 @@
                             }
                             $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (mid) { id.localeCompare(mid) == 0 });
                             $scope.$emit('vxGridRowEditRevert', { 'id': $scope.vxConfig.id, 'data': oRow });
+                            if ($scope.vxConfig.hybrid == true) {
+                                var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                                if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                    $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                                }
+                            }
                         }
                     }
                 }
@@ -1099,6 +1135,12 @@
                                         $scope.vxColSettings.saveInProgress[id] = false;
                                     });
                                     $scope.vxColSettings.multiSelected = _.difference($scope.vxColSettings.multiSelected, _processIDs);
+                                    if ($scope.vxConfig.hybrid == true) {
+                                        var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                                        if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                            $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                                        }
+                                    }
                                 }
                             }, function (data) {
                                 /* FAILURE SAVE */
@@ -1120,6 +1162,12 @@
                                 $scope.vxColSettings.rowSelected[id] = false;
                             });
                             $scope.vxColSettings.multiSelected = [];
+                            if ($scope.vxConfig.hybrid == true) {
+                                var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                                if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                    $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                                }
+                            }
                         }
                     }
                 }
@@ -1462,6 +1510,12 @@
                             }
                         }
                     });
+                    if ($scope.vxConfig.hybrid == true) {
+                        var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                        if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                            $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                        }
+                    }
                     $scope.$emit('vxGridRwSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
                 }
 
@@ -1490,7 +1544,13 @@
                                     $scope.vxColSettings.groupPredicate[key] = true;
                                 });
                             }
-                        })
+                        });
+                        if ($scope.vxConfig.hybrid == true) {
+                            var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                            if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                            }
+                        }
                         //$scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.vxColSettings.multiSelected });
                         $scope.$emit('vxGridRowAllSelectionChange', { 'id': $scope.vxConfig.id, 'data': { 'toggledTo': toggleTo, 'array': $scope.vxColSettings.multiSelected } });
                     }
@@ -1499,15 +1559,18 @@
                         $scope.clearSelection();
                         $scope.$emit('vxGridRowAllSelectionChange', { 'id': $scope.vxConfig.id, 'data': { 'toggledTo': toggleTo, 'array': $scope.vxColSettings.multiSelected } });
                     }
+                    if ($scope.vxConfig.hybrid == true) {
+                        var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                        if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                            $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                        }
+                    }
                 }
 
                 /// <summary>GRID FUNCTION : HANDLE SELECTION TOGGLE EVENT FOR A ROW CHECKBOX</summary>
                 $scope.rowSelectionChanged = function (rowId) {
                     var pid = rowId;
-                    if ($scope.vxConfig.selectionAtMyRisk == true) {
-                        return;
-                    }
-                    //console.log('4456456456');
+                    console.log('4456456456');
                     var row = _.find($scope.vxConfig.vxData, function (_row) { return _row[$scope.vxColSettings.primaryId] == rowId });
                     var result = { 'key': row[$scope.vxConfig.onSelectionReturnCol], 'value': $scope.vxColSettings.rowSelected[pid], '_pKey': pid };
                     var proceed = true;
@@ -1553,6 +1616,14 @@
                                 }
                             });
                             $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (rs) { return rs.localeCompare(pid) != 0 });
+                        }
+                    }
+                    if ($scope.vxConfig.hybrid == true) {
+                        //console.log('09876543234567890');
+                        var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                        if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                            //console.log('6769767659856', _elem);
+                            $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
                         }
                     }
                 }
@@ -1682,6 +1753,12 @@
                             }
                         })
                     });
+                    if ($scope.vxConfig.hybrid == true) {
+                        var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                        if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                            $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                        }
+                    }
                     $scope.$emit('vxGridRowMultiSelectionChange', { 'id': $scope.vxConfig.id, 'data': $scope.emitArray });
                 }
 

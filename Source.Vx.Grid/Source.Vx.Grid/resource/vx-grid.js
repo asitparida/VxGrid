@@ -1293,7 +1293,7 @@
                                             }
                                         }
                                         lastScroll[_colDefn.id] = 0;
-                                        var _ddElement = angular.element(document.getElementById('dropdwon-menu-' + _colDefn.id));
+                                        var _ddElement = angular.element(document.getElementById($scope.vxConfig.id + '-dropdwon-menu-' + _colDefn.id));
                                         _ddElement.on('scroll', function (e) {
                                             var _colDefnId = _colDefn.id;
                                             var _scrollTop = $(e.target).scrollTop();

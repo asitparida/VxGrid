@@ -167,6 +167,7 @@
                 $scope.vxColSettings = {};
                 $scope.posLeft = 1;
                 $scope.posTop = 0;
+                var lastScroll = {};
 
                 /// <summary>GET THE ANGULAR SCOPED WINDOW OBJECT REFERENCE</summary>
                 var w = angular.element($window);
@@ -182,6 +183,7 @@
 
                 /// <summary>RESETS THE VX INSTANCE AND DEFUALTING ALL APPICABLE PROPERTIES</summary>
                 $scope.resetVxInstance = function () {
+                    lastScroll = {};
                     /// <summary>RE-INITIALIZING ALL VXCOLSETTINGS PROPERTIES</summary>
                     $scope.vxColSettings = {
                         'primaryId': null, // COLUMN ID FOR COLUMN DESIGNATED AS PRIMARY 
@@ -374,12 +376,14 @@
                             { prop: 'columnIsDate', defValue: false },
                             { prop: 'columnDatePipe', defValue: 'dd/MM/yyyy' },
                             { prop: 'renderHybridCellDefn', defValue: false },
-                            { prop: 'hybridCompile', defValue: false }
+                            { prop: 'hybridCompile', defValue: false },
+                            { prop: 'filterLimit', defValue: 10 }
                         ];
                         _.each(_propDefns, function (propDefn) {
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
                                 col[propDefn.prop] = propDefn.defValue;
                         });
+                        console.log(col['filterLimit']);
                         col.effectiveWidth = col.width;
                         col.idCollection = [];
                         var _propDefnLocks = [
@@ -1226,6 +1230,7 @@
                 /// <param name="header" type="Object">HEADER OBJECT ASSOCIATED WITH THE CLICK</param>
                 /// <param name="E" type="Event"></param>
                 $scope.headerClick = function (header, e) {
+                    console.log(header);
                     var proceed = true;
                     var target = $(e.target);
                     if (typeof target !== 'undefined' && target != null & target.length > 0) {
@@ -1337,11 +1342,35 @@
                                                 });
                                             }
                                         }
+                                        lastScroll[_colDefn.id] = 0;
+                                        header.filterLimit = 10;
+                                        var _ddElement = angular.element(document.getElementById($scope.vxConfig.id + '-dropdwon-menu-' + _colDefn.id));
+                                        _ddElement.on('scroll', function (e) {
+                                            var _colDefnId = _colDefn.id;
+                                            var _scrollTop = $(e.target).scrollTop();
+                                            if (_scrollTop > lastScroll[_colDefnId]) {
+                                                $scope.debouncedIncrementFilter(_colDefnId);
+                                                lastScroll[_colDefnId] = _scrollTop;
+                                            }
+                                        })
                                     }
                                     $scope.vxColSettings.dropdDownLoaded[_colDefn.id] = true;
                                 }, 500);
                             }
                         }
+                    }
+                }
+
+                $scope.debouncedIncrementFilter = _.throttle(incrementFilterLimit, 500);
+
+                function incrementFilterLimit(_colId) {
+                    _.each($scope.vxConfig.columnDefConfigs, function (col) {
+                        if (col.id == _colId) {
+                            col.filterLimit = col.filterLimit + 2;
+                        }
+                    });
+                    if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                        $scope.$digest();
                     }
                 }
 

@@ -84,7 +84,7 @@
                                                         <span class="ddCaret" aria-hidden="true" ng-show="vxColSettings.colFiltersActivated[header.id] == true && vxColSettings.dropdDownEnabled[header.id] == true && vxConfig.data.length >= 1"><i class="icon icon-filter white"></i></span>
                                                     </button>
                                                 <!--<ul class="dropdown-menu" aria-labelledby="ddMenu_{{::header.id}}" data-container="body" ng-keydown="upDowKeyDownHandlerHeaderMenuItems($event, header.id)">-->
-                                                    <ul class="dropdown-menu" aria-labelledby="ddMenu_{{::header.id}}" data-container="body">
+                                                    <ul class="dropdown-menu" aria-labelledby="ddMenu_{{::header.id}}" data-container="body" du-scroll-container id="{{vxConfig.id}}-dropdwon-menu-{{::header.id}}">
                                                         <li tabindex="-1" class="loader" ng-if="vxColSettings.dropdDownLoaded[header.id] == false">
                                                             <img class="dropDownLoader" ng-src="{{vxConfig.loaderGifSrc}}" alt="dropdown addition in progress" />
                                                         </li>
@@ -109,7 +109,7 @@
                                                                 <i class="icon icon-search"></i>
                                                             </div>
                                                         </li>
-                                                        <li class="filter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && filter.disabled == false" ng-repeat="filter in vxColSettings.colFilterPairs[header.id] | filter:vxColSettings.filterSearchToken[header.id]">
+                                                        <li class="filter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && filter.disabled == false" ng-repeat="filter in vxColSettings.colFilterPairs[header.id] | limitTo:header.filterLimit | filter:vxColSettings.filterSearchToken[header.id]">
                                                             <input class="filter-toggle" tabindex="0" type="checkbox" ng-model="vxColSettings.colFiltersStatus[filter.key]" ng-change="filterClick(header, filter)" ng-attr-id="{{::header.id}}_filter_{{::$index}}" /><label class="filterItemTitle" ng-attr-for="{{::header.id}}_filter_{{::$index}}"><span ng-if="filter.filterDefnAvailable == false"><span class="offscreen">{{::header.columnName}} filter </span> {{::filter.name}}</span><span ng-if="filter.filterDefnAvailable == true" vx-compile="filter.filterDefn"></span></label>
                                                         </li>
                                                     </ul>

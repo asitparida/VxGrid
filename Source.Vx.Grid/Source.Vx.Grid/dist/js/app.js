@@ -317,7 +317,7 @@
 
     self.reloadDataVirtual = function () {
         self.vxSampleConfig.pagination = false;
-        self.vxSampleConfig.data = self.sampling(20, 'Coho Vineyard 1111');
+        self.vxSampleConfig.data = self.sampling(1000, 'Coho Vineyard 1111');
         self.secondSampleActive = false;
     }
 

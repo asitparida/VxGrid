@@ -1098,7 +1098,7 @@
         self.scope.config.resetColumnFilters = function (ids) {
             _.each(ids, function (id) {
                 self.vxColSettings.dropdDownLoaded[id] = false;
-                self.vxColSettings.colFilterPairs[id] = {};
+                self.vxColSettings.colFilterPairs[id] = [];
             });
         }
 
@@ -1114,13 +1114,13 @@
         //console.log(6, end.getTime() - start.getTime());
 
         /// <summary> STATIC MAPS FOR ENABLING HYBRID MODE SUPPORT</summary>
-        var _hybridContainer = null;
-        var _scrollContainer = null;
-        var _rowHeight = 48;
-        var _excess = self.vxConfig.latchExcess;
-        var _lastIndexCount = 0;
-        var _lastScrollDown = false;
-        var _lastScrollTop = 0;
+        self._hybridContainer = null;
+        self._scrollContainer = null;
+        self._rowHeight = 48;
+        self._excess = self.vxConfig.latchExcess;
+        self._lastIndexCount = 0;
+        self._lastScrollDown = false;
+        self._lastScrollTop = 0;
 
         self.scope.config.hybridDeleteRows = function (rowIds) {
             window.requestAnimFrame(function () {
@@ -1142,163 +1142,20 @@
 
         }
 
-        /// <summary>GRID FUNCTION : UPDATE ROWS</summary>
-        self.hybridUpdateRows = function (rows) {
-            angular.forEach(rows, function (row) {
-                var _result = self.hybridGetRowTmpl(row);
-                var rowElement = angular.element(document.getElementById(_result.rowId));
-                rowElement.empty();
-                rowElement.replaceWith(_result.rowTmpl);
-                if (_result.compile) {
-                    self.compile(rowElement.contents())(self.scope);
-                }
-            });
-        }
-
-        /// <summary>GRID FUNCTION : TO RESET THE HYBRID SCROLL WHEN SORT OR FILTER OR GROUP AFFECTED</summary>
-        self.resetHybridGrid = function () {
-            _lastIndexCount = 0;
-            _lastScrollDown = false;
-            _lastScrollTop = 0;
-            self.prepHybrid();
-        }
-
         /// <summary>GRID FUNCTION : TO PREP THE GRID FOR FIRST TIME INITIATIONS FOR HYBRID MODE</summary>
         self.prepHybrid = function () {
-            console.log(12134132);
-            _hybridContainer = angular.element(document.getElementById('_vxHybrid' + self.vxConfig.id));
-            _scrollContainer = angular.element(document.getElementById('_vxScrollContainer' + self.vxConfig.id));
-            _hybridContainer.empty();
-            var _height = _scrollContainer.height();
-            var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
-            var _rows = _.first(self.vxConfig.vxData, _initRowCount);
+            self._hybridContainer = angular.element(document.getElementById('_vxHybrid' + self.vxConfig.id));
+            self._scrollContainer = angular.element(document.getElementById('_vxScrollContainer' + self.vxConfig.id));
+            self._hybridContainer.empty();
+            var _height = self._scrollContainer.height();
+            var _initRowCount = Math.ceil(_height / self._rowHeight) + self._excess;
+            var _rows = _.first(self.vxConfig.vxFilteredData, _initRowCount);
             self.appendRows(_rows);
-            _lastIndexCount = _lastIndexCount + _initRowCount;
-            _scrollContainer.on('scroll', function () {
+            self._lastIndexCount = self._lastIndexCount + _initRowCount;
+            self._scrollContainer.on('scroll', function () {
                 self.debPep();
             });
 
-        }
-
-        /// <summary>GRID FUNCTION : PREPEARE AND INSERT ROWS WHEN SCROLL DOWN WHEN IN HYBRID MODE</summary>
-        self.prepForScrollInsertion = function () {
-            var diff = _hybridContainer.height() - (_scrollContainer.height() + _scrollContainer.scrollTop());
-            if (_scrollContainer.scrollTop() > _lastScrollTop) {
-                if (diff < 0)
-                    diff = 0;
-                if (diff < _rowHeight && _lastIndexCount < self.vxConfig.vxData.length) {
-                    var _initRowCount = _excess;
-                    var _restRows = _.rest(self.vxConfig.vxData, _lastIndexCount);
-                    var _rows = _.first(_restRows, _initRowCount);
-                    _lastIndexCount = _lastIndexCount + _initRowCount;
-                    self.appendRows(_rows);
-                    _scrollContainer.scrollTo(0, _scrollContainer.scrollTop() - 48);
-                }
-            }
-            _lastScrollTop = _scrollContainer.scrollTop();
-        }
-
-        /// <summary>GRID FUNCTION : DEBOUNCED VERSION FOR THE PREPFORSCROLLINDERSTION</summary>
-        self.debPep = _.debounce(self.prepForScrollInsertion, 10);
-
-        /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
-        self.compileAppend = function (rowTmpl, id, flag) {
-            $(document.getElementById('_vxHybrid' + self.vxConfig.id)).append(rowTmpl);
-            if (flag) {
-                var _row = angular.element(document.getElementById(id));
-                self.compile(_row.contents())(self.scope);
-            }
-        }
-
-        self.hybridGetRowTmpl = function (row) {
-            var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow vs-repeat-repeated-element VX_ROW_CLASSES ">VX_ALL_CELLS</tr>';
-            var cellHolderTmpl = '<td class="vxBodyRowCell VX_TD_CLASS">VX_CELL_CONTENT</td>';
-            var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
-            var cellTmplContent = '<span title="VX_CELL_TMPL">VX_CELL_TMPL</span>';
-            var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" rowid="VX_ROW_ID" type="checkbox" id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /></div>';
-            var allCells = '';
-            var _classes = '';
-            var rowId = row[self.vxColSettings.primaryId];
-            var _compile = false;
-            if (self.scope.config.noData != true) {
-                angular.forEach(self.vxConfig.columnDefConfigs, function (col) {
-                    var _cellTmpl = '';
-                    var _cellHolder = cellHolderTmpl;
-                    var _cellClass = '';
-                    if (col.hidden != true) {
-                        if (col.renderHybridCellDefn != true && col.columnIsRowSelect != true && col.columnIsDate != true) {
-                            var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : '';
-                            _cellTmpl = cellTmplContent;
-                            _cellTmpl = _cellTmpl.replaceAll('VX_CELL_TMPL', _data);
-                        }
-                        else if (col.renderHybridCellDefn != true && col.columnIsDate == true) {
-                            var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
-                            var _dtData = self.filter('date')(_data, col.columnDatePipe);
-                            _cellTmpl = cellTmplContent;
-                            _cellTmpl = _cellTmpl.replaceAll('VX_CELL_TMPL', typeof _dtData === 'undefined' || _dtData == null ? '' : _dtData);
-                        }
-                        else if (col.renderHybridCellDefn != true && col.columnIsRowSelect == true) {
-                            var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
-                            //console.log(14);
-                            var _rowSelectData = self.vxColSettings.rowSelected[rowId] || false;
-                            _cellTmpl = cellTmplRowSelect;
-                            _cellTmpl = _cellTmpl.replaceAll('VX_ROW_ID', rowId);
-                            _cellTmpl = _cellTmpl.replace('VX_ROW_SEL_VAL', _rowSelectData);
-                            //_compile = _compile || true;
-                        }
-                        else if (col.renderHybridCellDefn == true && typeof self.vxConfig.hybridCellDefn === 'function') {
-                            _cellTmpl = self.vxConfig.hybridCellDefn(row, col) || '';
-                            _compile = _compile || col.hybridCompile;
-                        }
-                        _cellHolder = _cellHolder.replace('VX_TD_CLASS', _cellClass);
-                        _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
-                        allCells = allCells + _cellHolder;
-                    }
-                });
-            }
-            else {
-                var _nonHiddenColLength = self.getNonHiddenColCount();
-                emptyRowTempl = emptyRowTempl.replace('VX_NON_HIDDEN_COL_LEN', _nonHiddenColLength);
-                emptyRowTempl = emptyRowTempl.replace('VX_EMPTYFILL', self.vxConfig.emptyFill);
-                allCells = emptyRowTempl;
-            }
-            if (typeof self.vxConfig.hybridCellDefn === 'function') {
-                _classes = _classes + self.vxConfig.rowClassFn(row);
-            }
-            _classes = _classes + ' ' + (typeof self.vxColSettings.vxRowClass[rowId] !== 'undefined' ? self.vxColSettings.vxRowClass[rowId] : '');
-            _classes = _classes.trim();
-            rowTmpl = rowTmpl.replace('VX_ROW_CLASSES', _classes);
-            rowTmpl = rowTmpl.replace('VX_ROW_ID', rowId);
-            rowTmpl = rowTmpl.replaceAll('VX_ALL_CELLS', allCells);
-            return { 'rowTmpl': rowTmpl, 'rowId': rowId, 'compile': _compile };
-        }
-
-        /// <summary>GRID FUNCTION : PREP ROWS FOR APPEND ROWS TO CONTAINER WHEN IN HYBRID MODE</summary>
-        self.appendRows = function (rows) {
-            angular.forEach(rows, function (row) {
-                var _result = self.hybridGetRowTmpl(row);
-                self.compileAppend(_result.rowTmpl, _result.rowId, _result.compile);
-            });
-            if (self.vxConfig.selectionEnabled == true) {
-                var elements = document.getElementsByClassName('vx-row-select-toggle');
-                _.each(elements, function (ele) {
-                    var _angElement = angular.element(ele);
-                    _angElement.on('click', function (e) {
-                        var _rowId = $(e.target).attr('rowid');
-                        console.log('click');
-                        var _currentState = $(e.target).prop('checked');
-                        self.vxColSettings.rowSelected[_rowId] = _currentState;
-                        var result = { 'key': _rowId, 'value': self.vxColSettings.rowSelected[_rowId], '_pKey': _rowId };
-                        if (self.vxConfig.selectionAtMyRisk == true) {
-                            if (typeof self.scope.config.rowSelectionCallback === 'function') {
-                                self.scope.config.rowSelectionCallback(result);
-                            }
-                        }
-                        else
-                            self.rowSelectionChanged(_rowId);
-                    });
-                });
-            }
         }
 
         end = new Date();
@@ -1307,11 +1164,161 @@
         if (self.vxConfig.hybrid == true) {
             //self.vxConfig.vxFilteredData = self.vxConfig.vxData;
             end = new Date();
+            self.vxConfig.vxFilteredData = self.vxConfig.vxData;
             //console.log(8, end.getTime() - start.getTime());
             self.timeout(self.prepHybrid, 100);
         }
 
     }
+
+    /// <summary>GRID FUNCTION : UPDATE ROWS</summary>
+    VxGridController.prototype.hybridUpdateRows = function (rows) {
+        var self = this;
+        angular.forEach(rows, function (row) {
+            var _result = self.hybridGetRowTmpl(row);
+            var rowElement = angular.element(document.getElementById(_result.rowId));
+            rowElement.empty();
+            rowElement.replaceWith(_result.rowTmpl);
+            if (_result.compile) {
+                self.compile(rowElement.contents())(self.scope);
+            }
+        });
+    }
+
+    /// <summary>GRID FUNCTION : TO RESET THE HYBRID SCROLL WHEN SORT OR FILTER OR GROUP AFFECTED</summary>
+    VxGridController.prototype.resetHybridGrid = function () {
+        var self = this;
+        self._lastIndexCount = 0;
+        self._lastScrollDown = false;
+        self._lastScrollTop = 0;
+        self.prepHybrid();
+    }
+
+    VxGridController.prototype.hybridGetRowTmpl = function (row) {
+        var self = this;
+        var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow vs-repeat-repeated-element VX_ROW_CLASSES ">VX_ALL_CELLS</tr>';
+        var cellHolderTmpl = '<td class="vxBodyRowCell VX_TD_CLASS">VX_CELL_CONTENT</td>';
+        var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
+        var cellTmplContent = '<span title="VX_CELL_TMPL">VX_CELL_TMPL</span>';
+        var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" rowid="VX_ROW_ID" type="checkbox" id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /></div>';
+        var allCells = '';
+        var _classes = '';
+        var rowId = row[self.vxColSettings.primaryId];
+        var _compile = false;
+        if (self.scope.config.noData != true) {
+            angular.forEach(self.vxConfig.columnDefConfigs, function (col) {
+                var _cellTmpl = '';
+                var _cellHolder = cellHolderTmpl;
+                var _cellClass = '';
+                if (col.hidden != true) {
+                    if (col.renderHybridCellDefn != true && col.columnIsRowSelect != true && col.columnIsDate != true) {
+                        var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : '';
+                        _cellTmpl = cellTmplContent;
+                        _cellTmpl = _cellTmpl.replaceAll('VX_CELL_TMPL', _data);
+                    }
+                    else if (col.renderHybridCellDefn != true && col.columnIsDate == true) {
+                        var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
+                        var _dtData = self.filter('date')(_data, col.columnDatePipe);
+                        _cellTmpl = cellTmplContent;
+                        _cellTmpl = _cellTmpl.replaceAll('VX_CELL_TMPL', typeof _dtData === 'undefined' || _dtData == null ? '' : _dtData);
+                    }
+                    else if (col.renderHybridCellDefn != true && col.columnIsRowSelect == true) {
+                        var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
+                        //console.log(14);
+                        var _rowSelectData = self.vxColSettings.rowSelected[rowId] || false;
+                        _cellTmpl = cellTmplRowSelect;
+                        _cellTmpl = _cellTmpl.replaceAll('VX_ROW_ID', rowId);
+                        _cellTmpl = _cellTmpl.replace('VX_ROW_SEL_VAL', _rowSelectData);
+                        //_compile = _compile || true;
+                    }
+                    else if (col.renderHybridCellDefn == true && typeof self.vxConfig.hybridCellDefn === 'function') {
+                        _cellTmpl = self.vxConfig.hybridCellDefn(row, col) || '';
+                        _compile = _compile || col.hybridCompile;
+                    }
+                    _cellHolder = _cellHolder.replace('VX_TD_CLASS', _cellClass);
+                    _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
+                    allCells = allCells + _cellHolder;
+                }
+            });
+        }
+        else {
+            var _nonHiddenColLength = self.getNonHiddenColCount();
+            emptyRowTempl = emptyRowTempl.replace('VX_NON_HIDDEN_COL_LEN', _nonHiddenColLength);
+            emptyRowTempl = emptyRowTempl.replace('VX_EMPTYFILL', self.vxConfig.emptyFill);
+            allCells = emptyRowTempl;
+        }
+        if (typeof self.vxConfig.hybridCellDefn === 'function') {
+            _classes = _classes + self.vxConfig.rowClassFn(row);
+        }
+        _classes = _classes + ' ' + (typeof self.vxColSettings.vxRowClass[rowId] !== 'undefined' ? self.vxColSettings.vxRowClass[rowId] : '');
+        _classes = _classes.trim();
+        rowTmpl = rowTmpl.replace('VX_ROW_CLASSES', _classes);
+        rowTmpl = rowTmpl.replace('VX_ROW_ID', rowId);
+        rowTmpl = rowTmpl.replaceAll('VX_ALL_CELLS', allCells);
+        return { 'rowTmpl': rowTmpl, 'rowId': rowId, 'compile': _compile };
+    }
+
+    /// <summary>GRID FUNCTION : PREP ROWS FOR APPEND ROWS TO CONTAINER WHEN IN HYBRID MODE</summary>
+    VxGridController.prototype.appendRows = function (rows) {
+        var self = this;
+        angular.forEach(rows, function (row) {
+            var _result = self.hybridGetRowTmpl(row);
+            self.compileAppend(_result.rowTmpl, _result.rowId, _result.compile);
+        });
+        if (self.vxConfig.selectionEnabled == true) {
+            var elements = document.getElementsByClassName('vx-row-select-toggle');
+            _.each(elements, function (ele) {
+                var _angElement = angular.element(ele);
+                _angElement.on('click', function (e) {
+                    var _rowId = $(e.target).attr('rowid');
+                    console.log('click');
+                    var _currentState = $(e.target).prop('checked');
+                    self.vxColSettings.rowSelected[_rowId] = _currentState;
+                    var result = { 'key': _rowId, 'value': self.vxColSettings.rowSelected[_rowId], '_pKey': _rowId };
+                    if (self.vxConfig.selectionAtMyRisk == true) {
+                        if (typeof self.scope.config.rowSelectionCallback === 'function') {
+                            self.scope.config.rowSelectionCallback(result);
+                        }
+                    }
+                    else
+                        self.rowSelectionChanged(_rowId);
+                });
+            });
+        }
+    }
+
+    /// <summary>GRID FUNCTION : PREPEARE AND INSERT ROWS WHEN SCROLL DOWN WHEN IN HYBRID MODE</summary>
+    VxGridController.prototype.prepForScrollInsertion = function () {
+        var self = this;
+        var diff = self._hybridContainer.height() - (self._scrollContainer.height() + self._scrollContainer.scrollTop());
+        if (self._scrollContainer.scrollTop() > self._lastScrollTop) {
+            if (diff < 0)
+                diff = 0;
+            if (diff < self._rowHeight && self._lastIndexCount < self.vxConfig.vxFilteredData.length) {
+                var _initRowCount = self._excess;
+                var _restRows = _.rest(self.vxConfig.vxFilteredData, self._lastIndexCount);
+                var _rows = _.first(_restRows, _initRowCount);
+                self._lastIndexCount = self._lastIndexCount + _initRowCount;
+                self.appendRows(_rows);
+                self._scrollContainer.scrollTo(0, self._scrollContainer.scrollTop() - 48);
+            }
+        }
+        self._lastScrollTop = self._scrollContainer.scrollTop();
+    }
+
+    /// <summary>GRID FUNCTION : DEBOUNCED VERSION FOR THE PREPFORSCROLLINDERSTION</summary>
+    VxGridController.prototype.debPep = _.debounce(VxGridController.prototype.prepForScrollInsertion, 10);
+
+    /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
+    VxGridController.prototype.compileAppend = function (rowTmpl, id, flag) {
+        var self = this;
+        $(document.getElementById('_vxHybrid' + self.vxConfig.id)).append(rowTmpl);
+        if (flag) {
+            var _row = angular.element(document.getElementById(id));
+            self.compile(_row.contents())(self.scope);
+        }
+    }
+
 
     /// <summary>GRID FUNCTION : SAVE ROWS ONCE EDITED OR CREATED</summary>
     /// <param name="id" type="String">ROW ID OF THE ROW BEING CREATED OR EDITED</param>
@@ -1833,9 +1840,9 @@
                 self.vxConfig.reverseSortDirection = self.vxColSettings.reverseSettings[_colDefn.id];
                 /// <summary>HYBRID MODE SUPPORT</summary>
                 if (self.vxConfig.hybrid == true) {
-                    self.vxConfig.vxData = _.sortBy(self.vxConfig.vxData, self.vxConfig.sortPredicate);
+                    self.vxConfig.self.vxFilteredData = _.sortBy(self.vxConfig.vxFilteredData, self.vxConfig.sortPredicate);
                     if (self.vxConfig.reverseSortDirection == true)
-                        self.vxConfig.vxData.reverse();
+                        self.vxConfig.vxFilteredData.reverse();
                     self.resetHybridGrid();
                 }
             }
@@ -2080,7 +2087,7 @@
         }
         /// <summary>HYBRID MODE SUPPORT</summary>
         if (self.vxConfig.hybrid == true) {
-            self.vxConfig.vxData = self.filter('vxGridMultiBoxFilters')(self._origData, self.multiBoxFilters);
+            self.vxConfig.vxFilteredData = self.filter('vxGridMultiBoxFilters')(self._origData, self.multiBoxFilters);
             self.resetHybridGrid();
         }
     }
@@ -2108,7 +2115,7 @@
         }
         /// <summary>HYBRID MODE SUPPORT</summary>
         if (self.vxConfig.hybrid == true) {
-            self.vxConfig.vxData = self.filter('vxGridMultiBoxFilters')(self._origData, self.multiBoxFilters);
+            self.vxConfig.vxFilteredData = self.filter('vxGridMultiBoxFilters')(self._origData, self.multiBoxFilters);
             self.resetHybridGrid();
         }
     }
@@ -2136,7 +2143,7 @@
             _set = 'vxFilteredData';
         }
         else if (self.vxConfig.hybrid = true) {
-            _set = 'vxData';
+            _set = 'vxFilteredData';
         }
         _.each(self.vxConfig[_set], function (row) {
             if (self.vxColSettings.multiSelColDependent == false || (self.vxColSettings.multiSelColDependent == true && row[self.vxConfig.multiSelectionDependentCol] == false)) {

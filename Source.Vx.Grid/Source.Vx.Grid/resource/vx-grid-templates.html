@@ -25,8 +25,7 @@
                         <label class="statTitle" ng-class="{ 'disabled' : vxGridCtrl.multiBoxFilters.length == 0}">Filtered</label>
                         <label class="statValue" ng-class="{ 'disabled' : vxGridCtrl.multiBoxFilters.length == 0}">
                             <span ng-if="vxGridCtrl.multiBoxFilters.length > 0">
-                                <span ng-if="vxGridCtrl.vxConfig.hybrid != true">{{vxGridCtrl.vxConfig.vxFilteredData.length | vxNumberFixedLen:2}}</span>
-                                <span ng-if="vxGridCtrl.vxConfig.hybrid == true">{{vxGridCtrl.vxConfig.vxData.length | vxNumberFixedLen:2}}</span>
+                                <span >{{vxGridCtrl.vxConfig.vxFilteredData.length | vxNumberFixedLen:2}}</span>
                             </span>
                             <span ng-if="vxGridCtrl.multiBoxFilters.length == 0">00</span>
                         </label>
@@ -110,7 +109,7 @@
                                                             </div>
                                                         </li>
                                                         <li class="filter" ng-if="vxGridCtrl.vxColSettings.dropdDownLoaded[header.id] == true && vxGridCtrl.vxColSettings.dropDownFilters[header.id] == true && filter.disabled == false" ng-repeat="filter in vxGridCtrl.vxColSettings.colFilterPairs[header.id] | limitTo:header.filterLimit | filter:vxGridCtrl.vxColSettings.filterSearchToken[header.id]">
-                                                            <input class="filter-toggle" tabindex="0" type="checkbox" ng-model="vxGridCtrl.vxColSettings.colFiltersStatus[filter.key]" ng-change="filterClick(header, filter)" ng-attr-id="{{::header.id}}_filter_{{::$index}}" /><label class="filterItemTitle" ng-attr-for="{{::header.id}}_filter_{{::$index}}"><span ng-if="filter.filterDefnAvailable == false"><span class="offscreen">{{::header.columnName}} filter </span> {{::filter.name}}</span><span ng-if="filter.filterDefnAvailable == true" vx-compile="filter.filterDefn"></span></label>
+                                                            <input class="filter-toggle" tabindex="0" type="checkbox" ng-model="vxGridCtrl.vxColSettings.colFiltersStatus[filter.key]" ng-change="vxGridCtrl.filterClick(header, filter)" ng-attr-id="{{::header.id}}_filter_{{::$index}}" /><label class="filterItemTitle" ng-attr-for="{{::header.id}}_filter_{{::$index}}"><span ng-if="filter.filterDefnAvailable == false"><span class="offscreen">{{::header.columnName}} filter </span> {{::filter.name}}</span><span ng-if="filter.filterDefnAvailable == true" vx-compile="filter.filterDefn"></span></label>
                                                         </li>
                                                     </ul>
                                             </div>
@@ -361,7 +360,7 @@
             <div ng-if="header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && vxGridCtrl.vxColSettings.inlineEditState[row[vxGridCtrl.vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
             <div ng-if="header.columnIsRowSelect == true">
                 <div class="vx-row-select">
-                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxGridCtrl.vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxGridCtrl.vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{rowId}}" />
+                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxGridCtrl.vxColSettings.rowSelected[rowId]" ng-change="vxGridCtrl.rowSelectionChanged(rowId)" ng-disabled="vxGridCtrl.vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{rowId}}" />
                 </div>
             </div>
             <div class="vx-row-edit-container" ng-if="header.columnIsRowEdit == true">
@@ -409,7 +408,7 @@
             <div ng-if="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && vxGridCtrl.vxColSettings.inlineEditState[row[vxGridCtrl.vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
             <div ng-if="::header.columnIsRowSelect == true">
                 <div class="vx-row-select">
-                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxGridCtrl.vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxGridCtrl.vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{::rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}" />
+                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxGridCtrl.vxColSettings.rowSelected[rowId]" ng-change="vxGridCtrl.rowSelectionChanged(rowId)" ng-disabled="vxGridCtrl.vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{::rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}" />
                 </div>
             </div>
             <div class="vx-row-edit-container" ng-if="::header.columnIsRowEdit == true">

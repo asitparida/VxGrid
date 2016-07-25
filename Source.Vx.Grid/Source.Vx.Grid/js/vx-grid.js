@@ -191,6 +191,7 @@
                     dt = new Date();
                     //console.log('start', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
                     delete $scope.vxGridCtrl.vxConfig;
+                    console.log($scope.vxGridCtrl.resetVxInstance());
                     $scope.vxGridCtrl.resetVxInstance();
                 });
 
@@ -495,7 +496,6 @@
         self.window = $window;
         self.q = $q;
         self.vxColSettings = {};
-        self.vxConfig = {};
         $scope.posLeft = 1;
         $scope.posTop = 0;
         self.lastScroll = {};
@@ -595,7 +595,6 @@
     /// <summary>RESETS THE VX INSTANCE AND DEFUALTING ALL APPICABLE PROPERTIES</summary>
     VxGridController.prototype.resetVxInstance = function () {
         var self = this;
-        console.log('resetVxInstance', self);
         self.lastScroll = {};
         /// <summary>RE-INITIALIZING ALL VXCOLSETTINGS PROPERTIES</summary>
         self.vxColSettings = {
@@ -1099,7 +1098,7 @@
         self.scope.config.resetColumnFilters = function (ids) {
             _.each(ids, function (id) {
                 self.vxColSettings.dropdDownLoaded[id] = false;
-                self.vxColSettings.colFilterPairs[id] = {};
+                self.vxColSettings.colFilterPairs[id] = [];
             });
         }
 
@@ -1143,14 +1142,31 @@
 
         }
 
+        /// <summary>GRID FUNCTION : TO PREP THE GRID FOR FIRST TIME INITIATIONS FOR HYBRID MODE</summary>
+        self.prepHybrid = function () {
+            self._hybridContainer = angular.element(document.getElementById('_vxHybrid' + self.vxConfig.id));
+            self._scrollContainer = angular.element(document.getElementById('_vxScrollContainer' + self.vxConfig.id));
+            self._hybridContainer.empty();
+            var _height = self._scrollContainer.height();
+            var _initRowCount = Math.ceil(_height / self._rowHeight) + self._excess;
+            var _rows = _.first(self.vxConfig.vxFilteredData, _initRowCount);
+            self.appendRows(_rows);
+            self._lastIndexCount = self._lastIndexCount + _initRowCount;
+            self._scrollContainer.on('scroll', function () {
+                self.debPep();
+            });
+
+        }
+
         end = new Date();
         //console.log(7, end.getTime() - start.getTime());
         //console.log(self.vxConfig.vxFilteredData);
         if (self.vxConfig.hybrid == true) {
             //self.vxConfig.vxFilteredData = self.vxConfig.vxData;
             end = new Date();
-            self.prepHybrid();
-            //self.timeout(self.prepHybrid(), 100);
+            self.vxConfig.vxFilteredData = self.vxConfig.vxData;
+            //console.log(8, end.getTime() - start.getTime());
+            self.timeout(self.prepHybrid, 100);
         }
 
     }
@@ -1176,56 +1192,6 @@
         self._lastScrollDown = false;
         self._lastScrollTop = 0;
         self.prepHybrid();
-
-    }
-
-    /// <summary>GRID FUNCTION : TO PREP THE GRID FOR FIRST TIME INITIATIONS FOR HYBRID MODE</summary>
-    VxGridController.prototype.prepHybrid = function () {
-        var self = this;
-        self._hybridContainer = angular.element(document.getElementById('_vxHybrid' + self.vxConfig.id));
-        self._scrollContainer = angular.element(document.getElementById('_vxScrollContainer' + self.vxConfig.id));
-        self._hybridContainer.empty();
-        var _height = self._scrollContainer.height();
-        var _initRowCount = Math.ceil(_height / self._rowHeight) + self._excess;
-        var _rows = _.first(self.vxConfig.vxData, _initRowCount);
-        self.appendRows(_rows);
-        self._lastIndexCount = self._lastIndexCount + _initRowCount;
-        self._scrollContainer.on('scroll', function () {
-            self.debPep();
-        });
-
-    }
-
-    /// <summary>GRID FUNCTION : PREPEARE AND INSERT ROWS WHEN SCROLL DOWN WHEN IN HYBRID MODE</summary>
-    VxGridController.prototype.prepForScrollInsertion = function () {
-        var self = this;
-        var diff = self._hybridContainer.height() - (self._scrollContainer.height() + self._scrollContainer.scrollTop());
-        if (self._scrollContainer.scrollTop() > self._lastScrollTop) {
-            if (diff < 0)
-                diff = 0;
-            if (diff < self._rowHeight && self._lastIndexCount < self.vxConfig.vxData.length) {
-                var _initRowCount = self._excess;
-                var _restRows = _.rest(self.vxConfig.vxData, self._lastIndexCount);
-                var _rows = _.first(_restRows, _initRowCount);
-                self._lastIndexCount = self._lastIndexCount + _initRowCount;
-                self.appendRows(_rows);
-                self._scrollContainer.scrollTo(0, self._scrollContainer.scrollTop() - 48);
-            }
-        }
-        self._lastScrollTop = self._scrollContainer.scrollTop();
-    }
-
-    /// <summary>GRID FUNCTION : DEBOUNCED VERSION FOR THE PREPFORSCROLLINDERSTION</summary>
-    VxGridController.prototype.debPep = _.debounce(VxGridController.prototype.prepForScrollInsertion, 10);
-
-    /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
-    VxGridController.prototype.compileAppend = function (rowTmpl, id, flag) {
-        var self = this;
-        $(document.getElementById('_vxHybrid' + self.vxConfig.id)).append(rowTmpl);
-        if (flag) {
-            var _row = angular.element(document.getElementById(id));
-            self.compile(_row.contents())(self.scope);
-        }
     }
 
     VxGridController.prototype.hybridGetRowTmpl = function (row) {
@@ -1297,7 +1263,6 @@
         var self = this;
         angular.forEach(rows, function (row) {
             var _result = self.hybridGetRowTmpl(row);
-            console.log(row);
             self.compileAppend(_result.rowTmpl, _result.rowId, _result.compile);
         });
         if (self.vxConfig.selectionEnabled == true) {
@@ -1319,6 +1284,38 @@
                         self.rowSelectionChanged(_rowId);
                 });
             });
+        }
+    }
+
+    /// <summary>GRID FUNCTION : PREPEARE AND INSERT ROWS WHEN SCROLL DOWN WHEN IN HYBRID MODE</summary>
+    VxGridController.prototype.prepForScrollInsertion = function () {
+        var self = this;
+        var diff = self._hybridContainer.height() - (self._scrollContainer.height() + self._scrollContainer.scrollTop());
+        if (self._scrollContainer.scrollTop() > self._lastScrollTop) {
+            if (diff < 0)
+                diff = 0;
+            if (diff < self._rowHeight && self._lastIndexCount < self.vxConfig.vxFilteredData.length) {
+                var _initRowCount = self._excess;
+                var _restRows = _.rest(self.vxConfig.vxFilteredData, self._lastIndexCount);
+                var _rows = _.first(_restRows, _initRowCount);
+                self._lastIndexCount = self._lastIndexCount + _initRowCount;
+                self.appendRows(_rows);
+                self._scrollContainer.scrollTo(0, self._scrollContainer.scrollTop() - 48);
+            }
+        }
+        self._lastScrollTop = self._scrollContainer.scrollTop();
+    }
+
+    /// <summary>GRID FUNCTION : DEBOUNCED VERSION FOR THE PREPFORSCROLLINDERSTION</summary>
+    VxGridController.prototype.debPep = _.debounce(VxGridController.prototype.prepForScrollInsertion, 10);
+
+    /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
+    VxGridController.prototype.compileAppend = function (rowTmpl, id, flag) {
+        var self = this;
+        $(document.getElementById('_vxHybrid' + self.vxConfig.id)).append(rowTmpl);
+        if (flag) {
+            var _row = angular.element(document.getElementById(id));
+            self.compile(_row.contents())(self.scope);
         }
     }
 
@@ -1843,9 +1840,9 @@
                 self.vxConfig.reverseSortDirection = self.vxColSettings.reverseSettings[_colDefn.id];
                 /// <summary>HYBRID MODE SUPPORT</summary>
                 if (self.vxConfig.hybrid == true) {
-                    self.vxConfig.vxData = _.sortBy(self.vxConfig.vxData, self.vxConfig.sortPredicate);
+                    self.vxConfig.self.vxFilteredData = _.sortBy(self.vxConfig.vxFilteredData, self.vxConfig.sortPredicate);
                     if (self.vxConfig.reverseSortDirection == true)
-                        self.vxConfig.vxData.reverse();
+                        self.vxConfig.vxFilteredData.reverse();
                     self.resetHybridGrid();
                 }
             }
@@ -2090,7 +2087,7 @@
         }
         /// <summary>HYBRID MODE SUPPORT</summary>
         if (self.vxConfig.hybrid == true) {
-            self.vxConfig.vxData = self.filter('vxGridMultiBoxFilters')(self._origData, self.multiBoxFilters);
+            self.vxConfig.vxFilteredData = self.filter('vxGridMultiBoxFilters')(self._origData, self.multiBoxFilters);
             self.resetHybridGrid();
         }
     }
@@ -2118,7 +2115,7 @@
         }
         /// <summary>HYBRID MODE SUPPORT</summary>
         if (self.vxConfig.hybrid == true) {
-            self.vxConfig.vxData = self.filter('vxGridMultiBoxFilters')(self._origData, self.multiBoxFilters);
+            self.vxConfig.vxFilteredData = self.filter('vxGridMultiBoxFilters')(self._origData, self.multiBoxFilters);
             self.resetHybridGrid();
         }
     }
@@ -2146,7 +2143,7 @@
             _set = 'vxFilteredData';
         }
         else if (self.vxConfig.hybrid = true) {
-            _set = 'vxData';
+            _set = 'vxFilteredData';
         }
         _.each(self.vxConfig[_set], function (row) {
             if (self.vxColSettings.multiSelColDependent == false || (self.vxColSettings.multiSelColDependent == true && row[self.vxConfig.multiSelectionDependentCol] == false)) {

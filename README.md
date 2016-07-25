@@ -2,6 +2,11 @@
 
 An standalone native table plugin which uses the best of features provided by AngularJS.
 
+Update : Am trying to refactor the module to enable a hybrid mode which uses Native JS for painting the rows instead of angular's ngRepeat. This is in view of the huge performances observed in IE wherein for ~1000 rows the grid
+takes a good 20-30 seconds to render. As of now, the hybrid mode is stable but needs to be solutioned for grids wherein we can treat the data as more of one time. The closest analogy I can think of is 'Canvas'
+vs 'SVG'. Many of the features currently enabled in normal mode will not work in hybrid mode like inline editing and some have been disabled like grouping option in columns.
+
+
 ##Demo
 
 Sample Preview @ <a href="http://vxgrid.azurewebsites.net/">http://vxgrid.azurewebsites.net</a>

@@ -25,8 +25,7 @@
                         <label class="statTitle" ng-class="{ 'disabled' : multiBoxFilters.length == 0}">Filtered</label>
                         <label class="statValue" ng-class="{ 'disabled' : multiBoxFilters.length == 0}">
                             <span ng-if="multiBoxFilters.length > 0">
-                                <span ng-if="vxConfig.hybrid != true">{{vxConfig.vxFilteredData.length | vxNumberFixedLen:2}}</span>
-                                <span ng-if="vxConfig.hybrid == true">{{vxConfig.vxData.length | vxNumberFixedLen:2}}</span>
+                                <span>{{vxConfig.vxFilteredData.length | vxNumberFixedLen:2}}</span>
                             </span>
                             <span ng-if="multiBoxFilters.length == 0">00</span>
                         </label>

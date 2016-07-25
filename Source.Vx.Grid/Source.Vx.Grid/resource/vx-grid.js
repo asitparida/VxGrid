@@ -755,7 +755,7 @@
                         _hybridContainer.empty();
                         var _height = _scrollContainer.height();
                         var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
-                        var _rows = _.first($scope.vxConfig.vxData, _initRowCount);
+                        var _rows = _.first($scope.vxConfig.vxFilteredData, _initRowCount);
                         $scope.appendRows(_rows);
                         _lastIndexCount = _lastIndexCount + _initRowCount;
                         _scrollContainer.on('scroll', function () {
@@ -770,9 +770,9 @@
                         if (_scrollContainer.scrollTop() > _lastScrollTop) {
                             if (diff < 0)
                                 diff = 0;
-                            if (diff < _rowHeight && _lastIndexCount < $scope.vxConfig.vxData.length) {
+                            if (diff < _rowHeight && _lastIndexCount < $scope.vxConfig.vxFilteredData.length) {
                                 var _initRowCount = _excess;
-                                var _restRows = _.rest($scope.vxConfig.vxData, _lastIndexCount);
+                                var _restRows = _.rest($scope.vxConfig.vxFilteredData, _lastIndexCount);
                                 var _rows = _.first(_restRows, _initRowCount);
                                 _lastIndexCount = _lastIndexCount + _initRowCount;
                                 $scope.appendRows(_rows);
@@ -890,6 +890,7 @@
                     if ($scope.vxConfig.hybrid == true) {
                         //$scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData;
                         end = new Date();
+                        $scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData;
                         //console.log(8, end.getTime() - start.getTime());
                         $timeout($scope.prepHybrid, 100);
                     }
@@ -1412,9 +1413,9 @@
                             $scope.vxConfig.reverseSortDirection = $scope.vxColSettings.reverseSettings[_colDefn.id];
                             /// <summary>HYBRID MODE SUPPORT</summary>
                             if ($scope.vxConfig.hybrid == true) {
-                                $scope.vxConfig.vxData = _.sortBy($scope.vxConfig.vxData, $scope.vxConfig.sortPredicate);
+                                $scope.vxConfig.vxFilteredData = _.sortBy($scope.vxConfig.vxFilteredData, $scope.vxConfig.sortPredicate);
                                 if ($scope.vxConfig.reverseSortDirection == true)
-                                    $scope.vxConfig.vxData.reverse();
+                                    $scope.vxConfig.vxFilteredData.reverse();
                                 $scope.resetHybridGrid();
                             }
                         }
@@ -1650,7 +1651,7 @@
                     }
                     /// <summary>HYBRID MODE SUPPORT</summary>
                     if ($scope.vxConfig.hybrid == true) {
-                        $scope.vxConfig.vxData = $filter('vxGridMultiBoxFilters')($scope._origData, $scope.multiBoxFilters);
+                        $scope.vxConfig.vxFilteredData = $filter('vxGridMultiBoxFilters')($scope._origData, $scope.multiBoxFilters);
                         $scope.resetHybridGrid();
                     }
                 }
@@ -1677,7 +1678,7 @@
                     }
                     /// <summary>HYBRID MODE SUPPORT</summary>
                     if ($scope.vxConfig.hybrid == true) {
-                        $scope.vxConfig.vxData = $filter('vxGridMultiBoxFilters')($scope._origData, $scope.multiBoxFilters);
+                        $scope.vxConfig.vxFilteredData = $filter('vxGridMultiBoxFilters')($scope._origData, $scope.multiBoxFilters);
                         $scope.resetHybridGrid();
                     }
                 }
@@ -1703,7 +1704,7 @@
                         _set = 'vxFilteredData';
                     }
                     else if ($scope.vxConfig.hybrid = true) {
-                        _set = 'vxData';
+                        _set = 'vxFilteredData';
                     }
                     _.each($scope.vxConfig[_set], function (row) {
                         if ($scope.vxColSettings.multiSelColDependent == false || ($scope.vxColSettings.multiSelColDependent == true && row[$scope.vxConfig.multiSelectionDependentCol] == false)) {

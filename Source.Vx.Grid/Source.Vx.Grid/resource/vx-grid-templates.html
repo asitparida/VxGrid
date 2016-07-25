@@ -108,7 +108,7 @@
                                                                 <i class="icon icon-search"></i>
                                                             </div>
                                                         </li>
-                                                        <li class="filter" ng-if="vxGridCtrl.vxColSettings.dropdDownLoaded[header.id] == true && vxGridCtrl.vxColSettings.dropDownFilters[header.id] == true && filter.disabled == false" ng-repeat="filter in vxGridCtrl.vxColSettings.colFilterPairs[header.id] | limitTo:header.filterLimit | filter:vxGridCtrl.vxColSettings.filterSearchToken[header.id]">
+                                                        <li class="filter" ng-if="vxGridCtrl.vxColSettings.dropdDownLoaded[header.id] == true && vxGridCtrl.vxColSettings.dropDownFilters[header.id] == true" ng-repeat="filter in (vxGridCtrl.vxColSettings.colFilterPairs[header.id] | filter:{'disabled': false}) | limitTo:header.filterLimit | filter:vxGridCtrl.vxColSettings.filterSearchToken[header.id]">
                                                             <input class="filter-toggle" tabindex="0" type="checkbox" ng-model="vxGridCtrl.vxColSettings.colFiltersStatus[filter.key]" ng-change="vxGridCtrl.filterClick(header, filter)" ng-attr-id="{{::header.id}}_filter_{{::$index}}" /><label class="filterItemTitle" ng-attr-for="{{::header.id}}_filter_{{::$index}}"><span ng-if="filter.filterDefnAvailable == false"><span class="offscreen">{{::header.columnName}} filter </span> {{::filter.name}}</span><span ng-if="filter.filterDefnAvailable == true" vx-compile="filter.filterDefn"></span></label>
                                                         </li>
                                                     </ul>

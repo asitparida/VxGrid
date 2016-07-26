@@ -35,7 +35,7 @@
                     </div>
                     <div class="vxTableOperations pull-right zeroPaddingRight" ng-if="vxGridCtrl.vxConfig.showGridOptions">
                         <div class="search-container pull-left input-group">
-                            <input class="search form-control" type="search" ng-model="vxGridCtrl.vxColSettings.searchToken" placeholder="Search" ng-keyup="keyUpSearch($event)" aria-label="search table" />
+                            <input class="search form-control" type="search" ng-model="vxGridCtrl.vxColSettings.searchToken" placeholder="Search" ng-keyup="vxGridCtrl.keyUpSearch($event)" aria-label="search table" />
                         </div>
                         <div class="icon-container pull-left" role="button" tabindex="0" ng-if="vxGridCtrl.vxConfig.inlineEditingEnabled == true && vxGridCtrl.vxConfig.inlineAddRowEnabled == true" ax-key="vxGridCtrl.addNewRow()" aria-label="add new row">
                             <i class="icon icon-add"></i>

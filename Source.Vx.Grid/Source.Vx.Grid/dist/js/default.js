@@ -1,1 +1,1 @@
-﻿angular.module('vxSample', ['vx.grid.modules', 'ui.ml.select', 'fng']);
+﻿angular.module('vxSample', ['vx.grid.modules', 'ui.ml.select']);

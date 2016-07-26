@@ -482,7 +482,7 @@
 	        }
 	        return [];
 	    };
-	})
+	});
 
     function VxGridController($scope, $modal, $sce, $timeout, $rootScope, $window, $filter, $q, $compile) {
         var self = this;
@@ -1039,7 +1039,7 @@
                 if (typeof _ostate === 'undefined' || _ostate == null || _ostate == false) {
                     self.vxColSettings.rowSelected[_id] = true;
                     self.vxColSettings.multiSelected.push(_id);
-                    _modIds.push(_id);//vx_row-sel_in_XXX-XXXX-XXXX_0_0
+                    _modIds.push(_id);
                     if (self.vxConfig.hybrid == true) {
                         var _element = angular.element(document.getElementById('vx_row-sel_in_' + _id));
                         if (typeof _element !== 'undefined' && _element != null && _element.length > 0) {

@@ -207,7 +207,7 @@
         if (col.id == 'category')
             tmpl = tmpl.replace('VX_DATA_POINT', row[col.id].name || '');
         if (col.id == 'link') {
-            tmpl = '<a href ng-click="vxConfig.showNotes(\'VX_ROW_ID\')">VX_DATA_POINT</span>';
+            tmpl = '<a href ng-click="vxGridCtrl.vxConfig.showNotes(\'VX_ROW_ID\')">VX_DATA_POINT</span>';
             tmpl = tmpl.replace('VX_DATA_POINT', row[col.id] || '');
             tmpl = tmpl.replace('VX_ROW_ID', row['laborId'] || '');
         }

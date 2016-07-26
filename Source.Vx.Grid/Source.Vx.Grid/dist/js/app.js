@@ -124,7 +124,7 @@
         inlineDeleteOverrideEnabled: true,
         allRowsInDefaultEdit: true,
         showGridStats: true,
-        showGridOptions: true,
+        showGridOptions: false,
         latchExcess: 20,
         data: self.sampling(1000, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,

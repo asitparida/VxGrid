@@ -76,7 +76,7 @@
                     new Date(2015, 01, 11, 0, 0, 0, 0),
                     new Date(2015, 01, 09, 0, 0, 0, 0),
                 ]);
-                rec.dt1 = _.sample([rec.dt, null]);
+                rec.dt1 = _.sample(['', rec.dt, null]);
                 rec.dt2 = rec.dt;
                 rec.dt3 = rec.dt;
                 rec.dt4 = rec.dt;
@@ -122,15 +122,15 @@
         inlineEditSyncEnabled: true,
         inlineSaveOverrideEnabled: true,
         inlineDeleteOverrideEnabled: true,
-        allRowsInDefaultEdit: true,
+        allRowsInDefaultEdit: false,
         showGridStats: true,
-        showGridOptions: true,
+        showGridOptions: false,
         latchExcess: 20,
-        data: self.sampling(1000, 'Coho Vineyard 1111'),
+        data: self.sampling(100, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
         bindOnce: false,
-        hybrid: true,
+        hybrid: false,
         //initialRowClasses: self.sampleRowClasses,
         rowClassFn: randomRowFunction,
         hybridCellDefn: hybridCellDefn,

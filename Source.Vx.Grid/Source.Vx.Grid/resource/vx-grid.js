@@ -1293,6 +1293,7 @@
                                         if (filterListForColAvailable == false) {
                                             $scope.vxColSettings.dropDownFilters[_colDefn.id] = true;
                                             $scope.vxColSettings.colFilterPairs[_colDefn.id] = [];
+                                            var _pairs = [];
                                             var uniqed = _.uniq(_.map($scope.vxConfig.vxData, function (item) {
                                                 var ret = { 'value': item[_colDefn.id], 'type': '' };
                                                 if (typeof ret.value !== 'undefined' && ret.value != null && ret.value != {} && typeof ret.value != 'object' && typeof ret.value != 'number' && typeof ret.value != 'boolean') {
@@ -1322,10 +1323,14 @@
                                                 else {
                                                     pair.filterDefnAvailable = false;
                                                 }
-                                                $scope.vxColSettings.colFilterPairs[_colDefn.id].push(pair);
+                                                _pairs.push(pair);
                                                 _colDefn.idCollection.push(_colDefn.id + '_filter_' + iterator);
                                                 $scope.vxColSettings.colFiltersStatus[key] = false;
                                             });
+                                            _pairs = _.sortBy(_pairs, 'label');
+                                            _.each(_pairs, function (_pair) {
+                                                $scope.vxColSettings.colFilterPairs[_colDefn.id].push(_pair);
+                                            })
                                             $scope.vxColSettings.filterSearchToken[_colDefn.id] = '';
                                             $scope.vxColSettings.colFiltersActivated[_colDefn.id] = false;
                                         }
@@ -2472,7 +2477,7 @@
                         unionedMatches = _.union(unionedMatches, _.filter(copyOfItems, function (item) {
                             if (typeof match.label !== 'undefined' && match.label != null && match.label != {} && typeof item[match.col] !== 'undefined' && item[match.col] != null && item[match.col] != {}) {
                                 if (match.type == 'date') {
-                                    return item[match.col].getTime() == match.label;
+                                    return typeof item[match.col] !== 'undefined' && item[match.col] != {} && item[match.col] != null && item[match.col] != '' ? item[match.col].getTime() == match.label : false;
                                 }
                                 if (match.type == 'object')
                                     return JSON.stringify(item[match.col]).localeCompare(JSON.stringify(match.label)) == 0;

@@ -19,7 +19,7 @@
         <div class="vxH100 vx-grid-inner vx-grid-related " ng-class="{ 'vxXsViewEnabled' : vxColSettings.xsViewEnabled == true}">
             <div class="row hidden-xs">
                 <div class="col-xs-12">
-                    <div class="col-md-4 vsTableStats pull-left zeroPaddingLeft" ng-if="vxConfig.showGridStats">
+                    <div class="col-md-6 vsTableStats pull-left zeroPaddingLeft" ng-if="vxConfig.showGridStats">
                         <label class="statTitle">All</label>
                         <label class="statValue">{{getAllRowLength() | vxNumberFixedLen:2}}</label>
                         <label class="statTitle" ng-class="{ 'disabled' : multiBoxFilters.length == 0}">Filtered</label>

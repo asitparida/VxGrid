@@ -559,7 +559,7 @@
                         if ($scope.vxConfig.selectionAtMyRisk == true) {
                             $scope.vxColSettings.multiSelected = [];
                             for (var id in $scope.vxColSettings.rowSelected) {
-                                if ($scope.vxColSettings.rowSelected[id] == true) {
+                                if ($scope.vxColSettings.rowSelected[id] == true && typeof id !== 'undefined' && id.toString() != 'undefined') {
                                     $scope.vxColSettings.multiSelected.push(id);
                                 }
                             }
@@ -1532,7 +1532,7 @@
                 $scope.allRowSelectionChanged = function () {
                     var toggleTo = $scope.vxColSettings.allRowSelected;
                     if (toggleTo == true) {
-                        _.each($scope.vxConfig.vxData, function (row) {
+                        _.each($scope.vxConfig.vxFilteredData, function (row) {
                             if (row.fillEmptyElement != true) {
                                 var pid = row[$scope.vxColSettings.primaryId];
                                 if ($scope.vxColSettings.rowSelected[pid] == false && toggleTo == true) {

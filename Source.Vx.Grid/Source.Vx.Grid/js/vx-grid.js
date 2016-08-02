@@ -1178,7 +1178,8 @@
                 /// <param name="page" type="int">PAGE NUMBER WHICH NEEDS TO BE ACTIVATED</param>
                 $scope.activatePage = function (page) {
                     $scope.vxColSettings.activePage = page;
-                    $scope.vxColSettings.vxPageStartPosition = (page > 0 ? page * $scope.vxConfig.pageLength - 1 : 0);
+                    $scope.vxColSettings.vxPageStartPosition = (page > 0 ? page * $scope.vxConfig.pageLength : 0);
+                    $scope.vxColSettings.allRowSelected = false;
                 }
 
                 /// <summary>GRID FUNCTION : DEBOUNCE THE SEARCH SO AS TO THROTTLE SEARCHING IN GRID AND PREVENT CLASHING OF DIGEST CYCLES</summary>
@@ -1532,8 +1533,15 @@
                 $scope.allRowSelectionChanged = function () {
                     var toggleTo = $scope.vxColSettings.allRowSelected;
                     if (toggleTo == true) {
-                        _.each($scope.vxConfig.vxFilteredData, function (row) {
-                            if (row.fillEmptyElement != true) {
+                        _.each($scope.vxConfig.vxFilteredData, function (row, iter) {
+                            var _proceed = true;
+                            if ($scope.vxConfig.pagination == true && $scope.vxConfig.virtualization == false) {
+                                //vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength
+                                if (!(iter >= $scope.vxColSettings.vxPageStartPosition && iter < $scope.vxColSettings.vxPageStartPosition + $scope.vxConfig.pageLength)) {
+                                    _proceed = false;
+                                }
+                            }
+                            if (row.fillEmptyElement != true && _proceed) {
                                 var pid = row[$scope.vxColSettings.primaryId];
                                 if ($scope.vxColSettings.rowSelected[pid] == false && toggleTo == true) {
                                     $scope.vxColSettings.rowSelected[pid] = true;

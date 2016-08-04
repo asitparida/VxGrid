@@ -203,7 +203,7 @@
                                 <tbody class="vxBody" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.hybrid == true" ng-attr-id="_vxHybrid{{vxConfig.id}}"></tbody>
                             </table>
                             <span class="offscreen">
-                                <span class="offscreen" style="visibility:collapse;" role="rowheader" ng-repeat="row in vxConfig.vxFilteredData" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{::row[vxConfig.ariaPrimary]}}</span>
+                                <span class="offscreen" style="visibility:collapse;" ng-repeat="row in vxConfig.vxFilteredData" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{::row[vxConfig.ariaPrimary]}}</span>
                             </span>
                         </div>
                     </div>

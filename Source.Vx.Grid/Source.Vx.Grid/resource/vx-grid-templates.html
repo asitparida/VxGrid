@@ -108,7 +108,7 @@
                                                                 <i class="icon icon-search"></i>
                                                             </div>
                                                         </li>
-                                                        <li class="filter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true" ng-repeat="filter in (vxColSettings.colFilterPairs[header.id] | filter:{'disabled': false}) | limitTo:header.filterLimit | filter:vxColSettings.filterSearchToken[header.id]">
+                                                        <li class="filter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true" ng-repeat="filter in ((vxColSettings.colFilterPairs[header.id] | filter:{'disabled': false} | filter:vxColSettings.filterSearchToken[header.id]) | limitTo:header.filterLimit )">
                                                             <input class="filter-toggle" tabindex="0" type="checkbox" ng-model="vxColSettings.colFiltersStatus[filter.key]" ng-change="filterClick(header, filter)" ng-attr-id="{{vxConfig.id}}_{{::header.id}}_filter_{{::$index}}" /><label class="filterItemTitle" ng-attr-for="{{vxConfig.id}}_{{::header.id}}_filter_{{::$index}}"><span ng-if="filter.filterDefnAvailable == false"><span class="offscreen">{{::header.columnName}} filter </span> {{::filter.name}}</span><span ng-if="filter.filterDefnAvailable == true" vx-compile="filter.filterDefn"></span></label>
                                                         </li>
                                                     </ul>
@@ -203,7 +203,7 @@
                                 <tbody class="vxBody" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.hybrid == true" ng-attr-id="_vxHybrid{{vxConfig.id}}"></tbody>
                             </table>
                             <span class="offscreen">
-                                <span class="offscreen" style="visibility:collapse;" role="rowheader" ng-repeat="row in vxConfig.vxFilteredData" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{::row[vxConfig.ariaPrimary]}}</span>
+                                <span class="offscreen" style="visibility:collapse;" ng-repeat="row in vxConfig.vxFilteredData" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{::row[vxConfig.ariaPrimary]}}</span>
                             </span>
                         </div>
                     </div>

@@ -1212,8 +1212,15 @@
 
                 $scope.filterAssignVar = function (id) {
                     var _input = angular.element(document.getElementById(id + '_searchfilters_' + $scope.vxConfig.id));
-                    if (typeof _input !== 'undefined' && _input.length > 0)
+                    if (typeof _input !== 'undefined' && _input.length > 0) {
                         $scope.vxColSettings.filterSearchToken[id] = _input[0].value;
+                        _.each($scope.vxConfig.columnDefConfigs, function (head) {
+                            if (head.id == id) {
+                                head.filterLimit = 10;
+                                lastScroll[id] = 0
+                            }
+                        });
+                    }
                 }
 
                 $scope.filterKeyDown = function ($event, id) {

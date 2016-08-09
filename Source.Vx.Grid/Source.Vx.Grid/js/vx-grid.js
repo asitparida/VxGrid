@@ -1217,7 +1217,7 @@
                         _.each($scope.vxConfig.columnDefConfigs, function (head) {
                             if (head.id == id) {
                                 head.filterLimit = 10;
-                                lastScroll[id] = 0
+                                lastScroll[id] = 0;
                             }
                         });
                     }

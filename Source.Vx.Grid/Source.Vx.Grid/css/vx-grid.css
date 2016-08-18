@@ -51,292 +51,127 @@
   width: 1px;
   overflow: hidden; }
 
-@media (max-width: 767px) {
-  .vx-grid-related.vxXsViewEnabled .vxTableContainer {
-    padding: 0;
-    margin: 0;
-    overflow: auto;
-    height: calc(100% - 15px);
-    -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
-    -webkit-transition: height 0.3s ease-in-out 0s;
-    -moz-transition: height 0.3s ease-in-out 0s;
-    -o-transition: height 0.3s ease-in-out 0s;
-    transition: height 0.3s ease-in-out 0s; }
-    .vx-grid-related.vxXsViewEnabled .vxTableContainer.pageEnabled {
-      height: calc(100% - 63px); }
-    .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable {
-      table-layout: fixed;
-      font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-      width: 100%;
-      border: 1px solid #006ebd; }
-      .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxHead .vxHeadRowCell {
-        width: 100%; }
-        .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxHead .vxHeadRowCell .icon {
-          background-position-x: -28px; }
-      .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBody .vxBodyRow {
-        border-bottom: 1px solid #e0e0e0;
-        width: 100%; }
-      .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell {
-        width: 100%; }
-        .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell .xsSelectionHolder {
-          width: 48px;
-          line-height: 48px;
-          display: inline-block;
-          vertical-align: top; }
-        .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell .xsRowViewToggleHolder {
-          width: 48px;
-          line-height: 48px;
-          display: inline-block;
-          position: relative;
-          top: 4px;
-          left: 4px;
-          cursor: pointer; }
-        .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell .xsRowTitleHolder {
-          width: calc(100% - 52px);
-          line-height: 48px;
-          display: inline-block;
-          cursor: pointer;
-          vertical-align: top; }
-        .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell.rowSelectionEnabled .xsRowTitleHolder {
-          width: calc(100% - 105px); }
-        .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell .xsCellContentHolder {
-          padding: 0 12px; }
-        .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell .xsCellContent {
-          padding-bottom: 10px; }
-          .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell .xsCellContent .xsCellHeader {
-            font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-            font-weight: 400;
-            text-transform: uppercase;
-            font-size: small;
-            letter-spacing: 1px;
-            color: #0073c6;
-            padding: 0; }
-          .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell .xsCellContent .xsCellValue {
-            font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-            font-weight: 400;
-            font-size: medium;
-            padding: 0;
-            -ms-text-overflow: ellipsis;
-            -o-text-overflow: ellipsis;
-            text-overflow: ellipsis;
-            white-space: normal;
-            -ms-word-break: break-all;
-            word-break: break-all; }
-      .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxHead .vxHeadRow th .icon-container {
-        border: none;
-        color: #fff;
-        background: transparent;
-        margin-left: 0; }
-        .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxHead .vxHeadRow th .icon-container:not(.active):hover, .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxHead .vxHeadRow th .icon-container:not(.active):active, .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxHead .vxHeadRow th .icon-container:not(.active):focus {
-          background: transparent;
-          color: #fff; }
-        .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxHead .vxHeadRow th .icon-container.active:hover, .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxHead .vxHeadRow th .icon-container.active:active, .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxHead .vxHeadRow th .icon-container.active:focus {
-          background: transparent;
-          color: #fff; }
-      .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell .icon-container {
-        margin: 0;
-        width: 40px;
-        height: 40px;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        background: none; }
-        .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell .icon-container:not(.active):hover {
-          background: transparent; }
-  .vx-grid-related.vxXsViewEnabled .vxBodyRowCell.xsCell .icon-container:not(.active):active, .vx-grid-related.vxXsViewEnabled .vxBodyRowCell.xsCell .icon-container:not(.active):focus {
-    background: transparent; }
-  .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell .icon-container.active:hover, .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell .icon-container.active:active, .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBodyRowCell.xsCell .icon-container.active:focus {
-    background: transparent; }
-  .vx-grid-related.vxXsViewEnabled .vxTableContainer .icon-container:not(.scrollAction).active {
-    background: transparent;
-    color: #fff; }
-  .vx-grid-related.vxXsViewEnabled .vxTableContainer .icon-container:not(.scrollAction).disabled {
-    background: transparent;
-    color: #fff;
-    opacity: 0.33;
-    filter: alpha(opacity=33);
-    cursor: none; }
-  .vx-grid-related.vxXsViewEnabled .vxTableContainer .icon-container:not(.scrollAction):not(.disabled):hover, .vx-grid-related.vxXsViewEnabled .vxTableContainer .icon-container:not(.scrollAction):not(.disabled):active, .vx-grid-related.vxXsViewEnabled .vxTableContainer .icon-container:not(.scrollAction):not(.disabled):focus {
-    background: transparent; }
-  .vx-grid-related.vxXsViewEnabled .vxTableContainer .icon-container:not(.scrollAction):not(.active):hover, .vx-grid-related.vxXsViewEnabled .vxTableContainer .icon-container:not(.scrollAction):not(.active):active, .vx-grid-related.vxXsViewEnabled .vxTableContainer .icon-container:not(.scrollAction):not(.active):focus {
-    background: transparent; }
-  .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxHead .vxHeadRow th {
-    padding: 0 10px 5px 0;
-    height: 60px;
-    -ms-text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    -ms-word-break: break-all;
-    word-break: break-all;
-    background: #0073c6; }
-  .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBody:not(.revealWrap) .vxBodyRow td {
-    padding: 0 5px;
-    height: 48px;
-    overflow: hidden;
-    -ms-text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    -ms-word-break: break-all;
-    word-break: break-all;
-    text-align: left; }
-  .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBody.revealWrap .vxBodyRow td {
-    padding: 0;
-    height: 48px;
-    overflow: hidden;
-    -ms-word-break: break-all;
-    word-break: break-all;
-    text-align: left; }
-  .vx-grid-related.vxXsViewEnabled .icon-container.scrollAction {
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    opacity: 1;
-    filter: alpha(opacity=100);
-    margin: 0;
-    background: #006ebd;
-    color: #fff;
-    border-radius: 50%; }
-    .vx-grid-related.vxXsViewEnabled .icon-container.scrollAction.pageEnabled {
-      bottom: 63px; }
-    .vx-grid-related.vxXsViewEnabled .icon-container.scrollAction .icon.icon-up {
-      background-position-y: -342px;
-      background-position-x: -28px; }
-    .vx-grid-related.vxXsViewEnabled .icon-container.scrollAction:hover, .vx-grid-related.vxXsViewEnabled .icon-container.scrollAction:active, .vx-grid-related.vxXsViewEnabled .icon-container.scrollAction:focus {
-      position: absolute;
-      bottom: 15px;
-      right: 15px;
-      margin: 0;
-      opacity: 1;
-      filter: alpha(opacity=100);
-      z-index: 9999;
-      background: #006ebd;
-      color: #fff;
-      outline: 1px dotted #fff; }
-  .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBody .vx-row-select {
-    width: 48px;
-    height: 48px;
-    line-height: 48px;
-    position: relative; }
-    .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxBody .vx-row-select input[type="checkbox"] {
-      width: 24px;
-      height: 24px;
-      line-height: normal;
-      margin: 0;
-      position: absolute;
-      top: 12px;
-      left: 12px; }
-  .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxHead tr th:nth-child(2n+1), .vx-grid-related.vxXsViewEnabled .vxTableContainer .vxTable .vxHead tr th:nth-child(2n) {
-    background-color: #006ebd; } }
+.vx-grid-related .vxTableContainer:not(.scrollDupHeader) {
+  padding: 0;
+  margin: 3px 0 0 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: calc(100% - 48px);
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  border-top: none;
+  border-left: 1px dotted #909090;
+  border-right: 1px dotted #909090;
+  border-bottom: 1px dotted #909090; }
 
-@media (min-width: 768px) {
-  .vx-grid-related .vxTableContainer:not(.scrollDupHeader) {
-    padding: 0;
-    margin: 3px 0 0 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: calc(100% - 48px);
-    -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
-    border-top: none;
-    border-left: 1px dotted #909090;
-    border-right: 1px dotted #909090;
-    border-bottom: 1px dotted #909090; }
-  .vx-grid-related .icon-container.scrollAction {
+.vx-grid-related .icon-container.scrollAction {
+  position: absolute;
+  bottom: 25px;
+  right: 15px;
+  opacity: 0.25;
+  filter: alpha(opacity=25);
+  border-radius: 50%; }
+  .vx-grid-related .icon-container.scrollAction.up {
+    right: 68px; }
+  .vx-grid-related .icon-container.scrollAction.down {
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg); }
+  .vx-grid-related .icon-container.scrollAction.pageEnabled {
+    bottom: 73px; }
+  .vx-grid-related .icon-container.scrollAction:hover, .vx-grid-related .icon-container.scrollAction:active, .vx-grid-related .icon-container.scrollAction:focus {
     position: absolute;
     bottom: 25px;
-    right: 15px;
-    opacity: 0.25;
-    filter: alpha(opacity=25);
-    border-radius: 50%; }
-    .vx-grid-related .icon-container.scrollAction.up {
-      right: 68px; }
-    .vx-grid-related .icon-container.scrollAction.down {
-      -moz-transform: rotate(180deg);
-      -ms-transform: rotate(180deg);
-      -o-transform: rotate(180deg);
-      -webkit-transform: rotate(180deg);
-      transform: rotate(180deg); }
-    .vx-grid-related .icon-container.scrollAction.pageEnabled {
-      bottom: 73px; }
-    .vx-grid-related .icon-container.scrollAction:hover, .vx-grid-related .icon-container.scrollAction:active, .vx-grid-related .icon-container.scrollAction:focus {
-      position: absolute;
-      bottom: 25px;
-      opacity: 1;
-      filter: alpha(opacity=100);
-      z-index: 9999;
-      background: #006ebd !important;
-      color: #fff;
-      outline: 1px dotted #fff; }
-      .vx-grid-related .icon-container.scrollAction:hover .icon.icon-up, .vx-grid-related .icon-container.scrollAction:active .icon.icon-up, .vx-grid-related .icon-container.scrollAction:focus .icon.icon-up {
-        background-position-y: -342px;
-        background-position-x: -28px; }
-    .vx-grid-related .icon-container.scrollAction.pageEnabled:hover, .vx-grid-related .icon-container.scrollAction.pageEnabled:active, .vx-grid-related .icon-container.scrollAction.pageEnabled:focus {
-      bottom: 73px; }
-  .vx-grid-related .vxTable {
-    table-layout: fixed;
-    font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-    width: 100%; }
-  .vx-grid-related .icon-container.active {
-    background: #006ebd;
-    color: #fff; }
-  .vx-grid-related .icon-container.disabled {
-    color: #000000;
-    background: #D0D0D0;
-    border-color: #000000;
-    opacity: 0.25;
-    filter: alpha(opacity=25);
-    cursor: none; }
-  .vx-grid-related .icon-container:not(.disabled):hover, .vx-grid-related .icon-container:not(.disabled):active, .vx-grid-related .icon-container:not(.disabled):focus {
-    background: rgba(0, 0, 0, 0.1); }
-  .vx-grid-related .icon-container:not(.active):hover, .vx-grid-related .icon-container:not(.active):active, .vx-grid-related .icon-container:not(.active):focus {
-    background: rgba(0, 0, 0, 0.1); }
-  .vx-grid-related .vxTable .vxHead .vxHeadRow th {
-    padding: 0 10px;
-    height: 48px;
-    -ms-text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    -ms-word-break: break-all;
-    word-break: break-all; }
-  .vx-grid-related .vxTable .vxBody:not(.revealWrap) .vxBodyRow td {
-    padding: 0 10px;
-    height: 48px;
-    overflow: hidden;
-    -ms-text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    -ms-word-break: break-all;
-    word-break: break-all;
-    text-align: left;
-    border: 1px solid #E0E0E0; }
-  .vx-grid-related .vxTable .vxBody .vxBodyRow td .vx-edit-input {
-    height: 40px;
-    width: calc(100% - 10px);
-    margin-left: 5px;
-    padding: 0 4px;
-    border-radius: 0; }
-  .vx-grid-related .vxTable .vxBody .vxBodyRow td .vx-edit-textarea {
-    height: 100%;
-    width: calc(100% - 10px);
-    margin-left: 5px;
-    padding: 0 4px;
-    border-radius: 0; }
-  .vx-grid-related .vxTable .vxBody .vxBodyRow td.vxBodyRowCell.renderedDefn {
-    padding: 0; }
-  .vx-grid-related .vxTable .vxBody.revealWrap .vxBodyRow td {
-    padding: 0 10px;
-    height: 48px;
-    overflow: hidden;
-    -ms-word-break: break-all;
-    word-break: break-all;
-    text-align: left; }
-  .vx-grid-related .vxTable .vxHead tr th:nth-child(2n+1) {
-    background-color: #363636; }
-  .vx-grid-related .vxTable .vxHead tr th:nth-child(2n) {
-    background-color: #565656; } }
+    opacity: 1;
+    filter: alpha(opacity=100);
+    z-index: 9999;
+    background: #006ebd !important;
+    color: #fff;
+    outline: 1px dotted #fff; }
+    .vx-grid-related .icon-container.scrollAction:hover .icon.icon-up, .vx-grid-related .icon-container.scrollAction:active .icon.icon-up, .vx-grid-related .icon-container.scrollAction:focus .icon.icon-up {
+      background-position-y: -342px;
+      background-position-x: -28px; }
+  .vx-grid-related .icon-container.scrollAction.pageEnabled:hover, .vx-grid-related .icon-container.scrollAction.pageEnabled:active, .vx-grid-related .icon-container.scrollAction.pageEnabled:focus {
+    bottom: 73px; }
+
+.vx-grid-related .vxTable {
+  table-layout: fixed;
+  font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+  width: 100%; }
+
+.vx-grid-related .icon-container.active {
+  background: #006ebd;
+  color: #fff; }
+
+.vx-grid-related .icon-container.disabled {
+  color: #000000;
+  background: #D0D0D0;
+  border-color: #000000;
+  opacity: 0.25;
+  filter: alpha(opacity=25);
+  cursor: none; }
+
+.vx-grid-related .icon-container:not(.disabled):hover, .vx-grid-related .icon-container:not(.disabled):active, .vx-grid-related .icon-container:not(.disabled):focus {
+  background: rgba(0, 0, 0, 0.1); }
+
+.vx-grid-related .icon-container:not(.active):hover, .vx-grid-related .icon-container:not(.active):active, .vx-grid-related .icon-container:not(.active):focus {
+  background: rgba(0, 0, 0, 0.1); }
+
+.vx-grid-related .vxTable .vxHead .vxHeadRow th {
+  padding: 0 10px;
+  height: 48px;
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -ms-word-break: break-all;
+  word-break: break-all; }
+
+.vx-grid-related .vxTable .vxBody:not(.revealWrap) .vxBodyRow td {
+  padding: 0 10px;
+  height: 48px;
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  text-align: left;
+  border: 1px solid #E0E0E0; }
+
+.vx-grid-related .vxTable .vxBody .vxBodyRow td .vx-edit-input {
+  height: 40px;
+  width: calc(100% - 10px);
+  margin-left: 5px;
+  padding: 0 4px;
+  border-radius: 0; }
+
+.vx-grid-related .vxTable .vxBody .vxBodyRow td .vx-edit-textarea {
+  height: 100%;
+  width: calc(100% - 10px);
+  margin-left: 5px;
+  padding: 0 4px;
+  border-radius: 0; }
+
+.vx-grid-related .vxTable .vxBody .vxBodyRow td.vxBodyRowCell.renderedDefn {
+  padding: 0; }
+
+.vx-grid-related .vxTable .vxBody.revealWrap .vxBodyRow td {
+  padding: 0 10px;
+  height: 48px;
+  overflow: hidden;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  text-align: left; }
+
+.vx-grid-related .vxTable .vxHead tr th:nth-child(2n+1) {
+  background-color: #363636; }
+
+.vx-grid-related .vxTable .vxHead tr th:nth-child(2n) {
+  background-color: #565656; }
 
 .vx-grid-related .vxTableContainer .vxHeadRowCell .search-container {
   width: calc(100% - 150px);

@@ -66,455 +66,170 @@
         overflow: hidden;
     }
 
-    @media (max-width: 767px) {
+    .vxTableContainer:not(.scrollDupHeader) {
+        padding: 0;
+        margin: 3px 0 0 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: calc(100% - 48px);
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+        border-top: none;
+        border-left: 1px dotted #909090;
+        border-right: 1px dotted #909090;
+        border-bottom: 1px dotted #909090;
+    }
 
-        &.vxXsViewEnabled {
-            .vxTableContainer {
-                padding: 0;
-                margin: 0;
-                overflow: auto;
-                height: calc(100% - 15px);
-                -webkit-overflow-scrolling: touch;
-                -ms-overflow-style: -ms-autohiding-scrollbar;
-                -webkit-transition: height 0.3s ease-in-out 0s;
-                -moz-transition: height 0.3s ease-in-out 0s;
-                -o-transition: height 0.3s ease-in-out 0s;
-                transition: height 0.3s ease-in-out 0s;
+    .icon-container.scrollAction {
+        position: absolute;
+        bottom: 25px;
+        right: 15px;
+        opacity: 0.25;
+        filter: alpha(opacity = 25);
+        border-radius: 50%;
 
-                &.pageEnabled {
-                    height: calc(100% - 63px);
-                }
+        &.up {
+            right: 68px;
+        }
 
-                .vxTable {
-                    table-layout: fixed;
-                    font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-                    width: 100%;
-                    border: 1px solid #006ebd;
+        &.down {
+            -moz-transform: rotate(180deg);
+            -ms-transform: rotate(180deg);
+            -o-transform: rotate(180deg);
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
 
-                    .vxHead {
-                        .vxHeadRowCell {
-                            width: 100%;
+        &.pageEnabled {
+            bottom: 73px;
+        }
 
-                            .icon {
-                                background-position-x: -28px;
-                            }
-                        }
-                    }
+        &:hover, &:active, &:focus {
+            position: absolute;
+            bottom: 25px;
+            opacity: 1;
+            filter: alpha(opacity = 100);
+            z-index: 9999;
+            background: #006ebd !important;
+            color: #fff;
+            outline: 1px dotted #fff;
 
-                    .vxBody {
-                        .vxBodyRow {
-                            border-bottom: 1px solid #e0e0e0;
-                            width: 100%;
-                        }
-                    }
-
-                    .vxBodyRowCell.xsCell {
-                        width: 100%;
-
-                        .xsSelectionHolder {
-                            width: 48px;
-                            line-height: 48px;
-                            display: inline-block;
-                            vertical-align: top;
-                        }
-
-                        .xsRowViewToggleHolder {
-                            width: 48px;
-                            line-height: 48px;
-                            display: inline-block;
-                            position: relative;
-                            top: 4px;
-                            left: 4px;
-                            cursor: pointer;
-                        }
-
-                        .xsRowTitleHolder {
-                            width: calc(100% - 52px);
-                            line-height: 48px;
-                            display: inline-block;
-                            cursor: pointer;
-                            vertical-align: top;
-                        }
-
-                        &.rowSelectionEnabled .xsRowTitleHolder {
-                            width: calc(100% - 105px);
-                        }
-
-                        .xsCellContentHolder {
-                            padding: 0 12px;
-                        }
-
-                        .xsCellContent {
-                            padding-bottom: 10px;
-
-                            .xsCellHeader {
-                                font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-                                font-weight: 400;
-                                text-transform: uppercase;
-                                font-size: small;
-                                letter-spacing: 1px;
-                                color: #0073c6;
-                                padding: 0;
-                            }
-
-                            .xsCellValue {
-                                font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-                                font-weight: 400;
-                                font-size: medium;
-                                padding: 0;
-                                -ms-text-overflow: ellipsis;
-                                -o-text-overflow: ellipsis;
-                                text-overflow: ellipsis;
-                                white-space: normal;
-                                -ms-word-break: break-all;
-                                word-break: break-all;
-                            }
-                        }
-                    }
-
-                    .vxHead .vxHeadRow th .icon-container {
-                        border: none;
-                        color: #fff;
-                        background: transparent;
-                        margin-left: 0;
-
-                        &:not(.active) {
-                            &:hover, &:active, &:focus {
-                                background: transparent;
-                                color: #fff;
-                            }
-                        }
-
-                        &.active {
-                            &:hover, &:active, &:focus {
-                                background: transparent;
-                                color: #fff;
-                            }
-                        }
-                    }
-
-                    .vxBodyRowCell.xsCell .icon-container {
-                        margin: 0;
-                        width: 40px;
-                        height: 40px;
-                        border: 1px solid rgba(0, 0, 0, 0.1);
-                        background: none;
-
-                        &:not(.active):hover {
-                            background: transparent;
-                        }
-                    }
+            .icon {
+                &.icon-up {
+                    background-position-y: -342px;
+                    background-position-x: -28px;
                 }
             }
+        }
 
-            .vxBodyRowCell.xsCell .icon-container:not(.active) {
-                &:active, &:focus {
-                    background: transparent;
-                }
-            }
-
-            .vxTableContainer {
-                .vxTable .vxBodyRowCell.xsCell .icon-container.active {
-                    &:hover, &:active, &:focus {
-                        background: transparent;
-                    }
-                }
-
-                .icon-container:not(.scrollAction) {
-                    &.active {
-                        background: transparent;
-                        color: #fff;
-                    }
-
-                    &.disabled {
-                        background: transparent;
-                        color: #fff;
-                        opacity: 0.33;
-                        filter: alpha(opacity = 33);
-                        cursor: none;
-                    }
-
-                    &:not(.disabled) {
-                        &:hover, &:active, &:focus {
-                            background: transparent;
-                        }
-                    }
-
-                    &:not(.active) {
-                        &:hover, &:active, &:focus {
-                            background: transparent;
-                        }
-                    }
-                }
-
-                .vxTable {
-                    .vxHead .vxHeadRow th {
-                        padding: 0 10px 5px 0;
-                        height: 60px;
-                        -ms-text-overflow: ellipsis;
-                        -o-text-overflow: ellipsis;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                        -ms-word-break: break-all;
-                        word-break: break-all;
-                        background: #0073c6;
-                    }
-
-                    .vxBody {
-                        &:not(.revealWrap) .vxBodyRow td {
-                            padding: 0 5px;
-                            height: 48px;
-                            overflow: hidden;
-                            -ms-text-overflow: ellipsis;
-                            -o-text-overflow: ellipsis;
-                            text-overflow: ellipsis;
-                            white-space: nowrap;
-                            -ms-word-break: break-all;
-                            word-break: break-all;
-                            text-align: left;
-                        }
-
-                        &.revealWrap .vxBodyRow td {
-                            padding: 0;
-                            height: 48px;
-                            overflow: hidden;
-                            -ms-word-break: break-all;
-                            word-break: break-all;
-                            text-align: left;
-                        }
-                    }
-                }
-            }
-
-            .icon-container.scrollAction {
-                position: absolute;
-                bottom: 15px;
-                right: 15px;
-                opacity: 1;
-                filter: alpha(opacity = 100);
-                margin: 0;
-                background: #006ebd;
-                color: #fff;
-                border-radius: 50%;
-
-                &.pageEnabled {
-                    bottom: 63px;
-                }
-
-                .icon {
-                    &.icon-up {
-                        background-position-y: -342px;
-                        background-position-x: -28px;
-                    }
-                }
-
-                &:hover, &:active, &:focus {
-                    position: absolute;
-                    bottom: 15px;
-                    right: 15px;
-                    margin: 0;
-                    opacity: 1;
-                    filter: alpha(opacity = 100);
-                    z-index: 9999;
-                    background: #006ebd;
-                    color: #fff;
-                    outline: 1px dotted #fff;
-                }
-            }
-
-            .vxTableContainer .vxTable {
-                .vxBody .vx-row-select {
-                    width: 48px;
-                    height: 48px;
-                    line-height: 48px;
-                    position: relative;
-
-                    input[type="checkbox"] {
-                        width: 24px;
-                        height: 24px;
-                        line-height: normal;
-                        margin: 0;
-                        position: absolute;
-                        top: 12px;
-                        left: 12px;
-                    }
-                }
-
-                .vxHead tr th {
-                    &:nth-child(2n+1), &:nth-child(2n) {
-                        background-color: #006ebd;
-                    }
-                }
+        &.pageEnabled {
+            &:hover, &:active, &:focus {
+                bottom: 73px;
             }
         }
     }
 
-    @media (min-width: 768px) {
-        .vxTableContainer:not(.scrollDupHeader) {
-            padding: 0;
-            margin: 3px 0 0 0;
-            overflow-x: hidden;
-            overflow-y: auto;
-            height: calc(100% - 48px);
-            -webkit-overflow-scrolling: touch;
-            -ms-overflow-style: -ms-autohiding-scrollbar;
-            border-top: none;
-            border-left: 1px dotted #909090;
-            border-right: 1px dotted #909090;
-            border-bottom: 1px dotted #909090;
+    .vxTable {
+        table-layout: fixed;
+        font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+        width: 100%;
+    }
+
+    .icon-container {
+        &.active {
+            background: #006ebd;
+            color: #fff;
         }
 
-        .icon-container.scrollAction {
-            position: absolute;
-            bottom: 25px;
-            right: 15px;
+        &.disabled {
+            color: #000000;
+            background: #D0D0D0;
+            border-color: #000000;
             opacity: 0.25;
             filter: alpha(opacity = 25);
-            border-radius: 50%;
+            cursor: none;
+        }
 
-            &.up {
-                right: 68px;
-            }
-
-            &.down {
-                -moz-transform: rotate(180deg);
-                -ms-transform: rotate(180deg);
-                -o-transform: rotate(180deg);
-                -webkit-transform: rotate(180deg);
-                transform: rotate(180deg);
-            }
-
-            &.pageEnabled {
-                bottom: 73px;
-            }
-
+        &:not(.disabled) {
             &:hover, &:active, &:focus {
-                position: absolute;
-                bottom: 25px;
-                opacity: 1;
-                filter: alpha(opacity = 100);
-                z-index: 9999;
-                background: #006ebd !important;
-                color: #fff;
-                outline: 1px dotted #fff;
-
-                .icon {
-                    &.icon-up {
-                        background-position-y: -342px;
-                        background-position-x: -28px;
-                    }
-                }
-            }
-
-            &.pageEnabled {
-                &:hover, &:active, &:focus {
-                    bottom: 73px;
-                }
+                background: rgba(0, 0, 0, 0.1);
             }
         }
 
-        .vxTable {
-            table-layout: fixed;
-            font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-            width: 100%;
-        }
-
-        .icon-container {
-            &.active {
-                background: #006ebd;
-                color: #fff;
-            }
-
-            &.disabled {
-                color: #000000;
-                background: #D0D0D0;
-                border-color: #000000;
-                opacity: 0.25;
-                filter: alpha(opacity = 25);
-                cursor: none;
-            }
-
-            &:not(.disabled) {
-                &:hover, &:active, &:focus {
-                    background: rgba(0, 0, 0, 0.1);
-                }
-            }
-
-            &:not(.active) {
-                &:hover, &:active, &:focus {
-                    background: rgba(0, 0, 0, 0.1);
-                }
+        &:not(.active) {
+            &:hover, &:active, &:focus {
+                background: rgba(0, 0, 0, 0.1);
             }
         }
+    }
 
-        .vxTable {
-            .vxHead .vxHeadRow th {
+    .vxTable {
+        .vxHead .vxHeadRow th {
+            padding: 0 10px;
+            height: 48px;
+            -ms-text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            -ms-word-break: break-all;
+            word-break: break-all;
+        }
+
+        .vxBody {
+            &:not(.revealWrap) .vxBodyRow td {
                 padding: 0 10px;
                 height: 48px;
+                overflow: hidden;
                 -ms-text-overflow: ellipsis;
                 -o-text-overflow: ellipsis;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 -ms-word-break: break-all;
                 word-break: break-all;
+                text-align: left;
+                border: 1px solid #E0E0E0;
             }
 
-            .vxBody {
-                &:not(.revealWrap) .vxBodyRow td {
-                    padding: 0 10px;
-                    height: 48px;
-                    overflow: hidden;
-                    -ms-text-overflow: ellipsis;
-                    -o-text-overflow: ellipsis;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    -ms-word-break: break-all;
-                    word-break: break-all;
-                    text-align: left;
-                    border: 1px solid #E0E0E0;
+            .vxBodyRow td {
+                .vx-edit-input {
+                    height: 40px;
+                    width: calc(100% - 10px);
+                    margin-left: 5px;
+                    padding: 0 4px;
+                    border-radius: 0;
                 }
 
-                .vxBodyRow td {
-                    .vx-edit-input {
-                        height: 40px;
-                        width: calc(100% - 10px);
-                        margin-left: 5px;
-                        padding: 0 4px;
-                        border-radius: 0;
-                    }
-
-                    .vx-edit-textarea {
-                        height: 100%;
-                        width: calc(100% - 10px);
-                        margin-left: 5px;
-                        padding: 0 4px;
-                        border-radius: 0;
-                    }
-
-                    &.vxBodyRowCell.renderedDefn {
-                        padding: 0;
-                    }
+                .vx-edit-textarea {
+                    height: 100%;
+                    width: calc(100% - 10px);
+                    margin-left: 5px;
+                    padding: 0 4px;
+                    border-radius: 0;
                 }
 
-                &.revealWrap .vxBodyRow td {
-                    padding: 0 10px;
-                    height: 48px;
-                    overflow: hidden;
-                    -ms-word-break: break-all;
-                    word-break: break-all;
-                    text-align: left;
+                &.vxBodyRowCell.renderedDefn {
+                    padding: 0;
                 }
+            }
+
+            &.revealWrap .vxBodyRow td {
+                padding: 0 10px;
+                height: 48px;
+                overflow: hidden;
+                -ms-word-break: break-all;
+                word-break: break-all;
+                text-align: left;
             }
         }
+    }
 
-        .vxTable .vxHead tr th {
-            &:nth-child(2n+1) {
-                background-color: #363636;
-            }
+    .vxTable .vxHead tr th {
+        &:nth-child(2n+1) {
+            background-color: #363636;
+        }
 
-            &:nth-child(2n) {
-                background-color: #565656;
-            }
+        &:nth-child(2n) {
+            background-color: #565656;
         }
     }
 
@@ -1121,8 +836,8 @@
                         color: rgba(255,255,255,0.80);
                         background: none;
                         border: 1px solid rgba(255,255,255, 0.60);
-                        will-change:auto;
-                        transform:translateZ(0);
+                        will-change: auto;
+                        transform: translateZ(0);
 
                         &:focus,
                         &:active {
@@ -1147,16 +862,16 @@
                         }
                     }
 
-                    .icon-container{
-                        &.filter-activator{
-                            width:36px;
-                            height:36px;
-                            line-height:36px;
-                            display:inline-block;
-                            margin:0;
-                            color:#fff;
+                    .icon-container {
+                        &.filter-activator {
+                            width: 36px;
+                            height: 36px;
+                            line-height: 36px;
+                            display: inline-block;
+                            margin: 0;
+                            color: #fff;
                             border: 1px solid rgba(255,255,255, 0.60);
-                            float:right;
+                            float: right;
                         }
                     }
                 }

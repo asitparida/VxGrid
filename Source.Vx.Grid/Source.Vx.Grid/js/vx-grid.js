@@ -377,7 +377,8 @@
                             { prop: 'columnDatePipe', defValue: 'dd/MM/yyyy' },
                             { prop: 'renderHybridCellDefn', defValue: false },
                             { prop: 'hybridCompile', defValue: false },
-                            { prop: 'filterLimit', defValue: 10 }
+                            { prop: 'filterLimit', defValue: 10 },
+                            { prop: 'scopeIsRow', defValue: false }
                         ];
                         _.each(_propDefns, function (propDefn) {
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
@@ -796,7 +797,7 @@
 
                     $scope.hybridGetRowTmpl = function (row) {
                         var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow vs-repeat-repeated-element VX_ROW_CLASSES ">VX_ALL_CELLS</tr>';
-                        var cellHolderTmpl = '<td class="vxBodyRowCell VX_TD_CLASS">VX_CELL_CONTENT</td>';
+                        var cellHolderTmpl = '<td class="vxBodyRowCell VX_TD_CLASS" scope="VX_CELL_SCOPE">VX_CELL_CONTENT</td>';
                         var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
                         var cellTmplContent = '<span title="VX_CELL_TMPL">VX_CELL_TMPL</span>';
                         var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" rowid="VX_ROW_ID" type="checkbox" id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /></div>';
@@ -809,7 +810,7 @@
                                 var _cellTmpl = '';
                                 var _cellHolder = cellHolderTmpl;
                                 var _cellClass = '';
-                                if (col.hidden != true) {
+                                if (col.hidden != true) {                                    
                                     if (col.renderHybridCellDefn != true && col.columnIsRowSelect != true && col.columnIsDate != true) {
                                         var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : '';
                                         _cellTmpl = cellTmplContent;
@@ -834,6 +835,10 @@
                                         _cellTmpl = $scope.vxConfig.hybridCellDefn(row, col) || '';
                                         _compile = _compile || col.hybridCompile;
                                     }
+                                    if (col.scopeIsRow == true)
+                                        _cellHolder = _cellHolder.replace('VX_CELL_SCOPE', 'row');
+                                    else
+                                        _cellHolder = _cellHolder.replace('VX_CELL_SCOPE', '');
                                     _cellHolder = _cellHolder.replace('VX_TD_CLASS', _cellClass);
                                     _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
                                     allCells = allCells + _cellHolder;
@@ -1285,17 +1290,17 @@
                                     /* SORT OPERATION */
                                     if (_colDefn.ddSort == true) {
                                         $scope.vxColSettings.dropDownSort[_colDefn.id] = true;
-                                        _colDefn.idCollection.push(_colDefn.id + '_sort');
+                                        _colDefn.idCollection.push($scope.vxConfig.id + '_' + _colDefn.id + '_sort');
                                     }
                                     /* GROUP OPERATION */ /* UNSUPPORTED IN HYBRID MODE */
                                     if (_colDefn.ddGroup == true && $scope.vxConfig.hybrid != true) {
                                         $scope.vxColSettings.dropDownGroup[_colDefn.id] = true;
-                                        _colDefn.idCollection.push(_colDefn.id + '_group');
-                                        _colDefn.idCollection.push(_colDefn.id + '_ungroup');
+                                        _colDefn.idCollection.push($scope.vxConfig.id + '_' + _colDefn.id + '_group');
+                                        _colDefn.idCollection.push($scope.vxConfig.id + '_' + _colDefn.id + '_ungroup');
                                     }
                                     /* FILTER OPERATION */
                                     if (_colDefn.ddFilters == true) {
-                                        _colDefn.idCollection.push(_colDefn.id + '_clearfilters');
+                                        _colDefn.idCollection.push($scope.vxConfig.id + '_' + _colDefn.id + '_clearfilters');
                                         _colDefn.idCollection.push(_colDefn.id + '_searchfilters_' + $scope.vxConfig.id);
                                         /*  POPULATE LIST OF FILTERS*/
                                         if (filterListForColAvailable == false) {
@@ -1332,7 +1337,7 @@
                                                     pair.filterDefnAvailable = false;
                                                 }
                                                 _pairs.push(pair);
-                                                _colDefn.idCollection.push(_colDefn.id + '_filter_' + iterator);
+                                                _colDefn.idCollection.push($scope.vxConfig.id + '_' + _colDefn.id + '_filter_' + iterator);
                                                 $scope.vxColSettings.colFiltersStatus[key] = false;
                                             });
                                             _pairs = _.sortBy(_pairs, 'label');

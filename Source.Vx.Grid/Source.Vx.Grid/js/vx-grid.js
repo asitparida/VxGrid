@@ -1862,14 +1862,15 @@
                 /// <summary>GRID FUNCTION : FUNCTION TO HELP UP DOWN KEY STROKE MOVEMENTS IN MENU</summary>
                 $scope.upDowKeyDownHandlerHeaderMenuItems = function (e, columnId) {
                     var _prevent = false;
-                    if (e.keyCode != 40 && e.keyCode != 38 && e.keyCode != 27)
+                    if (e.keyCode != 40 && e.keyCode != 38 && e.keyCode != 27 && e.keyCode != 9)
                         return false;
-                    if (e.keyCode == 40) {
+                    if (e.keyCode == 40 || e.keyCode == 9) {
                         /* DOWN ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, true);
                         if ($('#' + _elemId).is('[tabindex="0"]')) {
                             $('#' + _elemId).focus();
                         }
+                        _prevent = true;
                     }
                     else if (e.keyCode == 38) {
                         /* UP ARROW KEY PRESSED */

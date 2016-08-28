@@ -1204,6 +1204,12 @@
 
                 $scope.filtTokenChange = function (id) {
                     $scope.vxColSettings.filterSearchToken[id] = $scope.vxColSettings.enteredSearchToken[id];
+                    _.each($scope.vxConfig.columnDefConfigs, function (head) {
+                        if (head.id == id) {
+                            head.filterLimit = 10;
+                            lastScroll[id] = 0;
+                        }
+                    });
                 }
 
                 $scope.debFiltTokenChange = _.debounce($scope.filtTokenChange, 10);
@@ -1809,6 +1815,8 @@
                     var _id = index;
                     var _i = index;
                     if (direction) {
+                        if (_i + 1 == collection.length)
+                            _i = -1;
                         while (_i <= collection.length) {
                             var _element = $('#' + collection[_i + 1]);
                             if ($(_element).is('[tabindex="0"]')) {
@@ -1819,6 +1827,8 @@
                         }
                     }
                     else if (!direction) {
+                        if (_i == 0)
+                            _i = collection.length;
                         while (_i >= 1) {
                             var _element = $('#' + collection[_i - 1]);
                             if ($(_element).is('[tabindex="0"]')) {
@@ -1841,7 +1851,7 @@
                         if (_index != -1 && _index != _idCollection.length && direction == true) {
                             return $scope.findIdToBeFocussed(_index, _idCollection, true);
                         }
-                        else if (_index != -1 && _index != 0 && direction == false) {
+                        else if (_index != -1 && direction == false) {
                             return $scope.findIdToBeFocussed(_index, _idCollection, false);
                         }
                         else

@@ -136,6 +136,7 @@
                                 <span class="offscreen" id="vx_row_sel_all_row">Select All Rows</span>
                             </div>
                             <table class="vxTable">
+                                <caption class="offscreen" ng-bind="vxConfig.caption"></caption>
                                 <thead class="vxHead">
                                     <tr class="vxHeadRow">
                                         <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" ng-attr-id="{{vxConfig.id}}_vxHead_{{$index}}" ng-style="{ 'width' : header.effectiveWidth + 'px' }" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false" scope="col">

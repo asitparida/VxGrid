@@ -33,6 +33,7 @@
         <CONFIG>.sortPredicate			        <SUPPORTED : Y>    :   <STRING>         SET TO COLUMN_DEF_ID FOR DEFAULT SORTING BY THAT COLUMN
         <CONFIG>.reverseSortDirection			<SUPPORTED : Y>    :   <STRING>         SET TO TRUE/FALSE TO SET DEFAULT SORTING DIRECTION
         <CONFIG>.emptyFill			            <SUPPORTED : Y>    :   <STRING>         CONTENTS TO SHOW FOR EMPTY GRID
+        <CONFIG>.caption			            <SUPPORTED : Y>    :   <STRING>         CONTENTS FOR CAPTION
         <CONFIG>.loaderGifSrc                   <SUPPORTED : Y>    :   <STRING>         LOADER GIF PATH
         <CONFIG>.ariaPrimary                    <SUPPORTED : Y>    :   <STRING>         COLUMN IDENTIFYING ARIA PRIMARY
         <CONFIG>.xsTemplate                     <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE XS SPECIFIC TEMPLATE
@@ -329,6 +330,7 @@
                         { prop: 'sortPredicate', defValue: $scope.vxColSettings.primaryId },
                         { prop: 'reverseSortDirection', defValue: false },
                         { prop: 'emptyFill', defValue: '<span>No records to display ...</span>' },
+                        { prop: 'caption', defValue: 'sample vx grid table caption' },
                         { prop: 'loaderGifSrc', defValue: '/resource/loaderWhite36.GIF' },
                         { prop: 'ariaPrimary', defValue: $scope.vxColSettings.primaryId },
                         { prop: 'xsTemplate', defValue: false },

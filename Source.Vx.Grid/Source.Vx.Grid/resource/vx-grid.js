@@ -1216,7 +1216,15 @@
 
                 $scope.filterTokenChnagedRapid = function (id) {
                     if ($scope.vxColSettings.enteredSearchToken[id] == '')
+                    {
+                        _.each($scope.vxConfig.columnDefConfigs, function (head) {
+                            if (head.id == id) {
+                                head.filterLimit = 10;
+                                lastScroll[id] = 0;
+                            }
+                        });
                         $scope.vxColSettings.filterSearchToken[id] = '';
+                    }                        
                     else
                         $scope.debFiltTokenChange(id);
                 }

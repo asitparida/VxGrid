@@ -110,6 +110,7 @@
         <CONFIG>.sortByColumn()                 <COLUMN ID, SORT DIRECTION>             SORT BY COLUMN BASED ON DIRECTION     
         <CONFIG>.resetColumnFilters()           <ARRAY OF IDs>                          RESET FILTERS ON COLUMNS PROVIDED BY IDS
         <CONFIG>.modifyRows()                   <ARRAY OF ROWS, ARRAY OF FIELDS>        MODIFY ROW DATA PROGRAMATICALLY - IF FIELDS ARRAY EMPTY, UPDATES ALL FIELDS, ELSE ONLY FIELDS SUPPLIED THROUGH PARAMS
+        <CONFIG>.getAppliedFilters()            <ARRAY OF OBJECTS>                      RETURNS CURRENT STATE OF APPLIED FILTERS
 
     */
 
@@ -510,6 +511,17 @@
                                 }
                             }
                             //console.log(res);
+                            return res;
+                        }
+                        else
+                            return undefined;
+                    }
+
+                    /// <summary>CONFIG EXTENSION TO GET CURRENT STATE OF APPLIED FILTERS</summary>
+                    /// <returns type="OBJECT" />
+                    $scope.config.getAppliedFilters = function () {
+                        if (typeof $scope.vxConfig !== 'undefined' && $scope.vxConfig != null && $scope.vxConfig != {} && $scope.vxConfig.id !== 'undefined' && $scope.vxConfig.id != null && $scope.vxConfig.id != {}) {
+                            var res = _.map($scope.multiBoxFilters, function (item) { return {'column' : item.col, 'label' : item.label, 'key': item.key} });
                             return res;
                         }
                         else

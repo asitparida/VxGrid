@@ -247,6 +247,10 @@
         console.log(self.vxSampleConfig.getFilteredDataSet());
     }
 
+    self.getAppliedFilters = function () {
+        console.log(self.vxSampleConfig.getAppliedFilters());
+    }
+
     self.modRows = function () {
         var rows = [];
         var row = self._origCopy[0];

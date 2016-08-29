@@ -2083,7 +2083,7 @@
                         }
                         else
                             col.effectiveWidth = col.width;
-
+                        col.effectiveWidth = Math.floor(col.effectiveWidth);
                     });
                     return data;
                 }

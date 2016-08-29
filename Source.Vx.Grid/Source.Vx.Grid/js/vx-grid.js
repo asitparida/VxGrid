@@ -1867,12 +1867,21 @@
                     }
                 }
 
+                $scope.shiftKeyPressed = false;
+
+                $scope.upDowKeyUpHandlerHeaderMenuItems = function (e, columnId) {
+                    if (e.keyCode == 16)
+                        $scope.shiftKeyPressed = false;
+                }
+
                 /// <summary>GRID FUNCTION : FUNCTION TO HELP UP DOWN KEY STROKE MOVEMENTS IN MENU</summary>
                 $scope.upDowKeyDownHandlerHeaderMenuItems = function (e, columnId) {
                     var _prevent = false;
+                    if (e.keyCode == 16)
+                        $scope.shiftKeyPressed = true;
                     if (e.keyCode != 40 && e.keyCode != 38 && e.keyCode != 27 && e.keyCode != 9)
                         return false;
-                    if (e.keyCode == 40 || e.keyCode == 9) {
+                    if (e.keyCode == 40 || (e.keyCode == 9 && $scope.shiftKeyPressed == false)) {
                         /* DOWN ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, true);
                         if ($('#' + _elemId).is('[tabindex="0"]')) {
@@ -1880,7 +1889,7 @@
                         }
                         _prevent = true;
                     }
-                    else if (e.keyCode == 38) {
+                    else if (e.keyCode == 38 || (e.keyCode == 9 && $scope.shiftKeyPressed == true)) {
                         /* UP ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, false);
                         if (_elemId == null) {
@@ -1889,6 +1898,7 @@
                         else if ($('#' + _elemId).is('[tabindex="0"]')) {
                             $('#' + _elemId).focus();
                         }
+                        _prevent = true;
                     }
                     else if (e.keyCode == 27) {
                         /* ESC KEY PRESSED */

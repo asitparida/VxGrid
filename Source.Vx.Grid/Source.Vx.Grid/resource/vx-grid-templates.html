@@ -83,7 +83,7 @@
                                                         <span class="ddCaret" aria-hidden="true" ng-show="vxColSettings.colFiltersActivated[header.id] == true && vxColSettings.dropdDownEnabled[header.id] == true && vxConfig.data.length >= 1"><i class="icon icon-filter white"></i></span>
                                                     </button>
                                                 <!--<ul class="dropdown-menu" aria-labelledby="ddMenu_{{::header.id}}" data-container="body" ng-keydown="upDowKeyDownHandlerHeaderMenuItems($event, header.id)">-->
-                                                    <ul class="dropdown-menu" aria-labelledby="ddMenu_{{::header.id}}" data-container="body" du-scroll-container id="{{vxConfig.id}}-dropdwon-menu-{{::header.id}}" ng-keydown="upDowKeyDownHandlerHeaderMenuItems($event, header.id)">
+                                                    <ul class="dropdown-menu" aria-labelledby="ddMenu_{{::header.id}}" data-container="body" du-scroll-container id="{{vxConfig.id}}-dropdwon-menu-{{::header.id}}" ng-keydown="upDowKeyDownHandlerHeaderMenuItems($event, header.id)" ng-keyup="upDowKeyUpHandlerHeaderMenuItems($event, header.id)">
                                                         <li tabindex="-1" class="loader" ng-if="vxColSettings.dropdDownLoaded[header.id] == false">
                                                             <img class="dropDownLoader" ng-src="{{vxConfig.loaderGifSrc}}" alt="dropdown addition in progress" />
                                                         </li>

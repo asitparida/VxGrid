@@ -606,6 +606,17 @@
             }
         }
 
+        .vxHead .vx-row-select {           
+            input[type="checkbox"] {               
+                &:focus, &:active {
+                    outline-color: #fff;
+                    outline-offset: 5px;
+                    outline-style: dotted;
+                    outline-width: thin;
+                }
+            }
+        }
+
         .vxHead {
             .vxHeadRow th.ddEnabled {
                 padding: 0;

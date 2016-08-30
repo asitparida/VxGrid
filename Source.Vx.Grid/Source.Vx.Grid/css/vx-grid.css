@@ -435,6 +435,12 @@
       outline-style: dotted;
       outline-width: thin; }
 
+.vx-grid-related .vxTable .vxHead .vx-row-select input[type="checkbox"]:focus, .vx-grid-related .vxTable .vxHead .vx-row-select input[type="checkbox"]:active {
+  outline-color: #fff;
+  outline-offset: 5px;
+  outline-style: dotted;
+  outline-width: thin; }
+
 .vx-grid-related .vxTable .vxHead .vxHeadRow th.ddEnabled {
   padding: 0; }
 

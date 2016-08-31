@@ -70,8 +70,8 @@
             <div class="col-xs-12 vxTableScrollContainer" ng-class="{ 'attrPaneOpen': vxConfig.showGridStats || vxConfig.showGridOptions,'pageEnabled': vxColSettings.vxPageEnabled}">
                 <div class="col-xs-12 vxTableContainer ms-datatable ang-dt zeroPadding scrollDupHeader scrollDupHeaderAdded" ng-class="{'settingsMenuOpen': vxColSettings.menu, 'attrPaneOpen': vxConfig.showGridStats || vxConfig.showGridOptions}" ng-if="vxColSettings.xsViewEnabled == false">
                     <div class='row marg0'>
-                        <div class="col-xs-12 vxTableHolder pad0" role="presentation">
-                            <table class="vxTable">
+                        <div class="col-xs-12 vxTableHolder pad0">
+                            <table class="vxTable" role="presentation">
                                 <thead class="vxHead">
                                     <tr class="vxHeadRow">
                                         <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" title="{{header.columnName}}" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" tabindex="-1" ng-attr-id="{{vxConfig.id}}_vxHeadSt_{{$index}}" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false" ng-style="{ 'width' : header.effectiveWidth + 'px' }">

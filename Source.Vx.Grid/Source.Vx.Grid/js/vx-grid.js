@@ -702,6 +702,18 @@
                         });
                     }
 
+                    /// <summary>CONFIG EXTENSION TO REMOVE ROWS</summary>
+                    /// <param name="rowIds" type="ARRAY OF INT">LIST OF ROW IDS FOR WHICH WE WOULD REMOVE THE ROWS</param>
+                    $scope.config.removeRows = function (rowIds) {
+                        if ($scope.vxConfig.hybrid == false) {
+                            $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) { return _.contains(rowIds, row[$scope.vxColSettings.primaryId]) == true });
+                            $scope.vxColSettings.multiSelected = _.difference($scope.vxColSettings.multiSelected, rowIds);
+                        }
+                        else if ($scope.vxConfig.hybrid == true) {
+                            $scope.config.hybridDeleteRows(rowIds);
+                        }
+                    }
+
                     $scope.buildFns();
 
                     /// <summary>CONFIG EXTENSION TO CHANGE ROW CLASSES USING PROGRAMMATIC ACCESS</summary>
@@ -722,6 +734,7 @@
                     var _lastScrollDown = false;
                     var _lastScrollTop = 0;
 
+                    /// <summary>GRID FUNCTION : DELETE ROWS</summary>
                     $scope.config.hybridDeleteRows = function (rowIds) {
                         window.requestAnimFrame(function () {
                             angular.forEach(rowIds, function (id) {
@@ -739,7 +752,6 @@
                                 }
                             }
                         });
-
                     }
 
                     /// <summary>GRID FUNCTION : UPDATE ROWS</summary>

@@ -126,11 +126,11 @@
         showGridStats: true,
         showGridOptions: false,
         latchExcess: 20,
-        data: self.sampling(2000, 'Coho Vineyard 1111'),
+        data: self.sampling(100, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
         bindOnce: false,
-        hybrid: true,
+        hybrid: false,
         //initialRowClasses: self.sampleRowClasses,
         rowClassFn: randomRowFunction,
         hybridCellDefn: hybridCellDefn,
@@ -331,9 +331,11 @@
     }
 
     self.deleteRows = function () {
-        var _ids = [];
-        _ids.push(self._origCopy[1].laborId);
-        self.vxSampleConfig.hybridDeleteRows(_ids);
+        var _ids = self.vxSampleConfig.getSelectedRows();
+        console.log(_ids);
+        //_ids.push(self._origCopy[1].laborId);
+        //self.vxSampleConfig.hybridDeleteRows(_ids);
+        self.vxSampleConfig.removeRows(_ids);
     }
 
     self.consoleLogData = function () {

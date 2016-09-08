@@ -2100,6 +2100,7 @@
                         return memo + _val;
                     }, 0);
                     var _containerWidth = $scope.selfEle.find('.vxTableScrollContainer').width();
+                    var _totatWidth = 0;
                     _.each(data, function (col) {
                         if (_containerWidth > totalWidth) {
                             var _adjustment = (parseInt(col.width) / totalWidth) * (_containerWidth - totalWidth);
@@ -2108,7 +2109,9 @@
                         else
                             col.effectiveWidth = col.width;
                         col.effectiveWidth = Math.floor(col.effectiveWidth);
+                        _totatWidth = _totatWidth + col.effectiveWidth;
                     });
+
                     return data;
                 }
 
@@ -2351,8 +2354,14 @@
                 }
 
                 $scope.getvxTableContainerWidth = function () {
-                    var elem = angular.element($(element).find('.vx-scroller')[0]);
-                    return elem.width() + 'px';
+                    var _totatWidth = 0;
+                    _.each($scope.vxConfig.columnDefConfigs, function (col) {
+                        if(col.hidden == false)
+                            _totatWidth = _totatWidth + col.effectiveWidth;
+                    });
+                    $scope.vxConfig.totalWidth = _totatWidth + 'px';
+                    //console.log($scope.vxConfig.totalWidth);
+                    return $scope.vxConfig.totalWidth;
                 }
 
                 $scope.getNonHiddenColCount = function () {

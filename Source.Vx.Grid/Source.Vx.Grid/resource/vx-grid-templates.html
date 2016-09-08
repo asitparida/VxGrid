@@ -68,7 +68,10 @@
                 </div>
             </div>
             <div class="col-xs-12 vxTableScrollContainer" ng-class="{ 'attrPaneOpen': vxConfig.showGridStats || vxConfig.showGridOptions,'pageEnabled': vxColSettings.vxPageEnabled}">
-                <div class="col-xs-12 vxTableContainer ms-datatable ang-dt zeroPadding scrollDupHeader scrollDupHeaderAdded" ng-class="{'settingsMenuOpen': vxColSettings.menu, 'attrPaneOpen': vxConfig.showGridStats || vxConfig.showGridOptions}" ng-if="vxColSettings.xsViewEnabled == false">
+                <div class="col-xs-12 vxTableContainer ms-datatable ang-dt zeroPadding scrollDupHeader scrollDupHeaderAdded" 
+                     ng-class="{'settingsMenuOpen': vxColSettings.menu, 'attrPaneOpen': vxConfig.showGridStats || vxConfig.showGridOptions}"
+                     ng-style="{'min-width':getvxTableContainerWidth()}" 
+                     ng-if="vxColSettings.xsViewEnabled == false">
                     <div class='row marg0'>
                         <div class="col-xs-12 vxTableHolder pad0">
                             <table class="vxTable" role="presentation">

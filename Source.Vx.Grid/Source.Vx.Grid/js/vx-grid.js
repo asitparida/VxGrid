@@ -387,7 +387,7 @@
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
                                 col[propDefn.prop] = propDefn.defValue;
                         });
-                        console.log(col['filterLimit']);
+                        //console.log(col['filterLimit']);
                         col.effectiveWidth = col.width;
                         col.idCollection = [];
                         var _propDefnLocks = [
@@ -521,7 +521,7 @@
                     /// <returns type="OBJECT" />
                     $scope.config.getAppliedFilters = function () {
                         if (typeof $scope.vxConfig !== 'undefined' && $scope.vxConfig != null && $scope.vxConfig != {} && $scope.vxConfig.id !== 'undefined' && $scope.vxConfig.id != null && $scope.vxConfig.id != {}) {
-                            var res = _.map($scope.multiBoxFilters, function (item) { return {'column' : item.col, 'label' : item.label, 'key': item.key} });
+                            var res = _.map($scope.multiBoxFilters, function (item) { return { 'column': item.col, 'label': item.label, 'key': item.key } });
                             return res;
                         }
                         else
@@ -640,13 +640,12 @@
                                 $scope.vxColSettings.rowSelected[_id] = true;
                                 $scope.vxColSettings.multiSelected.push(_id);
                                 _modIds.push(_id);//vx_row-sel_in_XXX-XXXX-XXXX_0_0
+                                //console.log(_id);
                                 if ($scope.vxConfig.hybrid == true) {
                                     var _element = angular.element(document.getElementById('vx_row-sel_in_' + _id));
                                     if (typeof _element !== 'undefined' && _element != null && _element.length > 0) {
                                         $(_element).prop('checked', true);
                                     }
-                                }
-                                if ($scope.vxConfig.hybrid == true) {
                                     var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
                                     if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
                                         $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
@@ -744,13 +743,16 @@
                                 $scope.vxColSettings.rowSelected[id] = false;
                                 $scope.vxColSettings.saveInProgress[id] = false;
                             });
+                            $scope._origData = _.reject($scope._origData, function (row) { return _.contains(rowIds, row[$scope.vxColSettings.primaryId]) == true });
+                            $scope.vxConfig.vxFilteredData = _.reject($scope.vxConfig.vxFilteredData, function (row) { return _.contains(rowIds, row[$scope.vxColSettings.primaryId]) == true });
+                            $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) { return _.contains(rowIds, row[$scope.vxColSettings.primaryId]) == true });
                             $scope.vxColSettings.multiSelected = _.difference($scope.vxColSettings.multiSelected, rowIds);
-                            if ($scope.vxConfig.hybrid == true) {
-                                var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
-                                if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
-                                    $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
-                                }
+                            var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                            if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
                             }
+                            if (!$scope.$$phase)
+                                $scope.$apply();
                         });
                     }
 
@@ -836,7 +838,7 @@
                                 var _cellTmpl = '';
                                 var _cellHolder = cellHolderTmpl;
                                 var _cellClass = '';
-                                if (col.hidden != true) {                                    
+                                if (col.hidden != true) {
                                     if (col.renderHybridCellDefn != true && col.columnIsRowSelect != true && col.columnIsDate != true) {
                                         var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : '';
                                         _cellTmpl = cellTmplContent;
@@ -900,16 +902,31 @@
                                 var _angElement = angular.element(ele);
                                 _angElement.on('click', function (e) {
                                     var _rowId = $(e.target).attr('rowid');
-                                    var _currentState = $(e.target).prop('checked');
-                                    $scope.vxColSettings.rowSelected[_rowId] = _currentState;
-                                    var result = { 'key': _rowId, 'value': $scope.vxColSettings.rowSelected[_rowId], '_pKey': _rowId };
-                                    if ($scope.vxConfig.selectionAtMyRisk == true) {
-                                        if (typeof $scope.config.rowSelectionCallback === 'function') {
-                                            $scope.config.rowSelectionCallback(result);
+                                    if (typeof _rowId !== 'undefined') {                                        
+                                        var _currentState = $(e.target).prop('checked');
+                                        $scope.vxColSettings.rowSelected[_rowId] = _currentState;
+                                        var result = { 'key': _rowId, 'value': $scope.vxColSettings.rowSelected[_rowId], '_pKey': _rowId };
+                                        if ($scope.vxConfig.selectionAtMyRisk == true) {
+                                            if (_currentState == true) {
+                                                var item = _.find($scope.vxColSettings.multiSelected, function (rs) { return rs.localeCompare(_rowId) == 0 });
+                                                if (typeof item === 'undefined' || item == null)
+                                                    $scope.vxColSettings.multiSelected.push(_rowId);
+                                            }
+                                            else if (_currentState == false) {
+                                                $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (rs) { return rs.localeCompare(_rowId) == 0 });
+                                                $scope.vxColSettings.allRowSelected = false;
+                                            }
+                                            var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                                            if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                                $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                                            }
+                                            if (typeof $scope.config.rowSelectionCallback === 'function') {
+                                                $scope.config.rowSelectionCallback(result);
+                                            }
                                         }
-                                    }
-                                    else
-                                        $scope.rowSelectionChanged(_rowId);
+                                        else
+                                            $scope.rowSelectionChanged(_rowId);
+                                    }                                    
                                 });
                             });
                         }
@@ -1241,8 +1258,7 @@
                 $scope.debFiltTokenChange = _.debounce($scope.filtTokenChange, 10);
 
                 $scope.filterTokenChnagedRapid = function (id) {
-                    if ($scope.vxColSettings.enteredSearchToken[id] == '')
-                    {
+                    if ($scope.vxColSettings.enteredSearchToken[id] == '') {
                         _.each($scope.vxConfig.columnDefConfigs, function (head) {
                             if (head.id == id) {
                                 head.filterLimit = 10;
@@ -1250,7 +1266,7 @@
                             }
                         });
                         $scope.vxColSettings.filterSearchToken[id] = '';
-                    }                        
+                    }
                     else
                         $scope.debFiltTokenChange(id);
                 }
@@ -1284,7 +1300,7 @@
                 /// <param name="header" type="Object">HEADER OBJECT ASSOCIATED WITH THE CLICK</param>
                 /// <param name="E" type="Event"></param>
                 $scope.headerClick = function (header, e) {
-                    console.log(header);
+                    //console.log(header);
                     var proceed = true;
                     var target = $(e.target);
                     if (typeof target !== 'undefined' && target != null & target.length > 0) {
@@ -1532,6 +1548,7 @@
 
                 /// <summary>GRID FUNCTION : GET COUNT OF NUMBER OF ROWS IN THE GRID EXCEPT THE ROWS USED TO DENOTE GROUP HEADERS</summary>
                 $scope.getAllRowLength = function () {
+                    //console.log($scope._origData.length);
                     if ($scope.config.noData)
                         return 0;
                     if ($scope.vxConfig.hybrid == true)
@@ -1614,7 +1631,8 @@
                                 });
                             }
                         });
-                        if ($scope.vxConfig.hybrid == true) {
+                        $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (ml) { return typeof ml === 'undefined' || ml == null || ml == {} })
+                        if ($scope.vxConfig.hybrid == true) {                            
                             var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
                             if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
                                 $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
@@ -1639,7 +1657,7 @@
                 /// <summary>GRID FUNCTION : HANDLE SELECTION TOGGLE EVENT FOR A ROW CHECKBOX</summary>
                 $scope.rowSelectionChanged = function (rowId) {
                     var pid = rowId;
-                    console.log('4456456456');
+                    //console.log('4456456456');
                     var row = _.find($scope.vxConfig.vxData, function (_row) { return _row[$scope.vxColSettings.primaryId] == rowId });
                     var result = { 'key': row[$scope.vxConfig.onSelectionReturnCol], 'value': $scope.vxColSettings.rowSelected[pid], '_pKey': pid };
                     var proceed = true;
@@ -1688,10 +1706,8 @@
                         }
                     }
                     if ($scope.vxConfig.hybrid == true) {
-                        //console.log('09876543234567890');
                         var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
                         if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
-                            //console.log('6769767659856', _elem);
                             $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
                         }
                     }
@@ -2356,7 +2372,7 @@
                 $scope.getvxTableContainerWidth = function () {
                     var _totatWidth = 0;
                     _.each($scope.vxConfig.columnDefConfigs, function (col) {
-                        if(col.hidden == false)
+                        if (col.hidden == false)
                             _totatWidth = _totatWidth + col.effectiveWidth;
                     });
                     $scope.vxConfig.totalWidth = _totatWidth + 'px';

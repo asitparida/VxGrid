@@ -902,7 +902,7 @@
                                 var _angElement = angular.element(ele);
                                 _angElement.on('click', function (e) {
                                     var _rowId = $(e.target).attr('rowid');
-                                    if (typeof _rowId !== 'undefined') {
+                                    if (typeof _rowId !== 'undefined') {                                        
                                         var _currentState = $(e.target).prop('checked');
                                         $scope.vxColSettings.rowSelected[_rowId] = _currentState;
                                         var result = { 'key': _rowId, 'value': $scope.vxColSettings.rowSelected[_rowId], '_pKey': _rowId };
@@ -926,7 +926,7 @@
                                         }
                                         else
                                             $scope.rowSelectionChanged(_rowId);
-                                    }
+                                    }                                    
                                 });
                             });
                         }
@@ -1632,7 +1632,7 @@
                             }
                         });
                         $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (ml) { return typeof ml === 'undefined' || ml == null || ml == {} })
-                        if ($scope.vxConfig.hybrid == true) {
+                        if ($scope.vxConfig.hybrid == true) {                            
                             var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
                             if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
                                 $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));

@@ -33,6 +33,7 @@
         <CONFIG>.sortPredicate			        <SUPPORTED : Y>    :   <STRING>         SET TO COLUMN_DEF_ID FOR DEFAULT SORTING BY THAT COLUMN
         <CONFIG>.reverseSortDirection			<SUPPORTED : Y>    :   <STRING>         SET TO TRUE/FALSE TO SET DEFAULT SORTING DIRECTION
         <CONFIG>.emptyFill			            <SUPPORTED : Y>    :   <STRING>         CONTENTS TO SHOW FOR EMPTY GRID
+        <CONFIG>.caption			            <SUPPORTED : Y>    :   <STRING>         CONTENTS FOR CAPTION
         <CONFIG>.loaderGifSrc                   <SUPPORTED : Y>    :   <STRING>         LOADER GIF PATH
         <CONFIG>.ariaPrimary                    <SUPPORTED : Y>    :   <STRING>         COLUMN IDENTIFYING ARIA PRIMARY
         <CONFIG>.xsTemplate                     <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE XS SPECIFIC TEMPLATE
@@ -109,6 +110,7 @@
         <CONFIG>.sortByColumn()                 <COLUMN ID, SORT DIRECTION>             SORT BY COLUMN BASED ON DIRECTION     
         <CONFIG>.resetColumnFilters()           <ARRAY OF IDs>                          RESET FILTERS ON COLUMNS PROVIDED BY IDS
         <CONFIG>.modifyRows()                   <ARRAY OF ROWS, ARRAY OF FIELDS>        MODIFY ROW DATA PROGRAMATICALLY - IF FIELDS ARRAY EMPTY, UPDATES ALL FIELDS, ELSE ONLY FIELDS SUPPLIED THROUGH PARAMS
+        <CONFIG>.getAppliedFilters()            <ARRAY OF OBJECTS>                      RETURNS CURRENT STATE OF APPLIED FILTERS
 
     */
 
@@ -329,6 +331,7 @@
                         { prop: 'sortPredicate', defValue: $scope.vxColSettings.primaryId },
                         { prop: 'reverseSortDirection', defValue: false },
                         { prop: 'emptyFill', defValue: '<span>No records to display ...</span>' },
+                        { prop: 'caption', defValue: 'sample vx grid table caption' },
                         { prop: 'loaderGifSrc', defValue: '/resource/loaderWhite36.GIF' },
                         { prop: 'ariaPrimary', defValue: $scope.vxColSettings.primaryId },
                         { prop: 'xsTemplate', defValue: false },
@@ -377,13 +380,14 @@
                             { prop: 'columnDatePipe', defValue: 'dd/MM/yyyy' },
                             { prop: 'renderHybridCellDefn', defValue: false },
                             { prop: 'hybridCompile', defValue: false },
-                            { prop: 'filterLimit', defValue: 10 }
+                            { prop: 'filterLimit', defValue: 10 },
+                            { prop: 'scopeIsRow', defValue: false }
                         ];
                         _.each(_propDefns, function (propDefn) {
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
                                 col[propDefn.prop] = propDefn.defValue;
                         });
-                        console.log(col['filterLimit']);
+                        //console.log(col['filterLimit']);
                         col.effectiveWidth = col.width;
                         col.idCollection = [];
                         var _propDefnLocks = [
@@ -513,6 +517,17 @@
                             return undefined;
                     }
 
+                    /// <summary>CONFIG EXTENSION TO GET CURRENT STATE OF APPLIED FILTERS</summary>
+                    /// <returns type="OBJECT" />
+                    $scope.config.getAppliedFilters = function () {
+                        if (typeof $scope.vxConfig !== 'undefined' && $scope.vxConfig != null && $scope.vxConfig != {} && $scope.vxConfig.id !== 'undefined' && $scope.vxConfig.id != null && $scope.vxConfig.id != {}) {
+                            var res = _.map($scope.multiBoxFilters, function (item) { return { 'column': item.col, 'label': item.label, 'key': item.key } });
+                            return res;
+                        }
+                        else
+                            return undefined;
+                    }
+
                     /// <summary>CONFIG EXTENSION TO GET CURRENT DATA SUPPLIED TO THE VX GRID</summary>
                     /// <returns type="ARRAY OF OBJECT" />
                     $scope.config.getData = function () {
@@ -625,13 +640,12 @@
                                 $scope.vxColSettings.rowSelected[_id] = true;
                                 $scope.vxColSettings.multiSelected.push(_id);
                                 _modIds.push(_id);//vx_row-sel_in_XXX-XXXX-XXXX_0_0
+                                //console.log(_id);
                                 if ($scope.vxConfig.hybrid == true) {
                                     var _element = angular.element(document.getElementById('vx_row-sel_in_' + _id));
                                     if (typeof _element !== 'undefined' && _element != null && _element.length > 0) {
                                         $(_element).prop('checked', true);
                                     }
-                                }
-                                if ($scope.vxConfig.hybrid == true) {
                                     var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
                                     if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
                                         $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
@@ -687,6 +701,18 @@
                         });
                     }
 
+                    /// <summary>CONFIG EXTENSION TO REMOVE ROWS</summary>
+                    /// <param name="rowIds" type="ARRAY OF INT">LIST OF ROW IDS FOR WHICH WE WOULD REMOVE THE ROWS</param>
+                    $scope.config.removeRows = function (rowIds) {
+                        if ($scope.vxConfig.hybrid == false) {
+                            $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) { return _.contains(rowIds, row[$scope.vxColSettings.primaryId]) == true });
+                            $scope.vxColSettings.multiSelected = _.difference($scope.vxColSettings.multiSelected, rowIds);
+                        }
+                        else if ($scope.vxConfig.hybrid == true) {
+                            $scope.config.hybridDeleteRows(rowIds);
+                        }
+                    }
+
                     $scope.buildFns();
 
                     /// <summary>CONFIG EXTENSION TO CHANGE ROW CLASSES USING PROGRAMMATIC ACCESS</summary>
@@ -707,6 +733,7 @@
                     var _lastScrollDown = false;
                     var _lastScrollTop = 0;
 
+                    /// <summary>GRID FUNCTION : DELETE ROWS</summary>
                     $scope.config.hybridDeleteRows = function (rowIds) {
                         window.requestAnimFrame(function () {
                             angular.forEach(rowIds, function (id) {
@@ -716,15 +743,17 @@
                                 $scope.vxColSettings.rowSelected[id] = false;
                                 $scope.vxColSettings.saveInProgress[id] = false;
                             });
+                            $scope._origData = _.reject($scope._origData, function (row) { return _.contains(rowIds, row[$scope.vxColSettings.primaryId]) == true });
+                            $scope.vxConfig.vxFilteredData = _.reject($scope.vxConfig.vxFilteredData, function (row) { return _.contains(rowIds, row[$scope.vxColSettings.primaryId]) == true });
+                            $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) { return _.contains(rowIds, row[$scope.vxColSettings.primaryId]) == true });
                             $scope.vxColSettings.multiSelected = _.difference($scope.vxColSettings.multiSelected, rowIds);
-                            if ($scope.vxConfig.hybrid == true) {
-                                var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
-                                if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
-                                    $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
-                                }
+                            var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                            if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
                             }
+                            if (!$scope.$$phase)
+                                $scope.$apply();
                         });
-
                     }
 
                     /// <summary>GRID FUNCTION : UPDATE ROWS</summary>
@@ -796,7 +825,7 @@
 
                     $scope.hybridGetRowTmpl = function (row) {
                         var rowTmpl = '<tr id="VX_ROW_ID" class="vxBodyRow vs-repeat-repeated-element VX_ROW_CLASSES ">VX_ALL_CELLS</tr>';
-                        var cellHolderTmpl = '<td class="vxBodyRowCell VX_TD_CLASS">VX_CELL_CONTENT</td>';
+                        var cellHolderTmpl = '<td class="vxBodyRowCell VX_TD_CLASS" scope="VX_CELL_SCOPE">VX_CELL_CONTENT</td>';
                         var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
                         var cellTmplContent = '<span title="VX_CELL_TMPL">VX_CELL_TMPL</span>';
                         var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" rowid="VX_ROW_ID" type="checkbox" id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /></div>';
@@ -834,6 +863,10 @@
                                         _cellTmpl = $scope.vxConfig.hybridCellDefn(row, col) || '';
                                         _compile = _compile || col.hybridCompile;
                                     }
+                                    if (col.scopeIsRow == true)
+                                        _cellHolder = _cellHolder.replace('VX_CELL_SCOPE', 'row');
+                                    else
+                                        _cellHolder = _cellHolder.replace('VX_CELL_SCOPE', '');
                                     _cellHolder = _cellHolder.replace('VX_TD_CLASS', _cellClass);
                                     _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
                                     allCells = allCells + _cellHolder;
@@ -869,16 +902,31 @@
                                 var _angElement = angular.element(ele);
                                 _angElement.on('click', function (e) {
                                     var _rowId = $(e.target).attr('rowid');
-                                    var _currentState = $(e.target).prop('checked');
-                                    $scope.vxColSettings.rowSelected[_rowId] = _currentState;
-                                    var result = { 'key': _rowId, 'value': $scope.vxColSettings.rowSelected[_rowId], '_pKey': _rowId };
-                                    if ($scope.vxConfig.selectionAtMyRisk == true) {
-                                        if (typeof $scope.config.rowSelectionCallback === 'function') {
-                                            $scope.config.rowSelectionCallback(result);
+                                    if (typeof _rowId !== 'undefined') {                                        
+                                        var _currentState = $(e.target).prop('checked');
+                                        $scope.vxColSettings.rowSelected[_rowId] = _currentState;
+                                        var result = { 'key': _rowId, 'value': $scope.vxColSettings.rowSelected[_rowId], '_pKey': _rowId };
+                                        if ($scope.vxConfig.selectionAtMyRisk == true) {
+                                            if (_currentState == true) {
+                                                var item = _.find($scope.vxColSettings.multiSelected, function (rs) { return rs.localeCompare(_rowId) == 0 });
+                                                if (typeof item === 'undefined' || item == null)
+                                                    $scope.vxColSettings.multiSelected.push(_rowId);
+                                            }
+                                            else if (_currentState == false) {
+                                                $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (rs) { return rs.localeCompare(_rowId) == 0 });
+                                                $scope.vxColSettings.allRowSelected = false;
+                                            }
+                                            var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
+                                            if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
+                                                $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
+                                            }
+                                            if (typeof $scope.config.rowSelectionCallback === 'function') {
+                                                $scope.config.rowSelectionCallback(result);
+                                            }
                                         }
-                                    }
-                                    else
-                                        $scope.rowSelectionChanged(_rowId);
+                                        else
+                                            $scope.rowSelectionChanged(_rowId);
+                                    }                                    
                                 });
                             });
                         }
@@ -1199,13 +1247,26 @@
 
                 $scope.filtTokenChange = function (id) {
                     $scope.vxColSettings.filterSearchToken[id] = $scope.vxColSettings.enteredSearchToken[id];
+                    _.each($scope.vxConfig.columnDefConfigs, function (head) {
+                        if (head.id == id) {
+                            head.filterLimit = 10;
+                            lastScroll[id] = 0;
+                        }
+                    });
                 }
 
                 $scope.debFiltTokenChange = _.debounce($scope.filtTokenChange, 10);
 
                 $scope.filterTokenChnagedRapid = function (id) {
-                    if ($scope.vxColSettings.enteredSearchToken[id] == '')
+                    if ($scope.vxColSettings.enteredSearchToken[id] == '') {
+                        _.each($scope.vxConfig.columnDefConfigs, function (head) {
+                            if (head.id == id) {
+                                head.filterLimit = 10;
+                                lastScroll[id] = 0;
+                            }
+                        });
                         $scope.vxColSettings.filterSearchToken[id] = '';
+                    }
                     else
                         $scope.debFiltTokenChange(id);
                 }
@@ -1239,7 +1300,7 @@
                 /// <param name="header" type="Object">HEADER OBJECT ASSOCIATED WITH THE CLICK</param>
                 /// <param name="E" type="Event"></param>
                 $scope.headerClick = function (header, e) {
-                    console.log(header);
+                    //console.log(header);
                     var proceed = true;
                     var target = $(e.target);
                     if (typeof target !== 'undefined' && target != null & target.length > 0) {
@@ -1285,17 +1346,17 @@
                                     /* SORT OPERATION */
                                     if (_colDefn.ddSort == true) {
                                         $scope.vxColSettings.dropDownSort[_colDefn.id] = true;
-                                        _colDefn.idCollection.push(_colDefn.id + '_sort');
+                                        _colDefn.idCollection.push($scope.vxConfig.id + '_' + _colDefn.id + '_sort');
                                     }
                                     /* GROUP OPERATION */ /* UNSUPPORTED IN HYBRID MODE */
                                     if (_colDefn.ddGroup == true && $scope.vxConfig.hybrid != true) {
                                         $scope.vxColSettings.dropDownGroup[_colDefn.id] = true;
-                                        _colDefn.idCollection.push(_colDefn.id + '_group');
-                                        _colDefn.idCollection.push(_colDefn.id + '_ungroup');
+                                        _colDefn.idCollection.push($scope.vxConfig.id + '_' + _colDefn.id + '_group');
+                                        _colDefn.idCollection.push($scope.vxConfig.id + '_' + _colDefn.id + '_ungroup');
                                     }
                                     /* FILTER OPERATION */
                                     if (_colDefn.ddFilters == true) {
-                                        _colDefn.idCollection.push(_colDefn.id + '_clearfilters');
+                                        _colDefn.idCollection.push($scope.vxConfig.id + '_' + _colDefn.id + '_clearfilters');
                                         _colDefn.idCollection.push(_colDefn.id + '_searchfilters_' + $scope.vxConfig.id);
                                         /*  POPULATE LIST OF FILTERS*/
                                         if (filterListForColAvailable == false) {
@@ -1332,7 +1393,7 @@
                                                     pair.filterDefnAvailable = false;
                                                 }
                                                 _pairs.push(pair);
-                                                _colDefn.idCollection.push(_colDefn.id + '_filter_' + iterator);
+                                                _colDefn.idCollection.push($scope.vxConfig.id + '_' + _colDefn.id + '_filter_' + iterator);
                                                 $scope.vxColSettings.colFiltersStatus[key] = false;
                                             });
                                             _pairs = _.sortBy(_pairs, 'label');
@@ -1487,6 +1548,7 @@
 
                 /// <summary>GRID FUNCTION : GET COUNT OF NUMBER OF ROWS IN THE GRID EXCEPT THE ROWS USED TO DENOTE GROUP HEADERS</summary>
                 $scope.getAllRowLength = function () {
+                    //console.log($scope._origData.length);
                     if ($scope.config.noData)
                         return 0;
                     if ($scope.vxConfig.hybrid == true)
@@ -1569,7 +1631,8 @@
                                 });
                             }
                         });
-                        if ($scope.vxConfig.hybrid == true) {
+                        $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (ml) { return typeof ml === 'undefined' || ml == null || ml == {} })
+                        if ($scope.vxConfig.hybrid == true) {                            
                             var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
                             if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
                                 $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
@@ -1594,7 +1657,7 @@
                 /// <summary>GRID FUNCTION : HANDLE SELECTION TOGGLE EVENT FOR A ROW CHECKBOX</summary>
                 $scope.rowSelectionChanged = function (rowId) {
                     var pid = rowId;
-                    console.log('4456456456');
+                    //console.log('4456456456');
                     var row = _.find($scope.vxConfig.vxData, function (_row) { return _row[$scope.vxColSettings.primaryId] == rowId });
                     var result = { 'key': row[$scope.vxConfig.onSelectionReturnCol], 'value': $scope.vxColSettings.rowSelected[pid], '_pKey': pid };
                     var proceed = true;
@@ -1643,10 +1706,8 @@
                         }
                     }
                     if ($scope.vxConfig.hybrid == true) {
-                        //console.log('09876543234567890');
                         var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
                         if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
-                            //console.log('6769767659856', _elem);
                             $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
                         }
                     }
@@ -1804,6 +1865,8 @@
                     var _id = index;
                     var _i = index;
                     if (direction) {
+                        if (_i + 1 == collection.length)
+                            _i = -1;
                         while (_i <= collection.length) {
                             var _element = $('#' + collection[_i + 1]);
                             if ($(_element).is('[tabindex="0"]')) {
@@ -1814,6 +1877,8 @@
                         }
                     }
                     else if (!direction) {
+                        if (_i == 0)
+                            _i = collection.length;
                         while (_i >= 1) {
                             var _element = $('#' + collection[_i - 1]);
                             if ($(_element).is('[tabindex="0"]')) {
@@ -1836,7 +1901,7 @@
                         if (_index != -1 && _index != _idCollection.length && direction == true) {
                             return $scope.findIdToBeFocussed(_index, _idCollection, true);
                         }
-                        else if (_index != -1 && _index != 0 && direction == false) {
+                        else if (_index != -1 && direction == false) {
                             return $scope.findIdToBeFocussed(_index, _idCollection, false);
                         }
                         else
@@ -1844,19 +1909,29 @@
                     }
                 }
 
+                $scope.shiftKeyPressed = false;
+
+                $scope.upDowKeyUpHandlerHeaderMenuItems = function (e, columnId) {
+                    if (e.keyCode == 16)
+                        $scope.shiftKeyPressed = false;
+                }
+
                 /// <summary>GRID FUNCTION : FUNCTION TO HELP UP DOWN KEY STROKE MOVEMENTS IN MENU</summary>
                 $scope.upDowKeyDownHandlerHeaderMenuItems = function (e, columnId) {
                     var _prevent = false;
-                    if (e.keyCode != 40 && e.keyCode != 38 && e.keyCode != 27)
+                    if (e.keyCode == 16)
+                        $scope.shiftKeyPressed = true;
+                    if (e.keyCode != 40 && e.keyCode != 38 && e.keyCode != 27 && e.keyCode != 9)
                         return false;
-                    if (e.keyCode == 40) {
+                    if (e.keyCode == 40 || (e.keyCode == 9 && $scope.shiftKeyPressed == false)) {
                         /* DOWN ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, true);
                         if ($('#' + _elemId).is('[tabindex="0"]')) {
                             $('#' + _elemId).focus();
                         }
+                        _prevent = true;
                     }
-                    else if (e.keyCode == 38) {
+                    else if (e.keyCode == 38 || (e.keyCode == 9 && $scope.shiftKeyPressed == true)) {
                         /* UP ARROW KEY PRESSED */
                         var _elemId = $scope.findFocussable($(e.target), columnId, false);
                         if (_elemId == null) {
@@ -1865,6 +1940,7 @@
                         else if ($('#' + _elemId).is('[tabindex="0"]')) {
                             $('#' + _elemId).focus();
                         }
+                        _prevent = true;
                     }
                     else if (e.keyCode == 27) {
                         /* ESC KEY PRESSED */
@@ -2040,6 +2116,7 @@
                         return memo + _val;
                     }, 0);
                     var _containerWidth = $scope.selfEle.find('.vxTableScrollContainer').width();
+                    var _totatWidth = 0;
                     _.each(data, function (col) {
                         if (_containerWidth > totalWidth) {
                             var _adjustment = (parseInt(col.width) / totalWidth) * (_containerWidth - totalWidth);
@@ -2047,8 +2124,10 @@
                         }
                         else
                             col.effectiveWidth = col.width;
-
+                        col.effectiveWidth = Math.floor(col.effectiveWidth);
+                        _totatWidth = _totatWidth + col.effectiveWidth;
                     });
+
                     return data;
                 }
 
@@ -2291,8 +2370,14 @@
                 }
 
                 $scope.getvxTableContainerWidth = function () {
-                    var elem = angular.element($(element).find('.vx-scroller')[0]);
-                    return elem.width() + 'px';
+                    var _totatWidth = 0;
+                    _.each($scope.vxConfig.columnDefConfigs, function (col) {
+                        if (col.hidden == false)
+                            _totatWidth = _totatWidth + col.effectiveWidth;
+                    });
+                    $scope.vxConfig.totalWidth = _totatWidth + 'px';
+                    //console.log($scope.vxConfig.totalWidth);
+                    return $scope.vxConfig.totalWidth;
                 }
 
                 $scope.getNonHiddenColCount = function () {

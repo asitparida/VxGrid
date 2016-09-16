@@ -126,7 +126,7 @@
         showGridStats: true,
         showGridOptions: false,
         latchExcess: 20,
-        data: self.sampling(1000, 'Coho Vineyard 1111'),
+        data: self.sampling(10, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
         bindOnce: false,
@@ -140,8 +140,8 @@
         showNotes: function (data) { console.log('sample hybrid callback', data) },
         showTable: false,
         virtualization: false,
-        pagination: true,
-        pageLength: 10,
+        pagination: false,
+        pageLength: 10000,
         sortPredicate: 'dt',
         reverseSortDirection: true,
         inlineAddRowEnabled: true,
@@ -169,7 +169,7 @@
         },
         columnDefConfigs: [
             { id: 'locked', columnName: 'Locked', renderDefn: false, hidden: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", colClass: 'dtPickerClass' },
-            { id: 'dt1', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, hidden: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
+            { id: 'dt1', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, hidden: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass', scopeIsRow :true },
             { id: 'dt2', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, hidden: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
             { id: 'dt3', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, hidden: true, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
             { id: 'dt4', columnIsDate: true, columnDatePipe: 'dd-MM-yyyy', columnName: 'Date', renderDefn: false, hidden: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, width: '160', headerDefn: '<span>Date</span>', filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span> {{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", cellDefn: "<span>{{VX_DATA_POINT |  date:'yyyy-MM-dd'}}</span>", editDefn: ' <sample-date-picker dt="VX_DATA_POINT" vx-keep-watch="dt"></sample-date-picker>', inlineEditOnColumnEnabled: true, colClass: 'dtPickerClass' },
@@ -245,6 +245,10 @@
 
     self.consoleLogFiltered = function () {
         console.log(self.vxSampleConfig.getFilteredDataSet());
+    }
+
+    self.getAppliedFilters = function () {
+        console.log(self.vxSampleConfig.getAppliedFilters());
     }
 
     self.modRows = function () {
@@ -327,9 +331,11 @@
     }
 
     self.deleteRows = function () {
-        var _ids = [];
-        _ids.push(self._origCopy[1].laborId);
-        self.vxSampleConfig.hybridDeleteRows(_ids);
+        var _ids = self.vxSampleConfig.getSelectedRows();
+        console.log(_ids);
+        //_ids.push(self._origCopy[1].laborId);
+        //self.vxSampleConfig.hybridDeleteRows(_ids);
+        self.vxSampleConfig.removeRows(_ids);
     }
 
     self.consoleLogData = function () {

@@ -14,21 +14,7 @@
   "dependencies": {"angular": "1.4.8", "angular-ui-bootstrap": "1.1.1", "angular-sanitize": "1.4.8"},
   "homepage": "https://github.com/asitparida/VxGrid",
   "ignore": [
-    "Source.Vx.Grid/*.*",
-    "Source.Vx.Grid/Source.Vx.Grid/*.*",
-    "Source.Vx.Grid/Source.Vx.Grid/**/.*",
-    "Source.Vx.Grid/Source.Vx.Grid/dist/js",
-    "Source.Vx.Grid/Source.Vx.Grid/dist/min/fonts",
-    "Source.Vx.Grid/Source.Vx.Grid/node_modules",
-    "Source.Vx.Grid/Source.Vx.Grid/bower_components",
-    "Source.Vx.Grid/Source.Vx.Grid/images",
-    "Source.Vx.Grid/Source.Vx.Grid/lib",
-    "Source.Vx.Grid/Source.Vx.Grid/js",
-    "Source.Vx.Grid/Source.Vx.Grid/css",
-    "Source.Vx.Grid/Source.Vx.Grid/Properties",
-    "Source.Vx.Grid/Source.Vx.Grid/resource",
-    "Source.Vx.Grid/Source.Vx.Grid/scss",
-    "Source.Vx.Grid/Source.Vx.Grid/test",
-    "Source.Vx.Grid/Source.Vx.Grid/tests"
+    "Source.Vx.Grid/**",
+    "Source.Vx.Grid/*.*"    
   ]
 }

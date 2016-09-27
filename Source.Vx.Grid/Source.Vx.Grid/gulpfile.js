@@ -106,3 +106,9 @@ gulp.task('minify:css', ['minify:clean:css'], function () {
 gulp.task('default:vxgrid:css', function () {
     gulp.watch('scss/*.scss', ['minify:css']);
 });
+
+//Watch CSS task
+gulp.task('default:vxgrid:dist-prod', function () {
+    return gulp.src(['dist/min/js/vx.grid.min.js', 'dist/min/css/vx-grid.min.css'])
+        .pipe(gulp.dest('../../dist'));
+});

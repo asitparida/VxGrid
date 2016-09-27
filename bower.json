@@ -15,8 +15,7 @@
   "homepage": "https://github.com/asitparida/VxGrid",
   "ignore": [
     "Source.Vx.Grid/.*",
-    "Source.Vx.Grid/Source.Vx.Grid/**",
-    "Source.Vx.Grid/Source.Vx.Grid/.*",
+    "Source.Vx.Grid/Source.Vx.Grid/*.*",
     "Source.Vx.Grid/Source.Vx.Grid/**/.*",
     "Source.Vx.Grid/Source.Vx.Grid/dist/js",
     "Source.Vx.Grid/Source.Vx.Grid/dist/min/fonts",

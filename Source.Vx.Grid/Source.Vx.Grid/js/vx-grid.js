@@ -41,6 +41,7 @@
         <CONFIG>.rowClassFn                     <SUPPORTED : Y>    :   <FUNCTION>       PROVIDE FUNCTION REFERENCE TO SELF INVOKE WITH ONE PARAM - VX_ROW : FUNCTION VX_SAMPLE_ROWCLASS_FUNC(ROW){}
         <CONFIG>.bindOnce                       <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE BIND ONCE ROW TMPL
         <CONFIG>.hybrid                         <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE ZEN MODE - JS ONLY
+        <CONFIG>.preserveSelectionOnFilters     <SUPPORTED : Y>    :   <BOOLEAN>        ENABLE PRESERVING ROW SELECTION ON FILTER CHANGE
         
         VX GRID COLUMN CONFIG (BOUND TO EACH ITEM IN  'vxConfig.columnDefConfigs') IN DIRECTIVE DEFINTION
         -----------------------------------------------------------------------------------------------------
@@ -305,6 +306,7 @@
                         { prop: 'enableDropdownsInHeader', defValue: false },
                         { prop: 'selectionEnabled', defValue: false },
                         { prop: 'selectionAtMyRisk', defValue: false },
+                        { prop: 'preserveSelectionOnFilters', defValue: false },
                         { prop: 'multiSelectionEnabled', defValue: false },
                         { prop: 'showGridStats', defValue: false },
                         { prop: 'showGridOptions', defValue: false },
@@ -819,7 +821,7 @@
                         var cellHolderTmpl = '<td class="vxBodyRowCell VX_TD_CLASS" scope="VX_CELL_SCOPE">VX_CELL_CONTENT</td>';
                         var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
                         var cellTmplContent = '<span title="VX_CELL_TMPL">VX_CELL_TMPL</span>';
-                        var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" rowid="VX_ROW_ID" type="checkbox" id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /></div>';
+                        var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" rowid="VX_ROW_ID" type="checkbox" VX_ROW_SEL_VAL id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /></div>';
                         var allCells = '';
                         var _classes = '';
                         var rowId = row[$scope.vxColSettings.primaryId];
@@ -846,7 +848,7 @@
                                         var _rowSelectData = $scope.vxColSettings.rowSelected[rowId] || false;
                                         _cellTmpl = cellTmplRowSelect;
                                         _cellTmpl = _cellTmpl.replaceAll('VX_ROW_ID', rowId);
-                                        _cellTmpl = _cellTmpl.replace('VX_ROW_SEL_VAL', _rowSelectData);
+                                        _cellTmpl = _cellTmpl.replace('VX_ROW_SEL_VAL', _rowSelectData == true ? 'checked' : '');
                                         //_compile = _compile || true;
                                     }
                                     else if (col.renderHybridCellDefn == true && typeof $scope.vxConfig.hybridCellDefn === 'function') {
@@ -1692,7 +1694,8 @@
 
                 /// <summary>GRID FUNCTION : HANDLE CLICK EVENT WHEN A COLUMN FILTER IS CLICKED</summary>
                 $scope.filterClick = function (header, filter) {
-                    $scope.clearSelection();
+                    if ($scope.vxConfig.preserveSelectionOnFilters == false)
+                        $scope.clearSelection();
                     var filterValue = $scope.vxColSettings.colFiltersStatus[filter.key];
                     if (filterValue == false) {
                         $scope.multiBoxFilters = _.reject($scope.multiBoxFilters, function (mbFilter) { return mbFilter.key.localeCompare(filter.key) == 0 });

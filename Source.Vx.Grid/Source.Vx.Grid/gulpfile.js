@@ -6,8 +6,8 @@
     cssmin = require('gulp-cssmin'),
     del = require('del'),
     html2js = require('gulp-html-js-template'),
-    minify = require('gulp-minify'),
-    plato = require('plato');
+    minify = require('gulp-minify');
+    //plato = require('plato');
 
 gulp.task('styles', function () {
     gulp.src('scss/*.scss')
@@ -67,18 +67,18 @@ gulp.task('concat:js', ['clean:concat:js', 'minify:js'], function () {
     .pipe(gulp.dest('./dist/min/js'));
 });
 
-//Plato Tasks
-gulp.task('plato:js', function () {
-    try {
-        return plato.inspect(['Resource/vx-grid.js', 'Resource/vx-grid.jsoneditor.directive.js'],
-            'plato-reports/',
-            {}, function (report) {
-                /* analyse report */
-            });
-    } catch (e) {
-        console.log(e);
-    }
-});
+////Plato Tasks
+//gulp.task('plato:js', function () {
+//    try {
+//        return plato.inspect(['Resource/vx-grid.js', 'Resource/vx-grid.jsoneditor.directive.js'],
+//            'plato-reports/',
+//            {}, function (report) {
+//                /* analyse report */
+//            });
+//    } catch (e) {
+//        console.log(e);
+//    }
+//});
 
 //Watch JS task
 gulp.task('default:vxgrid:js', function () {

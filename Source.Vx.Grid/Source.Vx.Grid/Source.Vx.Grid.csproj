@@ -95,6 +95,7 @@
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="bower.json" />
     <None Include="Properties\PublishProfiles\vxgrid - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\vxgrid - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">

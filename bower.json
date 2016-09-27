@@ -14,7 +14,7 @@
   "dependencies": {"angular": "1.4.8", "angular-ui-bootstrap": "1.1.1", "angular-sanitize": "1.4.8"},
   "homepage": "https://github.com/asitparida/VxGrid",
   "ignore": [
-    "Source.Vx.Grid/.*",
+    "Source.Vx.Grid/*.*",
     "Source.Vx.Grid/Source.Vx.Grid/*.*",
     "Source.Vx.Grid/Source.Vx.Grid/**/.*",
     "Source.Vx.Grid/Source.Vx.Grid/dist/js",

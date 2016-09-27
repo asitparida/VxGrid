@@ -67,7 +67,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="default2.html" />
-    <Content Include="defHelp.jpg" />
     <Content Include="dist\js\ml-select.directive.js" />
     <Content Include="dist\min\css\multiselect.css" />
     <Content Include="dist\min\fonts\glyphicons-halflings-regular.svg" />

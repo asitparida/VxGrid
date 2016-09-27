@@ -226,15 +226,12 @@
                     var start = new Date();
                     var end = new Date();
                     var dt = new Date();
-                    //console.log('isnide method 1', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
                     if ($scope.config.hybrid == true)
                         $scope.vxConfig = $scope.config;
                     else
                         $scope.vxConfig = angular.copy($scope.config);
                     end = new Date();
                     dt = new Date();
-                    //console.log('isnide method 2', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
-                    //console.log(1, end.getTime() - start.getTime());
 
                     /* GETTING / SETTING PRIMARY COLUMN*/
                     var _primaryColDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.primary == true });
@@ -283,7 +280,6 @@
                         });
                     }
                     end = new Date();
-                    //console.log(2, end.getTime() - start.getTime());
                     /* ENBALE ROW SELECTION */
                     if ($scope.vxConfig.selectionEnabled == true) {
                         /* ADDING CHECKBOX COLUMN DEFINITION */
@@ -304,7 +300,6 @@
                         });
                     }
                     end = new Date();
-                    //console.log(3, end.getTime() - start.getTime());
                     $scope.multiBoxFilters = [];
                     var _propDefns = [
                         { prop: 'enableDropdownsInHeader', defValue: false },
@@ -350,7 +345,6 @@
                         $scope.vxConfig.latchExcess = 5;
                     }
                     end = new Date();
-                    //console.log(4, end.getTime() - start.getTime());
                     $scope.vxColSettings.selectAllOnRenderAll = $scope.vxConfig.selectAllOnRenderAll;
                     _.each($scope.vxConfig.columnDefConfigs, function (col) {
                         /* SET DEAFULTS FOR COLUMNS */
@@ -387,7 +381,7 @@
                             if (col[propDefn.prop] === 'undefined' || col[propDefn.prop] == null || col[propDefn.prop] == {})
                                 col[propDefn.prop] = propDefn.defValue;
                         });
-                        //console.log(col['filterLimit']);
+
                         col.effectiveWidth = col.width;
                         col.idCollection = [];
                         var _propDefnLocks = [
@@ -445,7 +439,7 @@
                         }
                     });
                     end = new Date();
-                    //console.log(5, end.getTime() - start.getTime());
+
                     $scope.vxConfig.columnDefConfigs = $scope.calculateEffectiveWidths($scope.vxConfig.columnDefConfigs);
                     if (typeof $scope.vxConfig.multiSelectionDependentCol !== 'undefined'
                         && $scope.vxConfig.multiSelectionDependentCol != null
@@ -510,7 +504,6 @@
                                     'vxSelectedDataLength': $scope.vxColSettings.multiSelected.length
                                 }
                             }
-                            //console.log(res);
                             return res;
                         }
                         else
@@ -640,7 +633,6 @@
                                 $scope.vxColSettings.rowSelected[_id] = true;
                                 $scope.vxColSettings.multiSelected.push(_id);
                                 _modIds.push(_id);//vx_row-sel_in_XXX-XXXX-XXXX_0_0
-                                //console.log(_id);
                                 if ($scope.vxConfig.hybrid == true) {
                                     var _element = angular.element(document.getElementById('vx_row-sel_in_' + _id));
                                     if (typeof _element !== 'undefined' && _element != null && _element.length > 0) {
@@ -722,7 +714,6 @@
                         'id': $scope.vxConfig.id
                     });
                     end = new Date();
-                    //console.log(6, end.getTime() - start.getTime());
 
                     /// <summary> STATIC MAPS FOR ENABLING HYBRID MODE SUPPORT</summary>
                     var _hybridContainer = null;
@@ -852,7 +843,6 @@
                                     }
                                     else if (col.renderHybridCellDefn != true && col.columnIsRowSelect == true) {
                                         var _data = typeof row[col.id] !== 'undefined' && row[col.id] != null ? row[col.id] : null;
-                                        //console.log(14);
                                         var _rowSelectData = $scope.vxColSettings.rowSelected[rowId] || false;
                                         _cellTmpl = cellTmplRowSelect;
                                         _cellTmpl = _cellTmpl.replaceAll('VX_ROW_ID', rowId);
@@ -902,7 +892,7 @@
                                 var _angElement = angular.element(ele);
                                 _angElement.on('click', function (e) {
                                     var _rowId = $(e.target).attr('rowid');
-                                    if (typeof _rowId !== 'undefined') {                                        
+                                    if (typeof _rowId !== 'undefined') {
                                         var _currentState = $(e.target).prop('checked');
                                         $scope.vxColSettings.rowSelected[_rowId] = _currentState;
                                         var result = { 'key': _rowId, 'value': $scope.vxColSettings.rowSelected[_rowId], '_pKey': _rowId };
@@ -926,20 +916,17 @@
                                         }
                                         else
                                             $scope.rowSelectionChanged(_rowId);
-                                    }                                    
+                                    }
                                 });
                             });
                         }
                     }
 
                     end = new Date();
-                    //console.log(7, end.getTime() - start.getTime());
-                    //console.log($scope.vxConfig.vxFilteredData);
                     if ($scope.vxConfig.hybrid == true) {
                         //$scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData;
                         end = new Date();
                         $scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData;
-                        //console.log(8, end.getTime() - start.getTime());
                         $timeout($scope.prepHybrid, 100);
                     }
                 }
@@ -1010,8 +997,6 @@
                                 $scope.vxColSettings.saveInProgress[id] = false;
                             }, function (data) {
                                 /* FAILURE SAVE */
-                                //console.log('Error : Save Failed');
-                                //console.log(data);
                                 $scope.vxColSettings.saveInProgress[id] = false;
                                 $scope.vxColSettings.inlineEditState[id] = true;
                                 cRow.newRow = true;
@@ -1048,8 +1033,6 @@
                                     $scope.vxColSettings.saveInProgress[id] = false;
                                 }, function (data) {
                                     /* FAILURE SAVE */
-                                    //console.log('Error : Save Failed');
-                                    //console.log(data);
                                     $scope.vxColSettings.saveInProgress[id] = false;
                                     $scope.vxColSettings.inlineEditState[id] = true;
                                 });
@@ -1106,7 +1089,6 @@
                     var cRow = _.find($scope.vxConfig.vxData, function (row) { return row[$scope.vxColSettings.primaryId] == id; });
                     if (typeof cRow !== 'undefined' && cRow.newRow == true) {
                         $scope.vxColSettings.inlineEditState[id] = false;
-                        //console.log(11);
                         $scope.vxColSettings.rowSelected[id] = false;
                         if ($scope.vxConfig.hybrid == true) {
                             var _element = angular.element(document.getElementById('vx_row-sel_in_' + id));
@@ -1131,7 +1113,6 @@
                                 cRow[head] = oRow[head];
                             });
                             $scope.vxColSettings.inlineEditState[id] = false;
-                            //console.log(10);
                             $scope.vxColSettings.rowSelected[id] = false;
                             if ($scope.vxConfig.hybrid == true) {
                                 var _element = angular.element(document.getElementById('vx_row-sel_in_' + id));
@@ -1180,7 +1161,6 @@
                                     $scope.$emit('vxGridRowsDeleted', { 'id': $scope.vxConfig.id, 'data': _processIDs });
                                     _.each(_processIDs, function (id) {
                                         $scope.vxColSettings.inlineEditState[id] = false;
-                                        //console.log(9);
                                         $scope.vxColSettings.rowSelected[id] = false;
                                         $scope.vxColSettings.saveInProgress[id] = false;
                                     });
@@ -1194,8 +1174,6 @@
                                 }
                             }, function (data) {
                                 /* FAILURE SAVE */
-                                //console.log('Error : Save Failed');
-                                //console.log(data);
                             }).then(function () {
                                 _.each($scope.vxColSettings.multiSelected, function (id) {
                                     $scope.vxColSettings.saveInProgress[id] = false;
@@ -1208,7 +1186,6 @@
                             $scope.$emit('vxGridRowsDeleted', { 'id': $scope.vxConfig.id, 'data': $scope.vxColSettings.multiSelected });
                             _.each($scope.vxColSettings.multiSelected, function (id) {
                                 $scope.vxColSettings.inlineEditState[id] = false;
-                                //console.log(8);
                                 $scope.vxColSettings.rowSelected[id] = false;
                             });
                             $scope.vxColSettings.multiSelected = [];
@@ -1285,8 +1262,6 @@
                 }
 
                 $scope.filterKeyDown = function ($event, id) {
-                    //console.log(id);
-                    //console.log($event.keyCode);
                 }
 
                 /// <summary>GRID FUNCTION : CHECK IF HEADER NAME IS VALID</summary>
@@ -1300,7 +1275,6 @@
                 /// <param name="header" type="Object">HEADER OBJECT ASSOCIATED WITH THE CLICK</param>
                 /// <param name="E" type="Event"></param>
                 $scope.headerClick = function (header, e) {
-                    //console.log(header);
                     var proceed = true;
                     var target = $(e.target);
                     if (typeof target !== 'undefined' && target != null & target.length > 0) {
@@ -1402,6 +1376,15 @@
                                             })
                                             $scope.vxColSettings.filterSearchToken[_colDefn.id] = '';
                                             $scope.vxColSettings.colFiltersActivated[_colDefn.id] = false;
+                                        }
+                                        else {
+                                            var uniqed = _.uniq(_.map($scope.vxConfig.vxFilteredData, function (item) { return item[_colDefn.id] }));
+                                            _.each($scope.vxColSettings.colFilterPairs[_colDefn.id], function (pair) {
+                                                if (_.contains(uniqed, pair.label) != true)
+                                                    pair.disabled = true;
+                                                else
+                                                    pair.disabled = false;
+                                            });
                                         }
                                         /* SET NON INTERSECTED FILTERS TO DISABLE TRUE*/
                                         if (processForIntersectedFilters == true) {
@@ -1548,7 +1531,6 @@
 
                 /// <summary>GRID FUNCTION : GET COUNT OF NUMBER OF ROWS IN THE GRID EXCEPT THE ROWS USED TO DENOTE GROUP HEADERS</summary>
                 $scope.getAllRowLength = function () {
-                    //console.log($scope._origData.length);
                     if ($scope.config.noData)
                         return 0;
                     if ($scope.vxConfig.hybrid == true)
@@ -1578,7 +1560,6 @@
                         if ($scope.vxColSettings.multiSelColDependent == false || ($scope.vxColSettings.multiSelColDependent == true && row[$scope.vxConfig.multiSelectionDependentCol] == false)) {
                             var pid = row[$scope.vxColSettings.primaryId];
                             if ($scope.vxColSettings.rowSelected[pid] != toggledTo) {
-                                //console.log(7);
                                 $scope.vxColSettings.rowSelected[pid] = toggledTo;
                                 var result = { 'key': row[$scope.vxConfig.onSelectionReturnCol], 'value': $scope.vxColSettings.rowSelected[pid], '_pKey': pid };
                                 $scope.emitArray.push(pid);
@@ -1632,7 +1613,7 @@
                             }
                         });
                         $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (ml) { return typeof ml === 'undefined' || ml == null || ml == {} })
-                        if ($scope.vxConfig.hybrid == true) {                            
+                        if ($scope.vxConfig.hybrid == true) {
                             var _elem = angular.element(document.getElementById('_vxMulLength' + $scope.vxConfig.id));
                             if (typeof _elem !== 'undefined' && _elem != null && _elem.length > 0) {
                                 $(_elem).text($filter('vxNumberFixedLen')($scope.vxColSettings.multiSelected.length, 2));
@@ -1657,7 +1638,6 @@
                 /// <summary>GRID FUNCTION : HANDLE SELECTION TOGGLE EVENT FOR A ROW CHECKBOX</summary>
                 $scope.rowSelectionChanged = function (rowId) {
                     var pid = rowId;
-                    //console.log('4456456456');
                     var row = _.find($scope.vxConfig.vxData, function (_row) { return _row[$scope.vxColSettings.primaryId] == rowId });
                     var result = { 'key': row[$scope.vxConfig.onSelectionReturnCol], 'value': $scope.vxColSettings.rowSelected[pid], '_pKey': pid };
                     var proceed = true;
@@ -1671,7 +1651,6 @@
                             var dataRow = _.find($scope.vxConfig.vxData, function (i) { return i[$scope.vxColSettings.primaryId].localeCompare(id) == 0 });
                             if (typeof dataRow !== 'undefined' && dataRow != null && dataRow != {} && dataRow[colId] == true) {
                                 proceed = false;
-                                //console.log(5);
                                 $scope.vxColSettings.rowSelected[pid] = false;
                             }
                             else
@@ -1681,7 +1660,6 @@
                             proceed = true;
                         else
                             $scope.vxColSettings.rowSelected[pid] = false;
-                        //console.log(4);
                     }
                     else if ($scope.vxColSettings.rowSelected[pid] == false) {
                         $scope.vxColSettings.multiSelected = _.reject($scope.vxColSettings.multiSelected, function (rs) { return rs.localeCompare(pid) == 0 });
@@ -1698,7 +1676,6 @@
                         if ($scope.vxConfig.multiSelectionEnabled == false) {
                             _.each($scope.vxColSettings.multiSelected, function (rs) {
                                 if (rs.localeCompare(pid) != 0) {
-                                    //console.log(3);
                                     $scope.vxColSettings.rowSelected[rs] = false;
                                 }
                             });
@@ -1789,7 +1766,6 @@
                     }
                     _.each($scope.vxConfig[_set], function (row) {
                         if ($scope.vxColSettings.multiSelColDependent == false || ($scope.vxColSettings.multiSelColDependent == true && row[$scope.vxConfig.multiSelectionDependentCol] == false)) {
-                            //console.log(2);
                             $scope.vxColSettings.rowSelected[row[$scope.vxColSettings.primaryId]] = true;
                             if ($scope.vxConfig.hybrid == true) {
                                 var _element = angular.element(document.getElementById('vx_row-sel_in_' + row[$scope.vxColSettings.primaryId]));
@@ -2333,7 +2309,6 @@
                 /// <summary>GRID WATCH : LISTEN TO CHANGES IN DATA AND ACCORDINGLY RESET INSTANCE</summary>
                 $scope.$watchCollection('config.data', function (n) {
                     var dt = new Date();
-                    //console.log('before start', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
                     if (typeof n !== 'undefined' && n.length == 0) {
                         n = [{ 'fillEmptyElement': true }];
                         $scope.config.noData = true;
@@ -2349,7 +2324,6 @@
                     else
                         $scope.config.vxData = angular.copy(n);
                     dt = new Date();
-                    //console.log('start', dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds() + ':' + dt.getMilliseconds());
                     delete $scope.vxConfig;
                     $scope.resetVxInstance();
                 });
@@ -2376,7 +2350,6 @@
                             _totatWidth = _totatWidth + col.effectiveWidth;
                     });
                     $scope.vxConfig.totalWidth = _totatWidth + 'px';
-                    //console.log($scope.vxConfig.totalWidth);
                     return $scope.vxConfig.totalWidth;
                 }
 
@@ -2614,7 +2587,6 @@
                         }
                     }
                     catch (e) {
-                        //console.log(e);
                     }
                 });
             }

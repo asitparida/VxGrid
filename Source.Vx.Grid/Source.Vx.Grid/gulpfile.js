@@ -92,7 +92,7 @@ gulp.task('minify:clean:css', function () {
 
 // Compile out sass files and minify it
 gulp.task('minify:css', ['minify:clean:css'], function () {
-    var min = resolveMinifiedPath("./dist/min/css/vx-grid.min.css");
+    var min = resolveMinifiedPath("./dist/min/css/vx.grid.min.css");
     return gulp.src('scss/*.scss')
         .pipe(plumber(errorHandler))
         .pipe(sass())
@@ -109,6 +109,6 @@ gulp.task('default:vxgrid:css', function () {
 
 //Watch CSS task
 gulp.task('default:vxgrid:dist-prod', function () {
-    return gulp.src(['dist/min/js/vx.grid.min.js', 'dist/min/css/vx-grid.min.css'])
+    return gulp.src(['dist/min/js/vx.grid.min.js', 'dist/min/css/vx.grid.min.css'])
         .pipe(gulp.dest('../../dist'));
 });

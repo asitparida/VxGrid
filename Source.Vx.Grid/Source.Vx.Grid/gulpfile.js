@@ -2,7 +2,6 @@
     plumber = require('gulp-plumber'),
     sass = require('gulp-sass'),
     concat = require('gulp-concat'),
-    uglify = require('gulp-uglify'),
     cssmin = require('gulp-cssmin'),
     del = require('del'),
     html2js = require('gulp-html-js-template'),
@@ -55,7 +54,7 @@ gulp.task('clean:concat:js', function () {
 });
 
 //Concat JS Files
-gulp.task('concat:js', ['clean:concat:js', 'minify:js'], function () {
+gulp.task('concat:bundle:js', ['clean:concat:js', 'minify:js'], function () {
     return gulp.src([
         './js/angular-scroll-min.js',
         './js/angular-vs-repeat-min.js',
@@ -63,9 +62,20 @@ gulp.task('concat:js', ['clean:concat:js', 'minify:js'], function () {
         './js/vx-grid-min.js',
         './js/vx-grid-templates-min.js',
     ])
+    .pipe(concat('vx.grid.bundle.min.js'))
+    .pipe(gulp.dest('./dist/min/js'));
+});
+
+gulp.task('concat:js', ['clean:concat:js', 'minify:js'], function () {
+    return gulp.src([
+        './js/vx-grid.jsoneditor.directive-min.js',
+        './js/vx-grid-min.js',
+        './js/vx-grid-templates-min.js',
+    ])
     .pipe(concat('vx.grid.min.js'))
     .pipe(gulp.dest('./dist/min/js'));
 });
+
 
 ////Plato Tasks
 //gulp.task('plato:js', function () {
@@ -82,7 +92,7 @@ gulp.task('concat:js', ['clean:concat:js', 'minify:js'], function () {
 
 //Watch JS task
 gulp.task('default:vxgrid:js', function () {
-    gulp.watch(['Resource/vx-grid.js', 'Resource/vx-grid-templates.html', 'Resource/vx-grid.jsoneditor.directive.js'], ['concat:js']);
+    gulp.watch(['Resource/vx-grid.js', 'Resource/vx-grid-templates.html', 'Resource/vx-grid.jsoneditor.directive.js'], ['concat:js', 'concat:bundle:js']);
 });
 
 // Clean the distributable css directory
@@ -109,6 +119,6 @@ gulp.task('default:vxgrid:css', function () {
 
 //Watch CSS task
 gulp.task('default:vxgrid:dist-prod', function () {
-    return gulp.src(['dist/min/js/vx.grid.min.js', 'dist/min/css/vx.grid.min.css'])
+    return gulp.src(['dist/min/js/vx.grid.bundle.min.js', 'dist/min/js/vx.grid.min.js', 'dist/min/css/vx.grid.min.css'])
         .pipe(gulp.dest('../../dist'));
 });

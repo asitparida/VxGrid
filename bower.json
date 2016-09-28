@@ -2,7 +2,7 @@
   "name": "vx-grid",
   "description": "An standalone native table plugin which uses the best of features provided by AngularJS",
   "authors": [
-    "asitparida@live.in"
+    "Asit Kumar Parida <asitparida@live.in>"
   ],
   "license": "MIT",
   "keywords": [

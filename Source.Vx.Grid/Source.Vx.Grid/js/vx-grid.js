@@ -1827,15 +1827,25 @@
                 }
 
                 /// <summary>GRID FUNCTION : FUNCTION TO MOVE FOCUS TO FIRST ITEM IN MENU</summary>
-                $scope.upDownKeyDownHandlerHeaderMenu = function (e) {
-                    if (e.keyCode != 40) {
+                $scope.upDownKeyDownHandlerHeaderMenu = function (e, columnId) {
+                    if (!(e.keyCode == 40 || e.keyCode == 27)) {
                         return;
-                    }
+                    }                    
                     else if (e.keyCode == 40) {
                         //DOWN ARROW PRESS
                         var focussables = $(e.target).siblings().find('[tabindex="0"]');
                         if (focussables.length > 0)
                             $(focussables[0]).focus();
+                    }
+                    else if (e.keyCode == 27) {
+                        /* ESC KEY PRESSED */                        
+                        if ($scope.vxColSettings.dropdDownOpen[columnId] == true) {
+                            $scope.vxColSettings.dropdDownOpen[columnId] = false;
+                            var _elem = $(e.target).closest('.dropdown').find('button');
+                            if (_elem && _elem.length > 0) {
+                                $(_elem).focus();
+                            }
+                        }
                     }
                 }
 

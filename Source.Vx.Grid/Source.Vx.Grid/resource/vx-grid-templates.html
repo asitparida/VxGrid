@@ -215,13 +215,13 @@
             </div>
             <div class="col-xs-12 vxTablePagination pad0" ng-if="vxColSettings.vxPageEnabled">
                 <div class="icon-container dirNumContainer" ax-key="activatePage(vxColSettings.activePage - 1)" ng-class="{ 'disabled' :vxColSettings.activePage == 0}" ax-disabled="vxColSettings.activePage == 0">
-                    <i class="icon icon-previous"></i>
+                    <i class="icon icon-previous" aria-hidden="true"></i><span class="offscreen">Previous Page</span>
                 </div>
                 <div class="icon-container dirNumContainer" ax-key="activatePage(vxColSettings.activePage + 1)" ng-class="{ 'disabled' :vxColSettings.activePage == vxColSettings.pages.length - 1}" ax-disabled="vxColSettings.activePage == vxColSettings.pages.length - 1">
-                    <i class="icon icon-next"></i>
+                    <i class="icon icon-next" aria-hidden="true"></i><span class="offscreen">Next Page</span>
                 </div>
                 <div class="icon-container pageNumContainer" ng-repeat="pageNum in vxColSettings.pages" ax-key="activatePage(pageNum)" ng-class="{'active' : pageNum == vxColSettings.activePage}">
-                    <i class="icon">{{pageNum + 1}}</i>
+                    <span class="offscreen">Page </span><i class="icon">{{pageNum + 1}}</i>
                 </div>
             </div>
             <div class="icon-container scrollAction up" role="button" tabindex="0" ax-key="justScrollTop()" ng-class="{'pageEnabled': vxColSettings.vxPageEnabled}" ng-show="showScrollUpArrow()" aria-label="Scroll Up">
@@ -238,7 +238,7 @@
                 <div class="vxSettingsHead">
                     <label class="title">Manage Columns</label>
                     <div class="icon-container" role="button" tabindex="0" ax-key="cancelChangeInConfig()">
-                        <i class="icon icon-close"></i>
+                        <i class="icon icon-close" aria-hidden="true"></i><span class="offscreen">Cancel Changes in Config</span>
                     </div>
                 </div>
                 <div class="vxSettingsBody">

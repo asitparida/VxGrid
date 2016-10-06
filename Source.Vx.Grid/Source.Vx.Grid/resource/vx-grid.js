@@ -1380,7 +1380,12 @@
                                             $scope.vxColSettings.colFiltersActivated[_colDefn.id] = false;
                                         }
                                         else {
-                                            var uniqed = _.uniq(_.map($scope.vxConfig.vxFilteredData, function (item) { return item[_colDefn.id] }));
+                                            var uniqed = _.uniq(_.map($scope.vxConfig.vxFilteredData, function (item) {
+                                                if (Object.prototype.toString.call(item[_colDefn.id]) === '[object Date]')
+                                                    return item[_colDefn.id].getTime();
+                                                else
+                                                    return item[_colDefn.id];
+                                            }));
                                             _.each($scope.vxColSettings.colFilterPairs[_colDefn.id], function (pair) {
                                                 if (_.contains(uniqed, pair.label) != true)
                                                     pair.disabled = true;
@@ -1392,7 +1397,12 @@
                                         if (processForIntersectedFilters == true) {
                                             /* GET INTERSECTED DATA SET BY LOOPING THROUGH MATCHES - vxConfig.vxFilteredData */
                                             var lastCol = _.last($scope.multiBoxFilters);
-                                            var uniqed = _.uniq(_.map($scope.vxConfig.vxFilteredData, function (item) { return item[_colDefn.id] }));
+                                            var uniqed = _.uniq(_.map($scope.vxConfig.vxFilteredData, function (item) {
+                                                if (Object.prototype.toString.call(item[_colDefn.id]) === '[object Date]')
+                                                    return item[_colDefn.id].getTime();
+                                                else
+                                                    return item[_colDefn.id];
+                                            }));
                                             if (lastCol.col.localeCompare(_colDefn.id) != 0) {
                                                 _.each($scope.vxColSettings.colFilterPairs[_colDefn.id], function (pair) {
                                                     if (_.contains(uniqed, pair.label) != true)
@@ -1830,7 +1840,7 @@
                 $scope.upDownKeyDownHandlerHeaderMenu = function (e, columnId) {
                     if (!(e.keyCode == 40 || e.keyCode == 27)) {
                         return;
-                    }                    
+                    }
                     else if (e.keyCode == 40) {
                         //DOWN ARROW PRESS
                         var focussables = $(e.target).siblings().find('[tabindex="0"]');
@@ -1838,7 +1848,7 @@
                             $(focussables[0]).focus();
                     }
                     else if (e.keyCode == 27) {
-                        /* ESC KEY PRESSED */                        
+                        /* ESC KEY PRESSED */
                         if ($scope.vxColSettings.dropdDownOpen[columnId] == true) {
                             $scope.vxColSettings.dropdDownOpen[columnId] = false;
                             var _elem = $(e.target).closest('.dropdown').find('button');

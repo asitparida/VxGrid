@@ -1383,6 +1383,8 @@
                                             var uniqed = _.uniq(_.map($scope.vxConfig.vxFilteredData, function (item) {
                                                 if (Object.prototype.toString.call(item[_colDefn.id]) === '[object Date]')
                                                     return item[_colDefn.id].getTime();
+                                                else if (Object.prototype.toString.call(item[_colDefn.id]) === '[object Boolean]')
+                                                    return item[_colDefn.id].toString();
                                                 else
                                                     return item[_colDefn.id];
                                             }));
@@ -1397,14 +1399,17 @@
                                         if (processForIntersectedFilters == true) {
                                             /* GET INTERSECTED DATA SET BY LOOPING THROUGH MATCHES - vxConfig.vxFilteredData */
                                             var lastCol = _.last($scope.multiBoxFilters);
-                                            var uniqed = _.uniq(_.map($scope.vxConfig.vxFilteredData, function (item) {
+                                            var uniqed = _.uniq(_.map($scope.vxConfig.vxFilteredData, function (item) {                                                
                                                 if (Object.prototype.toString.call(item[_colDefn.id]) === '[object Date]')
                                                     return item[_colDefn.id].getTime();
+                                                else if(Object.prototype.toString.call(item[_colDefn.id]) === '[object Boolean]')
+                                                    return item[_colDefn.id].toString();
                                                 else
                                                     return item[_colDefn.id];
                                             }));
                                             if (lastCol.col.localeCompare(_colDefn.id) != 0) {
                                                 _.each($scope.vxColSettings.colFilterPairs[_colDefn.id], function (pair) {
+                                                    console.log(pair);
                                                     if (_.contains(uniqed, pair.label) != true)
                                                         pair.disabled = true;
                                                     else

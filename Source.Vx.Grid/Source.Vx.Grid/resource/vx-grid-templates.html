@@ -169,7 +169,7 @@
                                     <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
                                         ng-attr-id="{{row[vxColSettings.primaryId]}}"
                                         class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"
-                                        ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection))"
+                                        ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicateFn:vxConfig.reverseSortDirection))"
                                         ng-init="rowId = row[vxColSettings.primaryId]"
                                         ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}"
                                         ng-include="'template/vx-grid/vx-grid-row-tmpl.html'"></tr>
@@ -178,7 +178,7 @@
                                     <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
                                         ng-attr-id="{{row[vxColSettings.primaryId]}}"
                                         class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"
-                                        ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength )"
+                                        ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicateFn:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength )"
                                         ng-init="rowId = row[vxColSettings.primaryId]"
                                         ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}"
                                         ng-include="'template/vx-grid/vx-grid-row-tmpl.html'"></tr>
@@ -188,7 +188,7 @@
                                     <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
                                         ng-attr-id="{{::row[vxColSettings.primaryId]}}"
                                         class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"
-                                        ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection))"
+                                        ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicateFn:vxConfig.reverseSortDirection))"
                                         ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}"
                                         ng-init="rowId = row[vxColSettings.primaryId]"
                                         ng-include="'template/vx-grid/vx-grid-row-tmpl-bindonce.html'"></tr>
@@ -197,7 +197,7 @@
                                     <tr vx-edit-focus-disable="vxColSettings.saveInProgress[row[vxColSettings.primaryId]]"
                                         ng-attr-id="{{::row[vxColSettings.primaryId]}}"
                                         class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"
-                                        ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicate:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength)"
+                                        ng-repeat="row in ( vxConfig.vxFilteredData = (vxConfig.vxData | filter:vxColSettings.xsSearch | vxGridMultiBoxFilters: multiBoxFilters | orderBy:vxConfig.sortPredicateFn:vxConfig.reverseSortDirection) | vxStartFrom: vxColSettings.vxPageStartPosition | limitTo:vxConfig.pageLength)"
                                         ng-class="{ 'vxRowSelected' : vxColSettings.rowSelected[row[vxColSettings.primaryId]], 'inProgress': vxColSettings.saveInProgress[row[vxColSettings.primaryId]]}"
                                         ng-init="rowId = row[vxColSettings.primaryId]"
                                         ng-include="'template/vx-grid/vx-grid-row-tmpl-bindonce.html'"></tr>

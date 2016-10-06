@@ -63,7 +63,9 @@
         <COLUMN>.editDefn                       <SUPPORTED : Y>    :   <STRING>    SET CUSTOM CELL TEMPLATE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY
         <COLUMN>.editDefnTemplate               <SUPPORTED : Y>    :   <STRING>    SET EDIT TEMPLATE TYPE - USE 'VX_ROW_POINT' FOR ROW LEVEL PROPERTY & 'VX_DATA_POINT' FOR ROW CELL LEVEL PROPERTY - SUPPORTED TYPES - 'INPUT', 'TEXTAREA'
         <COLUMN>.columnIsDate                   <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE TO ENABLE NATIVE DATE SUPPORT; SET <CONFIG>.renderDefn TO TRUE FOR THIS COLUMN
-        <COLUMN>.columnDatePipe                 <SUPPORTED : Y>    :   <STRING>    SET TO THE DATE FORMAT; USE VALUE FROM ANGULAR DATE FILTER PIPE 
+        <COLUMN>.columnDatePipe                 <SUPPORTED : Y>    :   <STRING>    SET TO THE DATE FORMAT; USE VALUE FROM ANGULAR DATE FILTER PIPE
+        <COLUMN>.customSortEnabled              <SUPPORTED : Y>    :   <BOOLEAN>   SET TO TRUE IF CUSTOM FN
+        <COLUMN>.customSortFn                   <SUPPORTED : Y>    :   <FUNCTION>  SET TO FN
 
         VX GRID EVENTS
         ----------------------
@@ -326,6 +328,7 @@
                         { prop: 'jsonEditorEnabled', defValue: false },
                         { prop: 'allRowsSelectionEnabled', defValue: false },
                         { prop: 'sortPredicate', defValue: $scope.vxColSettings.primaryId },
+                        { prop: 'sortPredicateFn', defValue: $scope.vxColSettings.primaryId },
                         { prop: 'reverseSortDirection', defValue: false },
                         { prop: 'emptyFill', defValue: '<span>No records to display ...</span>' },
                         { prop: 'caption', defValue: 'sample vx grid table caption' },
@@ -682,8 +685,16 @@
                     /// <param name="id" type="String">ID FOR COLUMN IN WHICH WE NEED TO SORT</param>
                     /// <param name="direction" type="Boolean">SET TO TRUE TO SORT IN REVERSE ELSE SET TO FALSE</param>
                     $scope.config.sortByColumn = function (id, direction) {
-                        $scope.vxConfig.sortPredicate = id;
-                        $scope.vxConfig.reverseSortDirection = direction;
+                        var _colDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare(id) == 0 });
+                        if (typeof _colDefn !== 'undefined' && _colDefn != null) {
+                            $scope.vxConfig.sortPredicate = _colDefn.id;
+                            if (_colDefn.customSortEnabled) {
+                                $scope.vxConfig.sortPredicateFn = _colDefn.customSortFn;
+                            }
+                            else
+                                $scope.vxConfig.sortPredicateFn = _colDefn.id;
+                            $scope.vxConfig.reverseSortDirection = direction;
+                        }
                     }
 
                     /// <summary>CONFIG EXTENSION TO RESET COLUMN FILTERS USING PROGRAMMTIC ACCESS</summary>
@@ -1137,6 +1148,7 @@
                 /// <summary>GRID FUNCTION : ADD NEW ROW TO THE GRID</summary>
                 $scope.addNewRow = function () {
                     $scope.vxConfig.sortPredicate = '_vxCreated';
+                    $scope.vxConfig.sortPredicateFn = '_vxCreated';
                     $scope.vxConfig.reverseSortDirection = true;
                     var newRow = angular.copy($scope.vxConfig.newRowTemplate);
                     var _newGuid = _GUID();
@@ -1399,10 +1411,10 @@
                                         if (processForIntersectedFilters == true) {
                                             /* GET INTERSECTED DATA SET BY LOOPING THROUGH MATCHES - vxConfig.vxFilteredData */
                                             var lastCol = _.last($scope.multiBoxFilters);
-                                            var uniqed = _.uniq(_.map($scope.vxConfig.vxFilteredData, function (item) {                                                
+                                            var uniqed = _.uniq(_.map($scope.vxConfig.vxFilteredData, function (item) {
                                                 if (Object.prototype.toString.call(item[_colDefn.id]) === '[object Date]')
                                                     return item[_colDefn.id].getTime();
-                                                else if(Object.prototype.toString.call(item[_colDefn.id]) === '[object Boolean]')
+                                                else if (Object.prototype.toString.call(item[_colDefn.id]) === '[object Boolean]')
                                                     return item[_colDefn.id].toString();
                                                 else
                                                     return item[_colDefn.id];
@@ -1481,13 +1493,19 @@
                     var _colDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare(header.id) == 0 });
                     if (typeof _colDefn !== 'undefined' && _colDefn != null) {
                         if (_colDefn.ddSort) {
-                            if ($scope.vxConfig.sortPredicate.localeCompare(_colDefn.id) != 0)
+                            if ($scope.vxConfig.sortPredicate.localeCompare(_colDefn.id) != 0) {
                                 $scope.vxConfig.sortPredicate = _colDefn.id;
+                                if (_colDefn.customSortEnabled) {
+                                    $scope.vxConfig.sortPredicateFn = _colDefn.customSortFn;
+                                }
+                                else
+                                    $scope.vxConfig.sortPredicateFn = _colDefn.id;
+                            }
                             $scope.vxColSettings.reverseSettings[_colDefn.id] = !$scope.vxColSettings.reverseSettings[_colDefn.id];
                             $scope.vxConfig.reverseSortDirection = $scope.vxColSettings.reverseSettings[_colDefn.id];
                             /// <summary>HYBRID MODE SUPPORT</summary>
                             if ($scope.vxConfig.hybrid == true) {
-                                $scope.vxConfig.vxFilteredData = _.sortBy($scope.vxConfig.vxFilteredData, $scope.vxConfig.sortPredicate);
+                                $scope.vxConfig.vxFilteredData = _.sortBy($scope.vxConfig.vxFilteredData, $scope.vxConfig.sortPredicateFn);
                                 if ($scope.vxConfig.reverseSortDirection == true)
                                     $scope.vxConfig.vxFilteredData.reverse();
                                 $scope.resetHybridGrid();
@@ -1535,7 +1553,15 @@
                 $scope.unGroupClick = function (header) {
                     $scope.clearFilters();
                     if ($scope.vxColSettings.groupByColActivated[header.id] == true) {
-                        $scope.vxConfig.sortPredicate = header.id;
+                        var _colDefn = _.find($scope.vxConfig.columnDefConfigs, function (col) { return col.id.localeCompare(header.id) == 0 });
+                        if (typeof _colDefn !== 'undefined' && _colDefn != null) {
+                            $scope.vxConfig.sortPredicate = _colDefn.id;
+                            if (_colDefn.customSortEnabled) {
+                                $scope.vxConfig.sortPredicateFn = _colDefn.customSortFn;
+                            }
+                            else
+                                $scope.vxConfig.sortPredicateFn = _colDefn.id;
+                        }
                         $scope.vxConfig.vxData = _.reject($scope.vxConfig.vxData, function (row) {
                             if (typeof row.type !== 'undefined' && row.type != null)
                                 return row.type.localeCompare('groupRow') == 0

@@ -127,7 +127,7 @@
         showGridStats: true,
         showGridOptions: false,
         latchExcess: 20,
-        data: self.sampling(110, 'Coho Vineyard 1111'),
+        data: self.sampling(120, 'Coho Vineyard 1111'),
         jsonEditorEnabled: false,
         vxFilteredData: [],
         bindOnce: false,
@@ -186,7 +186,7 @@
             { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: true, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, hidden: false, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'assignment', columnName: 'Assignment', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false },
             { id: 'category', columnName: 'Category', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span>{{VX_DATA_POINT.name}}</span>", cellDefn: '<span>{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" ng-options="item.name for item in row.categories" ng-disabled="vxColSettings.inlineEditState[VX_ROW_POINT] == true" ng-model="row[\'category\']"></select>', inlineEditOnColumnEnabled: true, renderHybridCellDefn: true, hybridCompile: true },
-            { id: 'userAlias', columnName: 'User', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, hidden: false, cellDefn: '<select class="selectStyleSampleA" ng-model="row.userAlias" ng-options="user for user in row.users" ng-disabled="vxColSettings.inlineEditState[VX_ROW_POINT] == true"><option value="">Select an option </option> </select>', ddFiltersWithSearch: true },
+            { id: 'userAlias', columnName: 'User', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, hidden: false, cellDefn: '<select class="selectStyleSampleA" ng-model="row.userAlias" ng-options="user for user in row.users" ng-disabled="vxColSettings.inlineEditState[VX_ROW_POINT] == true"><option value="">Select an option </option> </select>', ddFiltersWithSearch: true, customSortEnabled: true, customSortFn: customSortUserFn },
             { id: 'labor', columnName: 'Labor', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false, headTabIndex: -1 },
             { id: 'timezone', columnName: 'Timezone', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
             { id: 'status', columnName: 'Status', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
@@ -201,6 +201,10 @@
         if (typeof data === 'undefined' || data == '' || data == {} || data.localeCompare('http://google.com') == 0)
             valid = false;
         self.vxSampleConfig.setRowFieldValidation(id, 'link', valid);
+    }
+
+    function customSortUserFn(item) {
+        return item.userAlias.length;
     }
 
     function hybridCellDefn(row, col) {

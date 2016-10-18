@@ -107,7 +107,7 @@
                                                         <li class="filter-search" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && header.ddFiltersWithSearch == true">
                                                             <!--<input class="search-input" tabindex="0" type="search" placeholder="Search In Filters" aria-label="search for filters in column {{::header.columnName}}" ng-model="vxColSettings.enteredSearchToken[header.id]" ng-attr-id="{{::header.id}}_searchfilters_{{vxConfig.id}}" ng-change="filterTokenChnagedRapid(header.id)" />-->
                                                             <input class="search-input" tabindex="0" type="search" placeholder="Search In Filters" aria-label="search for filters in column {{::header.columnName}}" ng-attr-id="{{::header.id}}_searchfilters_{{vxConfig.id}}" />
-                                                            <div class="icon-container filter-activator" ax-key="filterAssignVar(header.id)" ng-attr-id="{{::header.id}}_invokesearchfilters_{{vxConfig.id}}" >
+                                                            <div class="icon-container filter-activator" ax-key="filterAssignVar(header.id)" ng-attr-id="{{::header.id}}_invokesearchfilters_{{vxConfig.id}}" aria-label="invoke column filter action for column {{header.columnName}}" >
                                                                 <i class="icon icon-search"></i>
                                                             </div>
                                                         </li>

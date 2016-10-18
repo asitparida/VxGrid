@@ -290,7 +290,7 @@
                         if (typeof col === 'undefined' || col == null || col == {}) {
                             var _selColDefn = {
                                 id: 'checkbox', columnName: 'Row Selection', columnIsRowSelect: true, renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
-                                headerDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-disabled="vxConfig.noData == true" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" aria-labelledby="vx_row_sel_all_row"  /></div>',
+                                headerDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-disabled="vxConfig.noData == true" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" aria-label="Select All Rows "  /></div>',
                                 cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" ng-attr-id="vx_row-sel_in{{::row[vxColSettings.primaryId]}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" /></div>'
                             };
                             $scope.vxConfig.columnDefConfigs.unshift(_selColDefn);
@@ -1953,25 +1953,25 @@
                         $scope.shiftKeyPressed = true;
                     if (e.keyCode != 40 && e.keyCode != 38 && e.keyCode != 27 && e.keyCode != 9)
                         return false;
-                    if (e.keyCode == 40 || (e.keyCode == 9 && $scope.shiftKeyPressed == false)) {
-                        /* DOWN ARROW KEY PRESSED */
-                        var _elemId = $scope.findFocussable($(e.target), columnId, true);
-                        if ($('#' + _elemId).is('[tabindex="0"]')) {
-                            $('#' + _elemId).focus();
-                        }
-                        _prevent = true;
-                    }
-                    else if (e.keyCode == 38 || (e.keyCode == 9 && $scope.shiftKeyPressed == true)) {
-                        /* UP ARROW KEY PRESSED */
-                        var _elemId = $scope.findFocussable($(e.target), columnId, false);
-                        if (_elemId == null) {
-                            $(e.target).closest('.dropdown').find('button').focus();
-                        }
-                        else if ($('#' + _elemId).is('[tabindex="0"]')) {
-                            $('#' + _elemId).focus();
-                        }
-                        _prevent = true;
-                    }
+                    //if (e.keyCode == 40 || (e.keyCode == 9 && $scope.shiftKeyPressed == false)) {
+                    //    /* DOWN ARROW KEY PRESSED */
+                    //    var _elemId = $scope.findFocussable($(e.target), columnId, true);
+                    //    if ($('#' + _elemId).is('[tabindex="0"]')) {
+                    //        $('#' + _elemId).focus();
+                    //    }
+                    //    _prevent = true;
+                    //}
+                    //else if (e.keyCode == 38 || (e.keyCode == 9 && $scope.shiftKeyPressed == true)) {
+                    //    /* UP ARROW KEY PRESSED */
+                    //    var _elemId = $scope.findFocussable($(e.target), columnId, false);
+                    //    if (_elemId == null) {
+                    //        $(e.target).closest('.dropdown').find('button').focus();
+                    //    }
+                    //    else if ($('#' + _elemId).is('[tabindex="0"]')) {
+                    //        $('#' + _elemId).focus();
+                    //    }
+                    //    _prevent = true;
+                    //}
                     else if (e.keyCode == 27) {
                         /* ESC KEY PRESSED */
                         if ($scope.vxColSettings.dropdDownOpen[columnId] == true) {
@@ -1986,6 +1986,7 @@
                         e.stopPropagation();
                         e.preventDefault();
                     }
+                    console.log($(':focus'));
                 }
 
                 /// <summary>GRID FUNCTION : OPEN MODAL TO MANAGE COLUMNS</summary>

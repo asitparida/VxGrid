@@ -1275,9 +1275,6 @@
                     }
                 }
 
-                $scope.filterKeyDown = function ($event, id) {
-                }
-
                 /// <summary>GRID FUNCTION : CHECK IF HEADER NAME IS VALID</summary>
                 $scope.isValidHeaderName = function (header, name) {
                     return header.renderHeadDefn == false && typeof name !== 'undefined' && name != null && name != '';
@@ -1346,6 +1343,7 @@
                                     if (_colDefn.ddFilters == true) {
                                         _colDefn.idCollection.push($scope.vxConfig.id + '_' + _colDefn.id + '_clearfilters');
                                         _colDefn.idCollection.push(_colDefn.id + '_searchfilters_' + $scope.vxConfig.id);
+                                        _colDefn.idCollection.push(_colDefn.id + '_invokesearchfilters_' + $scope.vxConfig.id);
                                         /*  POPULATE LIST OF FILTERS*/
                                         if (filterListForColAvailable == false) {
                                             $scope.vxColSettings.dropDownFilters[_colDefn.id] = true;

@@ -1275,9 +1275,6 @@
                     }
                 }
 
-                $scope.filterKeyDown = function ($event, id) {
-                }
-
                 /// <summary>GRID FUNCTION : CHECK IF HEADER NAME IS VALID</summary>
                 $scope.isValidHeaderName = function (header, name) {
                     return header.renderHeadDefn == false && typeof name !== 'undefined' && name != null && name != '';
@@ -1346,6 +1343,7 @@
                                     if (_colDefn.ddFilters == true) {
                                         _colDefn.idCollection.push($scope.vxConfig.id + '_' + _colDefn.id + '_clearfilters');
                                         _colDefn.idCollection.push(_colDefn.id + '_searchfilters_' + $scope.vxConfig.id);
+                                        _colDefn.idCollection.push(_colDefn.id + '_invokesearchfilters_' + $scope.vxConfig.id);
                                         /*  POPULATE LIST OF FILTERS*/
                                         if (filterListForColAvailable == false) {
                                             $scope.vxColSettings.dropDownFilters[_colDefn.id] = true;
@@ -1953,25 +1951,25 @@
                         $scope.shiftKeyPressed = true;
                     if (e.keyCode != 40 && e.keyCode != 38 && e.keyCode != 27 && e.keyCode != 9)
                         return false;
-                    //if (e.keyCode == 40 || (e.keyCode == 9 && $scope.shiftKeyPressed == false)) {
-                    //    /* DOWN ARROW KEY PRESSED */
-                    //    var _elemId = $scope.findFocussable($(e.target), columnId, true);
-                    //    if ($('#' + _elemId).is('[tabindex="0"]')) {
-                    //        $('#' + _elemId).focus();
-                    //    }
-                    //    _prevent = true;
-                    //}
-                    //else if (e.keyCode == 38 || (e.keyCode == 9 && $scope.shiftKeyPressed == true)) {
-                    //    /* UP ARROW KEY PRESSED */
-                    //    var _elemId = $scope.findFocussable($(e.target), columnId, false);
-                    //    if (_elemId == null) {
-                    //        $(e.target).closest('.dropdown').find('button').focus();
-                    //    }
-                    //    else if ($('#' + _elemId).is('[tabindex="0"]')) {
-                    //        $('#' + _elemId).focus();
-                    //    }
-                    //    _prevent = true;
-                    //}
+                    if (e.keyCode == 40 || (e.keyCode == 9 && $scope.shiftKeyPressed == false)) {
+                        /* DOWN ARROW KEY PRESSED */
+                        var _elemId = $scope.findFocussable($(e.target), columnId, true);
+                        if ($('#' + _elemId).is('[tabindex="0"]')) {
+                            $('#' + _elemId).focus();
+                        }
+                        _prevent = true;
+                    }
+                    else if (e.keyCode == 38 || (e.keyCode == 9 && $scope.shiftKeyPressed == true)) {
+                        /* UP ARROW KEY PRESSED */
+                        var _elemId = $scope.findFocussable($(e.target), columnId, false);
+                        if (_elemId == null) {
+                            $(e.target).closest('.dropdown').find('button').focus();
+                        }
+                        else if ($('#' + _elemId).is('[tabindex="0"]')) {
+                            $('#' + _elemId).focus();
+                        }
+                        _prevent = true;
+                    }
                     else if (e.keyCode == 27) {
                         /* ESC KEY PRESSED */
                         if ($scope.vxColSettings.dropdDownOpen[columnId] == true) {
@@ -1986,7 +1984,6 @@
                         e.stopPropagation();
                         e.preventDefault();
                     }
-                    console.log($(':focus'));
                 }
 
                 /// <summary>GRID FUNCTION : OPEN MODAL TO MANAGE COLUMNS</summary>

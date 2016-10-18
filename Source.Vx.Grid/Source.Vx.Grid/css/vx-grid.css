@@ -606,7 +606,7 @@
   padding: 0 10px;
   font-style: italic;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  width: 100%;
+  width: calc(100% - 38px);
   color: rgba(255, 255, 255, 0.8);
   background: none;
   border: 1px solid rgba(255, 255, 255, 0.6);

@@ -925,27 +925,30 @@
 
 .vx-grid-related .vsTableStats {
   padding: 0; }
-  .vx-grid-related .vsTableStats label.statTitle {
-    color: #303030;
-    font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-    font-size: medium;
-    text-transform: uppercase;
-    font-weight: 400;
-    line-height: 40px;
-    margin: 6px 5px 4px 5px; }
-  .vx-grid-related .vsTableStats label.statValue {
-    color: #0073c6;
-    font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-    font-size: medium;
-    text-transform: uppercase;
-    font-weight: 400;
-    line-height: 40px;
-    margin-right: 15px;
-    margin: 6px 15px 4px 0; }
-  .vx-grid-related .vsTableStats label.statTitle.disabled, .vx-grid-related .vsTableStats label.statValue.disabled {
-    opacity: 0.25;
-    filter: alpha(opacity=25);
-    color: #000000; }
+  .vx-grid-related .vsTableStats p {
+    display: inline;
+    margin: 0; }
+    .vx-grid-related .vsTableStats p.statTitle {
+      color: #303030;
+      font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+      font-size: medium;
+      text-transform: uppercase;
+      font-weight: 400;
+      line-height: 40px;
+      margin: 6px 5px 4px 5px; }
+    .vx-grid-related .vsTableStats p.statValue {
+      color: #0073c6;
+      font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+      font-size: medium;
+      text-transform: uppercase;
+      font-weight: 400;
+      line-height: 40px;
+      margin-right: 15px;
+      margin: 6px 15px 4px 0; }
+    .vx-grid-related .vsTableStats p.statTitle.disabled, .vx-grid-related .vsTableStats p.statValue.disabled {
+      opacity: 0.25;
+      filter: alpha(opacity=25);
+      color: #000000; }
 
 .vx-grid-related .vxTablePagination {
   height: 48px;

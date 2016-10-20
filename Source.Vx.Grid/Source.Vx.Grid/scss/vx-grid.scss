@@ -606,8 +606,8 @@
             }
         }
 
-        .vxHead .vx-row-select {           
-            input[type="checkbox"] {               
+        .vxHead .vx-row-select {
+            input[type="checkbox"] {
                 &:focus, &:active {
                     outline-color: #fff;
                     outline-offset: 5px;
@@ -1294,7 +1294,10 @@
     .vsTableStats {
         padding: 0;
 
-        label {
+        p {
+            display: inline;
+            margin: 0;
+
             &.statTitle {
                 color: #303030;
                 font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;

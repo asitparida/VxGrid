@@ -20,18 +20,18 @@
             <div class="row hidden-xs">
                 <div class="col-xs-12">
                     <div class="col-md-6 vsTableStats pull-left zeroPaddingLeft" ng-if="vxConfig.showGridStats">
-                        <label class="statTitle">All</label>
-                        <label class="statValue">{{getAllRowLength() | vxNumberFixedLen:2}}</label>
-                        <label class="statTitle" ng-class="{ 'disabled' : multiBoxFilters.length == 0}">Filtered</label>
-                        <label class="statValue" ng-class="{ 'disabled' : multiBoxFilters.length == 0}">
+                        <p class="statTitle">All</p>
+                        <p class="statValue">{{getAllRowLength() | vxNumberFixedLen:2}}</p>
+                        <p class="statTitle" ng-class="{ 'disabled' : multiBoxFilters.length == 0}">Filtered</p>
+                        <p class="statValue" ng-class="{ 'disabled' : multiBoxFilters.length == 0}">
                             <span ng-if="multiBoxFilters.length > 0">
                                 <span>{{vxConfig.vxFilteredData.length | vxNumberFixedLen:2}}</span>
                             </span>
                             <span ng-if="multiBoxFilters.length == 0">00</span>
-                        </label>
-                        <label class="statTitle" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}">Selected</label>
-                        <label class="statValue" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" ng-if="vxConfig.hybrid == false">{{vxColSettings.multiSelected.length | vxNumberFixedLen:2}}</label>
-                        <label class="statValue" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" ng-if="vxConfig.hybrid == true" ng-attr-id="_vxMulLength{{vxConfig.id}}">00</label>
+                        </p>
+                        <p class="statTitle" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}">Selected</p>
+                        <p class="statValue" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" ng-if="vxConfig.hybrid == false">{{vxColSettings.multiSelected.length | vxNumberFixedLen:2}}</p>
+                        <p class="statValue" ng-class="{ 'disabled' : vxColSettings.multiSelected.length == 0}" ng-if="vxConfig.hybrid == true" ng-attr-id="_vxMulLength{{vxConfig.id}}">00</p>
                     </div>
                     <div class="vxTableOperations pull-right zeroPaddingRight" ng-if="vxConfig.showGridOptions">
                         <div class="search-container pull-left input-group">

@@ -482,14 +482,15 @@
 
                     /// <summary>GRID FUNCTION : WATCH OVER THE WINDOW DIMENSIONS SO AS TO ENABLE XS VIEW WHEN WIDTH < 768PX </summary>
                     var vxWindowsWidthDeregister = $scope.$watch('getWindowDimensions()', function (newValue, oldValue) {
-                        if (newValue.w < 768)
-                            $scope.vxColSettings.xsViewEnabled = true;
-                        else
-                            $scope.vxColSettings.xsViewEnabled = false;
+                        //if (newValue.w < 768)
+                        //    $scope.vxColSettings.xsViewEnabled = true;
+                        //else
+                        $scope.vxColSettings.xsViewEnabled = false;
+                        $scope.vxConfig.columnDefConfigs = $scope.calculateEffectiveWidths($scope.vxConfig.columnDefConfigs);
                     }, true);
-                    if ($scope.vxConfig.xsTemplate == false) {
-                        vxWindowsWidthDeregister();
-                    }
+                    //if ($scope.vxConfig.xsTemplate == false) {
+                    //    vxWindowsWidthDeregister();
+                    //}
                     w.bind('resize', function () {
                         $scope.$apply();
                     });
@@ -2124,7 +2125,7 @@
                         }
                     });
                     modalInstance.result.then(function (data) {
-                        /* GET MODIFIED CHANGES FOPR CONFIG */
+                        /* GET MODIFIED CHANGES FOPR CONFIG */                        
                         data = $scope.calculateEffectiveWidths(data);
                         $scope.vxConfig.columnDefConfigs = data;
                         if ($scope.vxConfig.hybrid == true) {
@@ -2155,7 +2156,7 @@
                         col.effectiveWidth = Math.floor(col.effectiveWidth);
                         _totatWidth = _totatWidth + col.effectiveWidth;
                     });
-
+                    console.log('calculateEffectiveWidths for grid' + $scope.vxConfig.id + ' called');
                     return data;
                 }
 

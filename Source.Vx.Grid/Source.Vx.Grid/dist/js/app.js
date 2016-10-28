@@ -128,6 +128,7 @@
         showGridOptions: false,
         latchExcess: 20,
         data: self.sampling(120, 'Coho Vineyard 1111'),
+        //data: [],
         jsonEditorEnabled: false,
         vxFilteredData: [],
         bindOnce: false,

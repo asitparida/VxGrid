@@ -496,7 +496,7 @@
                     });
 
                     /* GENERATE VX INSTANCE ID AND SEND BACK*/
-                    $scope.config.id = $scope.vxConfig.id = _.uniqueId('_vxUID_');
+                    $scope.config.id = $scope.vxConfig.id = typeof $scope.vxConfig.id === 'undefined' ? _.uniqueId('_vxUID_') : $scope.vxConfig.id;
 
                     /// <summary>CONFIG EXTENSION TO GET CURRENT STATE OF DIFFERENT COUNTS</summary>
                     /// <returns type="OBJECT" />
@@ -820,8 +820,8 @@
                     $scope.debPep = _.debounce($scope.prepForScrollInsertion, 10);
 
                     /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
-                    $scope.compileAppend = function (rowTmpl, id, flag) {
-                        _hybridContainer.append(rowTmpl);
+                    $scope.compileAppend = function (rowTmpl, id, flag) {                        
+                        _hybridContainer && _hybridContainer.append(rowTmpl);
                         if (flag) {
                             var _row = angular.element(document.getElementById(id));
                             $compile(_row.contents())($scope);
@@ -939,8 +939,8 @@
                     end = new Date();
                     if ($scope.vxConfig.hybrid == true) {
                         //$scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData;
-                        end = new Date();
-                        $scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData;
+                        end = new Date();                        
+                        $scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData || [];
                         $timeout($scope.prepHybrid, 100);
                     }
                 }
@@ -1420,7 +1420,7 @@
                                             }));
                                             if (lastCol.col.localeCompare(_colDefn.id) != 0) {
                                                 _.each($scope.vxColSettings.colFilterPairs[_colDefn.id], function (pair) {
-                                                    console.log(pair);
+                                                    //console.log(pair);
                                                     if (_.contains(uniqed, pair.label) != true)
                                                         pair.disabled = true;
                                                     else
@@ -2156,7 +2156,7 @@
                         col.effectiveWidth = Math.floor(col.effectiveWidth);
                         _totatWidth = _totatWidth + col.effectiveWidth;
                     });
-                    console.log('calculateEffectiveWidths for grid' + $scope.vxConfig.id + ' called');
+//                    console.log('calculateEffectiveWidths for grid' + $scope.vxConfig.id + ' called');
                     return data;
                 }
 
@@ -2361,6 +2361,7 @@
 
                 /// <summary>GRID WATCH : LISTEN TO CHANGES IN DATA AND ACCORDINGLY RESET INSTANCE</summary>
                 $scope.$watchCollection('config.data', function (n) {
+                    n = n || [];
                     var dt = new Date();
                     if (typeof n !== 'undefined' && n.length == 0) {
                         n = [{ 'fillEmptyElement': true }];
@@ -2368,8 +2369,9 @@
                         if ($scope.config.hybrid == true && typeof $scope.vxConfig !== 'undefined')
                             angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id)).empty();
                     }
-                    else
+                    else {
                         $scope.config.noData = false;
+                    }
                     if ($scope.config.hybrid == true) {
                         $scope.config.vxData = _.clone(n);
                         $scope._origData = _.clone(n);
@@ -2377,7 +2379,7 @@
                     else
                         $scope.config.vxData = angular.copy(n);
                     dt = new Date();
-                    delete $scope.vxConfig;
+                    delete $scope.vxConfig;                    
                     $scope.resetVxInstance();
                 });
 

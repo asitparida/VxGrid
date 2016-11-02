@@ -252,8 +252,9 @@
                     }
                     else {
                         /* PRIMARY COLUMN DOES NOT EXISTS */
-                        _.each($scope.vxConfig.vxData, function (row, index) { row.primaryId = index });
+                        _.each($scope.vxConfig.vxData, function (row, index) { row[primaryId] = index });
                     }
+                    console.log($scope.vxConfig.vxData);
                     $scope.vxColSettings.primaryId = primaryId;
                     /* ENBALE ROW EDITING INLINE */ /* UNSUPPORTED IN HYBRID MODE */
                     if ($scope.vxConfig.inlineEditingEnabled == true && $scope.vxConfig.hybrid != true) {

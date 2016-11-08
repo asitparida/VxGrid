@@ -83,7 +83,7 @@
                                                 <!--<button class="btn btn-default dropdown-toggle" ng-attr-id="ddMenu_{{::header.id}}" ng-attr-aria-expanded="{{vxColSettings.dropdDownOpen[header.id] == true}}" ng-attr-tabindex="{{vxConfig.noData == false ? header.headTabIndex : -1}}" ng-click="headerClick(header, $event)" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)" ng-disabled="vxConfig.data.length == 0">-->
                                                     <button class="btn btn-default dropdown-toggle" ng-attr-id="{{vxConfig.id}}_ddMenu_{{::header.id}}" ng-attr-aria-expanded="{{vxColSettings.dropdDownOpen[header.id] == true}}" ng-attr-tabindex="{{vxConfig.noData == false ? header.headTabIndex : -1}}" ng-click="headerClick(header, $event)" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-disabled="vxConfig.data.length == 0" ng-keydown="upDownKeyDownHandlerHeaderMenu($event, header.id)">
                                                         <span class="colTitle">{{::header.columnName}}</span>
-                                                        <span class="offscreen">Column. Press enter or spacebar to collapse or expand menu. </span>
+                                                        <span class="offscreen">Column Press enter or spacebar to collapse or expand menu. </span>
                                                         <span class="ddCaret" aria-hidden="true" ng-show="vxColSettings.colFiltersActivated[header.id] != true && vxColSettings.dropdDownEnabled[header.id] == true && vxConfig.data.length >= 1"><i class="icon icon-ScrollChevronDownLegacy white"></i></span>
                                                         <span class="ddCaret" aria-hidden="true" ng-show="vxColSettings.colFiltersActivated[header.id] == true && vxColSettings.dropdDownEnabled[header.id] == true && vxConfig.data.length >= 1"><i class="icon icon-filter white"></i></span>
                                                     </button>
@@ -207,10 +207,7 @@
                                         class="{{vxColSettings.vxRowClass[row[vxColSettings.primaryId]]}} {{vxConfig.rowClassFn(row)}} vxBodyRow"></tr>
                                 </tbody>
                                 <tbody class="vxBody" ng-class="{ 'revealWrap' : vxColSettings.revealWrapRowData }" ng-if="vxConfig.hybrid == true" ng-attr-id="_vxHybrid{{vxConfig.id}}"></tbody>
-                            </table>
-                            <span class="offscreen">
-                                <span class="offscreen" style="visibility:collapse;" ng-repeat="row in vxConfig.vxFilteredData" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{::row[vxConfig.ariaPrimary]}}</span>
-                            </span>
+                            </table>                            
                         </div>
                     </div>
                 </div>
@@ -367,6 +364,7 @@
             <div ng-if="header.columnIsRowSelect == true">
                 <div class="vx-row-select">
                     <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{rowId}}" />
+                    <span class="offscreen" style="visibility:collapse;" ng-attr-id="vx_row_sel_{{rowId}}">{{rowId}}</span>
                 </div>
             </div>
             <div class="vx-row-edit-container" ng-if="header.columnIsRowEdit == true">
@@ -415,6 +413,7 @@
             <div ng-if="::header.columnIsRowSelect == true">
                 <div class="vx-row-select">
                     <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{::rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}" />
+                    <span class="offscreen" style="visibility:collapse;" ng-attr-id="vx_row_sel_{{rowId}}">{{rowId}}</span>
                 </div>
             </div>
             <div class="vx-row-edit-container" ng-if="::header.columnIsRowEdit == true">

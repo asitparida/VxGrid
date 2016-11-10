@@ -507,6 +507,15 @@
 
         &.icon-ScrollChevronUpLegacy {
             background-position-y: -231px;
+
+            &.white {
+                background-position-x: -28px;
+                width: 24px;
+                height: 24px;
+                position: relative;
+                top: 8px;
+                left: -5px;
+            }
         }
 
         &.icon-ScrollChevronDownLegacy {

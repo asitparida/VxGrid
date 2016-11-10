@@ -370,6 +370,13 @@
       height: 30px; }
   .vx-grid-related .icon.icon-ScrollChevronUpLegacy {
     background-position-y: -231px; }
+    .vx-grid-related .icon.icon-ScrollChevronUpLegacy.white {
+      background-position-x: -28px;
+      width: 24px;
+      height: 24px;
+      position: relative;
+      top: 8px;
+      left: -5px; }
   .vx-grid-related .icon.icon-ScrollChevronDownLegacy {
     background-position-y: -257px; }
     .vx-grid-related .icon.icon-ScrollChevronDownLegacy.white {

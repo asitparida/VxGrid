@@ -4,6 +4,7 @@
     /*  VX GRID 
         LAST UPDATE - 29-10-2015 16:38 
         LAST UPDATE BY - ASPARIDA
+        BUILD NUMBER : v1.4.7
         
         VX GRID CONFIG (BOUND TO 'config=') IN DIRECTIVE CALL
         -----------------------------------------------------------       

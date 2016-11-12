@@ -1,6 +1,6 @@
 {
   "name": "VxGridSource",
-  "version": "1.0.0",
+  "version": "1.4.7",
   "description": "VxGridSource",
   "main": "server.js",
   "author": {
@@ -16,6 +16,7 @@
     "gulp-cssmin": "0.1.7",
     "del": "2.2.2",
     "gulp-html-js-template": "0.1.6",
-    "gulp-minify": "0.0.14"
+    "gulp-minify": "0.0.14",
+    "gulp-header": "1.8.8"
   }
 }

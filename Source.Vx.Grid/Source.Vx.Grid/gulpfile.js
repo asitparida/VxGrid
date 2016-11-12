@@ -5,7 +5,8 @@
     cssmin = require('gulp-cssmin'),
     del = require('del'),
     html2js = require('gulp-html-js-template'),
-    minify = require('gulp-minify');
+    minify = require('gulp-minify'),
+    header = require('gulp-header');
     //plato = require('plato');
 
 gulp.task('styles', function () {
@@ -117,8 +118,25 @@ gulp.task('default:vxgrid:css', function () {
     gulp.watch('scss/*.scss', ['minify:css']);
 });
 
+var banner = ['/**',
+  ' * <%= pkg.name %>',
+  ' * @version v<%= pkg.version %>',
+  ' * @license <%= pkg.license %>',
+  ' * @git <%= pkg.git %>',
+  ' */',
+  ''].join('\n');
+
+
+var pkg = {
+    name: 'VX-GRID',
+    version: '1.4.7',
+    license: 'MIT',
+    git: 'https://github.com/asitparida/vxgrid'
+}
+
 //Watch CSS task
 gulp.task('default:vxgrid:dist-prod', function () {
     return gulp.src(['dist/min/js/vx.grid.bundle.min.js', 'dist/min/js/vx.grid.min.js', 'dist/min/css/vx.grid.min.css'])
+        .pipe(header(banner, { pkg: pkg }))
         .pipe(gulp.dest('../../dist'));
 });

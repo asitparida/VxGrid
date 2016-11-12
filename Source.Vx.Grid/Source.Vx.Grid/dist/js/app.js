@@ -125,7 +125,7 @@
         inlineDeleteOverrideEnabled: true,
         allRowsInDefaultEdit: false,
         showGridStats: false,
-        showGridOptions: false,
+        showGridOptions: true,
         latchExcess: 20,
         data: self.sampling(100, 'Coho Vineyard 1111'),
         //data: [],
@@ -197,7 +197,7 @@
     };
     self.secondSampleActive = false;
 
-    self.showGridView = false;
+    self.showGridView = true;
 
     self.toggleView = function () {
         self.showGridView = !self.showGridView;

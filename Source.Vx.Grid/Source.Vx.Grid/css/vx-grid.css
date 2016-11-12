@@ -739,7 +739,10 @@
     height: calc(100% - 125px);
     padding: 0 0 15px 0;
     width: 100%;
-    font-family: inherit; }
+    font-family: inherit;
+    overflow-x: auto; }
+    .vx-grid-related .vxTableSettings .vxSettingsBody .vxSettingsBodyContainer {
+      min-width: 1000px; }
   .vx-grid-related .vxTableSettings .orderChanger {
     height: 100%; }
   .vx-grid-related .vxTableSettings .columns {

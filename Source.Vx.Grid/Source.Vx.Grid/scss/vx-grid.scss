@@ -1033,6 +1033,11 @@
             padding: 0 0 15px 0;
             width: 100%;
             font-family: inherit;
+            overflow-x:auto;
+
+            .vxSettingsBodyContainer{
+                min-width:1000px;
+            }
         }
 
         .orderChanger {

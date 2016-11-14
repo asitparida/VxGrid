@@ -136,13 +136,7 @@
                      ng-style="{'min-width':getvxTableContainerWidth()}"
                      ng-attr-id="_vxScrollContainer{{vxConfig.id}}">
                     <div class='row marg0'>
-                        <div class="col-xs-12 vxTableHolder pad0">
-                            <div class="offscreen">
-                                <span class="offscreen" id="vx_row_edit"> Edit Row</span>
-                                <span class="offscreen" id="vx_row_save"> Save Row</span>
-                                <span class="offscreen" id="vx_row_sel_row">Select Row</span>
-                                <span class="offscreen" id="vx_row_sel_all_row">Select All Rows</span>
-                            </div>
+                        <div class="col-xs-12 vxTableHolder pad0">                            
                             <table class="vxTable">
                                 <caption class="offscreen" ng-bind="vxConfig.caption"></caption>
                                 <thead class="vxHead">
@@ -231,6 +225,12 @@
             </div>
             <div class="icon-container scrollAction down" role="button" tabindex="0" ax-key="justScrollDown()" ng-class="{'pageEnabled': vxColSettings.vxPageEnabled}" ng-show="showScrollDownArrow()" aria-label="Scroll Down">
                 <i class="icon icon-up down"></i>
+            </div>
+            <div class="offscreen">
+                <span class="offscreen" id="vx_row_edit"> Edit Row</span>
+                <span class="offscreen" id="vx_row_save"> Save Row</span>
+                <span class="offscreen" id="vx_row_sel_row">Select Row</span>
+                <span class="offscreen" id="vx_row_sel_all_row">Select All Rows</span>
             </div>
         </div>
     </div>

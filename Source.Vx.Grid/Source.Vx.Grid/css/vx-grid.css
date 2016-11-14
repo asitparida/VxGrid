@@ -750,7 +750,7 @@
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     height: calc(100% - 15px); }
-    .vx-grid-related .vxTableSettings .columns label.help {
+    .vx-grid-related .vxTableSettings .columns p.help {
       font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
       font-weight: 400;
       color: #0073c6;
@@ -803,7 +803,7 @@
     filter: alpha(opacity=50);
     cursor: none; }
 
-.vx-grid-related .vxTableSettings label.title {
+.vx-grid-related .vxTableSettings p.title {
   color: #006ebd;
   width: calc(100% - 52px);
   display: inline-block;
@@ -835,13 +835,13 @@
     .vx-grid-related .vxSettingsBody .columns .colItem.selected {
       background-color: #006ebd;
       border-left: 3px solid #006ebd; }
-      .vx-grid-related .vxSettingsBody .columns .colItem.selected label.colName {
+      .vx-grid-related .vxSettingsBody .columns .colItem.selected p.colName {
         color: #fff; }
-      .vx-grid-related .vxSettingsBody .columns .colItem.selected label.colLabel {
+      .vx-grid-related .vxSettingsBody .columns .colItem.selected p.colLabel {
         color: #fff; }
-        .vx-grid-related .vxSettingsBody .columns .colItem.selected label.colLabel .icon {
+        .vx-grid-related .vxSettingsBody .columns .colItem.selected p.colLabel .icon {
           color: #fff; }
-    .vx-grid-related .vxSettingsBody .columns .colItem label.colName {
+    .vx-grid-related .vxSettingsBody .columns .colItem p.colName {
       font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
       font-size: medium;
       font-weight: 400;
@@ -867,6 +867,7 @@
       background: transparent;
       border-color: #fff;
       color: #fff; }
+    .vx-grid-related .vxSettingsBody .columns .colItem p.colLabel,
     .vx-grid-related .vxSettingsBody .columns .colItem label.colLabel {
       font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
       font-size: medium;
@@ -875,6 +876,7 @@
       line-height: 40px;
       display: inline-block;
       margin: 0; }
+      .vx-grid-related .vxSettingsBody .columns .colItem p.colLabel.xl,
       .vx-grid-related .vxSettingsBody .columns .colItem label.colLabel.xl {
         font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
         font-size: large;
@@ -883,6 +885,7 @@
         line-height: 40px;
         display: inline-block;
         margin: 0; }
+      .vx-grid-related .vxSettingsBody .columns .colItem p.colLabel .icon,
       .vx-grid-related .vxSettingsBody .columns .colItem label.colLabel .icon {
         color: #bb0000; }
     .vx-grid-related .vxSettingsBody .columns .colItem input.colCheckbox {

@@ -1050,7 +1050,7 @@
             -ms-overflow-style: -ms-autohiding-scrollbar;
             height: calc(100% - 15px);
 
-            label.help {
+            p.help {
                 font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
                 font-weight: 400;
                 color: #0073c6;
@@ -1129,7 +1129,7 @@
             }
         }
 
-        label.title {
+        p.title {
             color: #006ebd;
             width: calc(100% - 52px);
             display: inline-block;
@@ -1170,7 +1170,7 @@
                     background-color: #006ebd;
                     border-left: 3px solid #006ebd;
 
-                    label {
+                    p {
                         &.colName {
                             color: #fff;
                         }
@@ -1185,7 +1185,7 @@
                     }
                 }
 
-                label.colName {
+                p.colName {
                     font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
                     font-size: medium;
                     font-weight: 400;
@@ -1219,6 +1219,7 @@
                     color: #fff;
                 }
 
+                p.colLabel,
                 label.colLabel {
                     font-family: 'Segoe UI', Arial, Cambria, Cochin, Georgia, Times, Times New Roman, serif;
                     font-size: medium;

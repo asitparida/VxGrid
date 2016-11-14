@@ -72,9 +72,9 @@
                      ng-class="{'settingsMenuOpen': vxColSettings.menu, 'attrPaneOpen': vxConfig.showGridStats || vxConfig.showGridOptions}"
                      ng-style="{'min-width':getvxTableContainerWidth()}"
                      ng-if="vxColSettings.xsViewEnabled == false">
-                    <div class='row marg0' role="region" aria-labelledby="{{vxConfig.id}}_tablemenu">
+                    <div class='row marg0' aria-labelledby="{{vxConfig.id}}_tablemenu" tabindex="0">
                         <div class="col-xs-12 vxTableHolder pad0">
-                            <span class="offscreen" id="{{vxConfig.id}}_tablemenu">Column Menu for the grid {{vxConfig.caption}}</span>
+                            <span class="offscreen" id="{{vxConfig.id}}_tablemenu">Column Operations Menu for the grid {{vxConfig.caption}}</span>
                             <table class="vxTable" role="presentation">
                                 <thead class="vxHead">
                                     <tr class="vxHeadRow">

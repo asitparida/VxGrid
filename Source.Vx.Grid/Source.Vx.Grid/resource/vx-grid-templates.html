@@ -83,7 +83,7 @@
                                                 <!--<button class="btn btn-default dropdown-toggle" ng-attr-id="ddMenu_{{::header.id}}" ng-attr-aria-expanded="{{vxColSettings.dropdDownOpen[header.id] == true}}" ng-attr-tabindex="{{vxConfig.noData == false ? header.headTabIndex : -1}}" ng-click="headerClick(header, $event)" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)" ng-disabled="vxConfig.data.length == 0">-->
                                                 <button class="btn btn-default dropdown-toggle" ng-attr-id="{{vxConfig.id}}_ddMenu_{{::header.id}}" ng-attr-aria-expanded="{{vxColSettings.dropdDownOpen[header.id] == true}}" ng-attr-tabindex="{{vxConfig.noData == false ? header.headTabIndex : -1}}" ng-click="headerClick(header, $event)" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-disabled="vxConfig.data.length == 0" ng-keydown="upDownKeyDownHandlerHeaderMenu($event, header.id)">
                                                     <span class="colTitle">{{::header.columnName}}</span>
-                                                    <span class="offscreen">Column Press enter or spacebar to <span ng-show="vxColSettings.dropdDownOpen[header.id] == true">collapse</span><span ng-show="vxColSettings.dropdDownOpen[header.id] == false">expand</span> menu </span>
+                                                    <span class="offscreen">Column Press enter or spacebar to <span ng-if="vxColSettings.dropdDownOpen[header.id] == true">collapse</span><span ng-if="vxColSettings.dropdDownOpen[header.id] == false">expand</span> menu </span>
                                                     <span class="ddCaret" aria-hidden="true" ng-show="vxColSettings.colFiltersActivated[header.id] != true && vxColSettings.dropdDownEnabled[header.id] == true && vxConfig.data.length >= 1">
                                                         <i class="icon icon-ScrollChevronDownLegacy white" ng-show="vxColSettings.dropdDownOpen[header.id] == false"></i>
                                                         <i class="icon icon-ScrollChevronUpLegacy white" ng-show="vxColSettings.dropdDownOpen[header.id] == true"></i>
@@ -96,18 +96,22 @@
                                                         <img class="dropDownLoader" ng-src="{{vxConfig.loaderGifSrc}}" alt="dropdown addition in progress" />
                                                     </li>
                                                     <li tabindex="0" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownSort[header.id] == true" ax-key="sortClick(header)" ng-attr-id="{{vxConfig.id}}_{{header.id}}_sort">
-                                                        <span class="sortIndicator" ng-show="vxColSettings.reverse == false && vxColSettings.predicate == header.id"><i class="icon icon-up white"></i></span><span class="sortIndicator" ng-show="vxConfig.reverseSortDirection == true && vxConfig.sortPredicate == header.id"><i class="icon icon-down white"></i></span>Sort
+                                                        <span class="sortIndicator" ng-show="vxColSettings.reverse == false && vxColSettings.predicate == header.id"><i class="icon icon-up white"></i></span>
+                                                        <span class="sortIndicator" ng-show="vxConfig.reverseSortDirection == true && vxConfig.sortPredicate == header.id"><i class="icon icon-down white"></i></span>Sort
+                                                        <span class="offscreen"> Press Enter or spacebar to sort on {{::header.columnName}} column</span>
                                                     </li>
                                                     <!-- UNSPPORTED IN HYBRID MODE-->
                                                     <li tabindex="0" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownGroup[header.id] == true && vxColSettings.groupByColActivated[header.id] == false" ax-key="groupClick(header)" ng-attr-id="{{vxConfig.id}}_{{header.id}}_group">
                                                         <span>Group</span>
+                                                        <span class="offscreen"> Press Enter or spacebar to group on {{::header.columnName}} column</span>
                                                     </li>
                                                     <!-- UNSPPORTED IN HYBRID MODE-->
                                                     <li tabindex="0" class="sorter" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownGroup[header.id] == true && vxColSettings.groupByColActivated[header.id] == true" ax-key="unGroupClick(header)" ng-attr-id="{{vxConfig.id}}_{{header.id}}_ungroup">
                                                         <span>Ungroup</span>
+                                                        <span class="offscreen"> Press Enter or spacebar to ungroup on {{::header.columnName}} column</span>
                                                     </li>
                                                     <li class="filterClear" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && vxColSettings.colFilterPairs[header.id].length > 0" ng-class="{ 'disabled': vxColSettings.colFiltersActivated[header.id] == false && vxColSettings.filterSearchToken[header.id] == ''}" ax-key="filterClearClick(header)" ng-attr-id="{{vxConfig.id}}_{{header.id}}_clearfilters" ax-disabled="vxColSettings.colFiltersActivated[header.id] == false && vxColSettings.filterSearchToken[header.id] == ''" ng-attr-aria-hidden="{{(vxColSettings.colFiltersActivated[header.id] == false && vxColSettings.filterSearchToken[header.id] == '') ? true : false}}">
-                                                        <span class="indicator"><i class="icon icon-filter white"></i></span>Clear All Filters
+                                                        <span class="indicator"><i class="icon icon-filter white"></i></span><span class="offscreen">press enter or spacebar to</span> Clear All Filters <span class="offscreen"> on {{header.columnName}} column</span>
                                                     </li>
                                                     <li class="filter-search" ng-if="vxColSettings.dropdDownLoaded[header.id] == true && vxColSettings.dropDownFilters[header.id] == true && header.ddFiltersWithSearch == true">
                                                         <!--<input class="search-input" tabindex="0" type="search" placeholder="Search In Filters" aria-label="search for filters in column {{::header.columnName}}" ng-model="vxColSettings.enteredSearchToken[header.id]" ng-attr-id="{{::header.id}}_searchfilters_{{vxConfig.id}}" ng-change="filterTokenChnagedRapid(header.id)" />-->
@@ -136,7 +140,7 @@
                      ng-style="{'min-width':getvxTableContainerWidth()}"
                      ng-attr-id="_vxScrollContainer{{vxConfig.id}}">
                     <div class='row marg0'>
-                        <div class="col-xs-12 vxTableHolder pad0">                            
+                        <div class="col-xs-12 vxTableHolder pad0">
                             <table class="vxTable">
                                 <caption class="offscreen" ng-bind="vxConfig.caption"></caption>
                                 <thead class="vxHead">
@@ -250,7 +254,7 @@
                                 <div class="col-xs-12 columns">
                                     <p role="heading" aria-level="2" class="help">Available Columns</p>
                                     <p class="helpText">To Select a column to change column Visbility, use the up and down arrows</p>
-                                    <div class="col-xs-12 colItem" tabindex="{{header.locked == false ? 0 : -1}}" ng-repeat="header in copyForWidthVisChange" ng-class="{ 'locked': header.locked, 'selected': header.id == headerSelected.id}" ax-key="selectHeader(header)" ng-if="header.hidden == true" ng-keydown="upDownKeyPressHandler($event)">                                        
+                                    <div class="col-xs-12 colItem" tabindex="{{header.locked == false ? 0 : -1}}" ng-repeat="header in copyForWidthVisChange" ng-class="{ 'locked': header.locked, 'selected': header.id == headerSelected.id}" ax-key="selectHeader(header)" ng-if="header.hidden == true" ng-keydown="upDownKeyPressHandler($event)">
                                         <div class="col-xs-2 col-sm-2 col-md-1">
                                             <p class="colLabel xl" ng-if="header.visbilityLocked == true"><i class="icon icon-blockedLegacy" tooltip="Visbility Locked"></i></p>
                                         </div>
@@ -282,29 +286,35 @@
                                 <div class="col-xs-12 columns">
                                     <p role="heading" aria-level="2" class="help">Selected Columns</p>
                                     <p class="helpText">To Select a column to change  column order, use the up and down arrows</p>
-                                    <div class="col-xs-12 colItem" tabindex="{{header.locked == true || (header.locked == false && header.visbilityLocked == true && header.orderLocked == true) ? -1 : 0}}" ng-repeat="header in copyForWidthVisChange | orderBy: 'order'" ng-class="{ 'locked': header.locked, 'selected': header.id == headerSelected.id}" ax-key="selectHeader(header)" ng-if="header.hidden == false" ng-keydown="upDownKeyPressHandler($event)">                                        
-                                        <div class="col-xs-12 col-sm-6 col-md-2 padA0L10R0">
-                                            <div class="col-xs-4 pad0">
-                                                <p class="colLabel xl" ng-if="header.visbilityLocked == true">
-                                                    <span class="icon icon-blockedLegacy red" tooltip="Visbility Locked" aria-hidden="true"></span>                                                    
-                                                </p>
-                                            </div>
-                                            <div class="col-xs-4 pad0">
-                                                <p class="colLabel xl" ng-if="header.orderLocked == true">
-                                                    <span class="icon icon-unpin red" tooltip="Order Locked"></span>                                                    
-                                                </p>
-                                            </div>
-                                            <div class="col-xs-4 pad0">
-                                                <p class="colLabel xl" ng-if="header.widthLocked == true">
-                                                    <span class="icon icon-trim red" tooltip="Width Locked"></span>                                                    
-                                                </p>
-                                            </div>
+                                    <div class="col-xs-12 colItem" ng-repeat="header in copyForWidthVisChange | orderBy: 'order'" ng-class="{ 'locked': header.locked, 'selected': header.id == headerSelected.id}" ng-if="header.hidden == false">
+                                        <div class="col-xs-12 col-sm-6 col-md-6 padA0L10R0" tabindex="{{header.locked == true || (header.locked == false && header.visbilityLocked == true && header.orderLocked == true) ? -1 : 0}}" ax-key="selectHeader(header)" ng-keydown="upDownKeyPressHandler($event)">
+                                            <div class="col-xs-12 col-sm-6 col-md-6 padA0L10R0">
+                                                <div class="col-xs-4 pad0">
+                                                    <p class="colLabel xl" ng-if="header.visbilityLocked == true" aria-hidden="true">
+                                                        <span class="icon icon-blockedLegacy red" tooltip="Visbility Locked" aria-hidden="true"></span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-xs-4 pad0">
+                                                    <p class="colLabel xl" ng-if="header.orderLocked == true" aria-hidden="true">
+                                                        <span class="icon icon-unpin red" tooltip="Order Locked"></span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-xs-4 pad0">
+                                                    <p class="colLabel xl" ng-if="header.widthLocked == true" aria-hidden="true">
+                                                        <span class="icon icon-trim red" tooltip="Width Locked"></span>
+                                                    </p>
+                                                </div>
+                                            </div>                                            
+                                            <p class="col-xs-12 col-sm-12 col-md-6 colName">{{::header.columnName}}</p>
+                                            <span ng-if="!(header.locked == true || (header.locked == false && header.visbilityLocked == true && header.orderLocked == true))">
+                                                <span class="offscreen" ng-if="header.id == headerSelected.id"> column selected to unselect press spacebar or enter</span>
+                                                <span class="offscreen" ng-if="header.id != headerSelected.id"> column press spacebar or enter to select column for changing visibility or order</span>
+                                            </span>                                            
+                                            <span class="offscreen" ng-show="header.locked"> Column locked for all changes</span>
+                                            <span class="offscreen" ng-if="header.visbilityLocked == true"> Column visibility locked for changes</span>
+                                            <span class="offscreen" ng-if="header.orderLocked == true"> Column Order locked for changes</span>
+                                            <span class="offscreen" ng-if="header.widthLocked == true"> Column Width locked for changes</span>
                                         </div>
-                                        <p class="col-xs-12 col-sm-12 col-md-4 colName">{{::header.columnName}}</p>
-                                        <span class="offscreen" ng-show="header.locked"> Column locked for all changes</span>
-                                        <span class="offscreen" ng-if="header.visbilityLocked == true"> Column visibility locked for changes</span>
-                                        <span class="offscreen" ng-if="header.orderLocked == true"> Column Order locked for changes</span>
-                                        <span class="offscreen" ng-if="header.widthLocked == true"> Column Width locked for changes</span>
                                         <div class="col-xs-12 col-sm-6 col-md-6">
                                             <label class="colLabel" ng-attr-for="_mc_{{header.id}}">Width <span class="offscreen"> for column {{::header.columnName}} in approximate characters </span> <span aria-hidden="true"> (in approx. char)</span></label>
                                             <input class="inputStyle colInput" ng-model="header.chars" ng-disabled="header.widthLocked" ng-change="widthChanged(header)" ng-attr-id="_mc_{{header.id}}" />

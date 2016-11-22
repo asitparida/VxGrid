@@ -387,8 +387,8 @@
             <div ng-if="header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
             <div ng-if="header.columnIsRowSelect == true">
                 <div class="vx-row-select">
-                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{rowId}}" aria-labelledby="{{::vxConfig.selectRowID}} vx_row_sel_{{rowId}}" />
-                    <span class="offscreen" style="visibility:collapse;" ng-attr-id="vx_row_sel_{{rowId}}">{{rowId}}</span>
+                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{rowId}}" aria-labelledby="vx_row_sel_{{rowId}}" />
+                    <span class="offscreen" style="visibility:collapse;" ng-attr-id="vx_row_sel_{{rowId}}">Select Row {{rowId}}</span>
                 </div>
             </div>
             <div class="vx-row-edit-container" ng-if="header.columnIsRowEdit == true">
@@ -398,7 +398,7 @@
                 <div class="vx-row-edit icon-container" ax-disabled="vxConfig.invalidRows[row[vxColSettings.primaryId]]" tabindex="0" ax-key="saveRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == true && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="{{::vxConfig.saveRowID}} vx_row_sel_{{rowId}}">
                     <i class="icon icon-save"></i>
                 </div>
-                <div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[rowId] == true" role="button" aria-labelledby="{{::vxConfig.selectRowID}} vx_row_sel_{{rowId}}">
+                <div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[rowId] == true" role="button">
                     <img class="loader-row" ng-src="{{vxConfig.loaderGifSrc}}" />
                 </div>
             </div>
@@ -436,8 +436,8 @@
             <div ng-if="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
             <div ng-if="::header.columnIsRowSelect == true">
                 <div class="vx-row-select">
-                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{::rowId}}" aria-labelledby="{{::vxConfig.selectRowID}} vx_row_sel_{{::rowId}}" />
-                    <span class="offscreen" style="visibility:collapse;" ng-attr-id="vx_row_sel_{{rowId}}">{{rowId}}</span>
+                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{::rowId}}" aria-labelledby="vx_row_sel_{{::rowId}}" />
+                    <span class="offscreen" style="visibility:collapse;" ng-attr-id="vx_row_sel_{{rowId}}">Select row {{rowId}}</span>
                 </div>
             </div>
             <div class="vx-row-edit-container" ng-if="::header.columnIsRowEdit == true">
@@ -447,7 +447,7 @@
                 <div class="vx-row-edit icon-container" ax-disabled="vxConfig.invalidRows[row[vxColSettings.primaryId]]" tabindex="0" ax-key="saveRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == true && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="{{::vxConfig.saveRowID}} vx_row_sel_{{::rowId}}">
                     <i class="icon icon-save"></i>
                 </div>
-                <div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[rowId] == true" role="button" aria-labelledby="{{::vxConfig.selectRowID}} vx_row_sel_{{::rowId}}">
+                <div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[rowId] == true" role="button">
                     <img class="loader-row" ng-src="{{::vxConfig.loaderGifSrc}}" />
                 </div>
             </div>

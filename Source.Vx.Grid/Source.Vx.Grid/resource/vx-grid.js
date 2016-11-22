@@ -837,7 +837,7 @@
                         var cellHolderTmpl = '<td class="vxBodyRowCell VX_TD_CLASS" scope="VX_CELL_SCOPE">VX_CELL_CONTENT</td>';
                         var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
                         var cellTmplContent = '<span title="VX_CELL_TMPL">VX_CELL_TMPL</span>';
-                        var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" rowid="VX_ROW_ID" type="checkbox" VX_ROW_SEL_VAL id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="VX_CONFIG_ROW_SEL_ID vx_row_sel_VX_ROW_ID" /><span class="offscreen" style="visibility:collapse;" id="vx_row_sel_VX_ROW_ID">VX_ROW_ID</span></div>';
+                        var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" rowid="VX_ROW_ID" type="checkbox" VX_ROW_SEL_VAL id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_VX_ROW_ID" /><span class="offscreen" style="visibility:collapse;" id="vx_row_sel_VX_ROW_ID">Select row VX_ROW_ID</span></div>';
                         var allCells = '';
                         var _classes = '';
                         var rowId = row[$scope.vxColSettings.primaryId];
@@ -865,7 +865,7 @@
                                         _cellTmpl = cellTmplRowSelect;
                                         _cellTmpl = _cellTmpl.replaceAll('VX_ROW_ID', rowId);
                                         _cellTmpl = _cellTmpl.replace('VX_ROW_SEL_VAL', _rowSelectData == true ? 'checked' : '');
-                                        _cellTmpl = _cellTmpl.replace('VX_CONFIG_ROW_SEL_ID', $scope.vxConfig.selectRowID);
+                                        //_cellTmpl = _cellTmpl.replace('VX_CONFIG_ROW_SEL_ID', $scope.vxConfig.selectRowID);
                                         //_compile = _compile || true;
                                     }
                                     else if (col.renderHybridCellDefn == true && typeof $scope.vxConfig.hybridCellDefn === 'function') {

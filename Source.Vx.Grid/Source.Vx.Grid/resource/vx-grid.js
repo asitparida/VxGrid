@@ -254,7 +254,13 @@
                         /* PRIMARY COLUMN DOES NOT EXISTS */
                         _.each($scope.vxConfig.vxData, function (row, index) { row[primaryId] = index });
                     }
-                    console.log($scope.vxConfig.vxData);
+                    
+                    /* GENERATE VX INSTANCE ID AND SEND BACK*/
+                    $scope.config.id = $scope.vxConfig.id = typeof $scope.vxConfig.id === 'undefined' ? _.uniqueId('_vxUID_') : $scope.vxConfig.id;
+                    $scope.vxConfig.editRowID = $scope.vxConfig.id + '_edit_row';
+                    $scope.vxConfig.saveRowID = $scope.vxConfig.id + '_save_row';
+                    $scope.vxConfig.selectRowID = $scope.vxConfig.id + '_sel_row';
+
                     $scope.vxColSettings.primaryId = primaryId;
                     /* ENBALE ROW EDITING INLINE */ /* UNSUPPORTED IN HYBRID MODE */
                     if ($scope.vxConfig.inlineEditingEnabled == true && $scope.vxConfig.hybrid != true) {
@@ -264,13 +270,13 @@
                             var _selColDefn = {
                                 id: 'inlinediting', columnName: 'Edit', renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
                                 cellDefn:
-                                    '<div class="vx-row-edit icon-container" tabindex="0" ax-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false && vxColSettings.saveInProgress[VX_ROW_POINT] != true" role="button" aria-labelledby="vx_row_edit vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
+                                    '<div class="vx-row-edit icon-container" tabindex="0" ax-key="editRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == false && vxColSettings.saveInProgress[VX_ROW_POINT] != true" role="button" aria-labelledby="{{::vxConfig.editRowID}} vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
                                         + '<i class="icon icon-edit"></i>'
                                   + '</div>'
-                                  + '<div class="vx-row-edit icon-container" ax-disabled="vxConfig.invalidRows[row[vxColSettings.primaryId]]" tabindex="0" ax-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true && vxColSettings.saveInProgress[VX_ROW_POINT] != true" role="button" aria-labelledby="vx_row_save vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
+                                  + '<div class="vx-row-edit icon-container" ax-disabled="vxConfig.invalidRows[row[vxColSettings.primaryId]]" tabindex="0" ax-key="saveRow(VX_ROW_POINT)" ng-show="vxColSettings.inlineEditState[VX_ROW_POINT] == true && vxColSettings.saveInProgress[VX_ROW_POINT] != true" role="button" aria-labelledby="{{::vxConfig.saveRowID}} vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
                                     + '<i class="icon icon-save"></i>'
                                   + '</div>'
-                                  + '<div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[VX_ROW_POINT] == true" role="button" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
+                                  + '<div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[VX_ROW_POINT] == true" role="button" aria-labelledby="{{::vxConfig.selectRowID}} vx_row_sel_{{::row[vxColSettings.primaryId]}}" >'
                                     + '<img class="loader-row" src="/resource/loaderBlue30.GIF"></i>'
                                   + '</div>'
                                 , inlineEditOnColumnEnabled: false
@@ -292,7 +298,7 @@
                             var _selColDefn = {
                                 id: 'checkbox', columnName: 'Row Selection', columnIsRowSelect: true, renderDefn: true, renderHeadDefn: true, ddSort: false, ddGroup: false, ddFilters: false, width: '50', locked: true, headTabIndex: -1,
                                 headerDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-disabled="vxConfig.noData == true" ng-model="vxColSettings.allRowSelected" ng-change="allRowSelectionChanged()" ng-disabled="vxColSettings.allRowSelectionDisabled" ng-if="vxConfig.allRowsSelectionEnabled" aria-label="Select All Rows "  /></div>',
-                                cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" ng-attr-id="vx_row-sel_in{{::row[vxColSettings.primaryId]}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::row[vxColSettings.primaryId]}}" /></div><span class="offscreen" style="visibility:collapse;" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{::row[vxConfig.ariaPrimary]}}</span>'
+                                cellDefn: '<div class="vx-row-select"><input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[VX_ROW_POINT]" ng-change="rowSelectionChanged(row)" ng-disabled="vxColSettings.vxRowSelectionDisable[VX_ROW_POINT]" ng-attr-id="vx_row-sel_in{{::row[vxColSettings.primaryId]}}" aria-labelledby="{{::vxConfig.selectRowID}} vx_row_sel_{{::row[vxColSettings.primaryId]}}" /></div><span class="offscreen" style="visibility:collapse;" ng-attr-id="vx_row_sel_{{::row[vxColSettings.primaryId]}}">{{::row[vxConfig.ariaPrimary]}}</span>'
                             };
                             $scope.vxConfig.columnDefConfigs.unshift(_selColDefn);
                         }
@@ -494,10 +500,7 @@
                     //}
                     w.bind('resize', function () {
                         $scope.$apply();
-                    });
-
-                    /* GENERATE VX INSTANCE ID AND SEND BACK*/
-                    $scope.config.id = $scope.vxConfig.id = typeof $scope.vxConfig.id === 'undefined' ? _.uniqueId('_vxUID_') : $scope.vxConfig.id;
+                    });                  
 
                     /// <summary>CONFIG EXTENSION TO GET CURRENT STATE OF DIFFERENT COUNTS</summary>
                     /// <returns type="OBJECT" />
@@ -834,7 +837,7 @@
                         var cellHolderTmpl = '<td class="vxBodyRowCell VX_TD_CLASS" scope="VX_CELL_SCOPE">VX_CELL_CONTENT</td>';
                         var emptyRowTempl = '<td colspan="VX_NON_HIDDEN_COL_LEN" style="padding-left:15px;"><span>VX_EMPTYFILL</span></td>';
                         var cellTmplContent = '<span title="VX_CELL_TMPL">VX_CELL_TMPL</span>';
-                        var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" rowid="VX_ROW_ID" type="checkbox" VX_ROW_SEL_VAL id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="vx_row_sel_row vx_row_sel_VX_ROW_ID" /><span class="offscreen" style="visibility:collapse;" id="vx_row_sel_VX_ROW_ID">VX_ROW_ID</span></div>';
+                        var cellTmplRowSelect = '<div class="vx-row-select"><input class="vx-row-select-toggle" rowid="VX_ROW_ID" type="checkbox" VX_ROW_SEL_VAL id="vx_row-sel_in_VX_ROW_ID" aria-labelledby="VX_CONFIG_ROW_SEL_ID vx_row_sel_VX_ROW_ID" /><span class="offscreen" style="visibility:collapse;" id="vx_row_sel_VX_ROW_ID">VX_ROW_ID</span></div>';
                         var allCells = '';
                         var _classes = '';
                         var rowId = row[$scope.vxColSettings.primaryId];
@@ -862,6 +865,7 @@
                                         _cellTmpl = cellTmplRowSelect;
                                         _cellTmpl = _cellTmpl.replaceAll('VX_ROW_ID', rowId);
                                         _cellTmpl = _cellTmpl.replace('VX_ROW_SEL_VAL', _rowSelectData == true ? 'checked' : '');
+                                        _cellTmpl = _cellTmpl.replace('VX_CONFIG_ROW_SEL_ID', $scope.vxConfig.selectRowID);
                                         //_compile = _compile || true;
                                     }
                                     else if (col.renderHybridCellDefn == true && typeof $scope.vxConfig.hybridCellDefn === 'function') {

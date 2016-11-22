@@ -79,8 +79,7 @@
                                 <thead class="vxHead">
                                     <tr class="vxHeadRow">
                                         <th class="vxHeadRowCell" ng-repeat="header in vxConfig.columnDefConfigs" title="{{header.columnName}}" ng-class="{ 'ddEnabled' : vxColSettings.dropdDownEnabled[header.id] == true}" tabindex="-1" ng-attr-id="{{vxConfig.id}}_vxHeadSt_{{$index}}" ng-if="header.hidden == false && vxColSettings.xsViewEnabled == false" ng-style="{ 'width' : header.effectiveWidth + 'px' }">
-                                            <div class="dropdown" data-container="body" ng-if="::header.renderHeadDefn == false" ng-class="{ 'open' : vxColSettings.dropdDownOpen[header.id] == true}">
-                                                <!--<button class="btn btn-default dropdown-toggle" ng-attr-id="ddMenu_{{::header.id}}" ng-attr-aria-expanded="{{vxColSettings.dropdDownOpen[header.id] == true}}" ng-attr-tabindex="{{vxConfig.noData == false ? header.headTabIndex : -1}}" ng-click="headerClick(header, $event)" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-keydown="upDownKeyDownHandlerHeaderMenu($event)" ng-disabled="vxConfig.data.length == 0">-->
+                                            <div class="dropdown" data-container="body" ng-if="::header.renderHeadDefn == false" ng-class="{ 'open' : vxColSettings.dropdDownOpen[header.id] == true}">                                                
                                                 <button class="btn btn-default dropdown-toggle" ng-attr-id="{{vxConfig.id}}_ddMenu_{{::header.id}}" ng-attr-aria-expanded="{{vxColSettings.dropdDownOpen[header.id] == true}}" ng-attr-tabindex="{{vxConfig.noData == false ? header.headTabIndex : -1}}" ng-click="headerClick(header, $event)" click-outside-header="outsideHeader(header)" check-click-outside="vxColSettings.dropdDownOpen[header.id]" ng-disabled="vxConfig.data.length == 0" ng-keydown="upDownKeyDownHandlerHeaderMenu($event, header.id)">
                                                     <span class="colTitle">{{::header.columnName}}</span>
                                                     <span class="offscreen">Column Press enter or spacebar to <span ng-if="vxColSettings.dropdDownOpen[header.id] == true">collapse</span><span ng-if="vxColSettings.dropdDownOpen[header.id] == false">expand</span> menu </span>
@@ -89,8 +88,7 @@
                                                         <i class="icon icon-ScrollChevronUpLegacy white" ng-show="vxColSettings.dropdDownOpen[header.id] == true"></i>
                                                     </span>
                                                     <span class="ddCaret" aria-hidden="true" ng-show="vxColSettings.colFiltersActivated[header.id] == true && vxColSettings.dropdDownEnabled[header.id] == true && vxConfig.data.length >= 1"><i class="icon icon-filter white"></i></span>
-                                                </button>
-                                                <!--<ul class="dropdown-menu" aria-labelledby="ddMenu_{{::header.id}}" data-container="body" ng-keydown="upDowKeyDownHandlerHeaderMenuItems($event, header.id)">-->
+                                                </button>                                                
                                                 <ul class="dropdown-menu" aria-labelledby="{{vxConfig.id}}_ddMenu_{{::header.id}}" data-container="body" du-scroll-container id="{{vxConfig.id}}-dropdwon-menu-{{::header.id}}" ng-keydown="upDowKeyDownHandlerHeaderMenuItems($event, header.id)" ng-keyup="upDowKeyUpHandlerHeaderMenuItems($event, header.id)">
                                                     <li tabindex="-1" class="loader" ng-if="vxColSettings.dropdDownLoaded[header.id] == false">
                                                         <img class="dropDownLoader" ng-src="{{vxConfig.loaderGifSrc}}" alt="dropdown addition in progress" />
@@ -231,10 +229,11 @@
                 <i class="icon icon-up down"></i>
             </div>
             <div class="offscreen">
-                <span class="offscreen" id="vx_row_edit"> Edit Row</span>
-                <span class="offscreen" id="vx_row_save"> Save Row</span>
-                <span class="offscreen" id="vx_row_sel_row">Select Row</span>
-                <span class="offscreen" id="vx_row_sel_all_row">Select All Rows</span>
+                <span class="offscreen"> Region starts for adding offscreen labels to aid screen readers please ignore the labels</span>
+                <span class="offscreen" ng-attr-id="{{::vxConfig.editRowID}}"> Edit Row</span>
+                <span class="offscreen" ng-attr-id="{{::vxConfig.saveRowID}}"> Save Row</span>
+                <span class="offscreen" ng-attr-id="{{::vxConfig.selectRowID}}">Select Row</span>
+                <span class="offscreen"> Region for offscreen labels to aid screen readers ends</span>
             </div>
         </div>
     </div>
@@ -388,18 +387,18 @@
             <div ng-if="header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
             <div ng-if="header.columnIsRowSelect == true">
                 <div class="vx-row-select">
-                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{rowId}}" />
+                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{rowId}}" aria-labelledby="{{::vxConfig.selectRowID}} vx_row_sel_{{rowId}}" />
                     <span class="offscreen" style="visibility:collapse;" ng-attr-id="vx_row_sel_{{rowId}}">{{rowId}}</span>
                 </div>
             </div>
             <div class="vx-row-edit-container" ng-if="header.columnIsRowEdit == true">
-                <div class="vx-row-edit icon-container" tabindex="0" ax-key="editRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == false && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="vx_row_edit vx_row_sel_{{rowId}}">
+                <div class="vx-row-edit icon-container" tabindex="0" ax-key="editRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == false && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="{{::vxConfig.editRowID}} vx_row_sel_{{rowId}}">
                     <i class="icon icon-edit"></i>
                 </div>
-                <div class="vx-row-edit icon-container" ax-disabled="vxConfig.invalidRows[row[vxColSettings.primaryId]]" tabindex="0" ax-key="saveRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == true && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="vx_row_save vx_row_sel_{{rowId}}">
+                <div class="vx-row-edit icon-container" ax-disabled="vxConfig.invalidRows[row[vxColSettings.primaryId]]" tabindex="0" ax-key="saveRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == true && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="{{::vxConfig.saveRowID}} vx_row_sel_{{rowId}}">
                     <i class="icon icon-save"></i>
                 </div>
-                <div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[rowId] == true" role="button" aria-labelledby="vx_row_sel_row vx_row_sel_{{rowId}}">
+                <div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[rowId] == true" role="button" aria-labelledby="{{::vxConfig.selectRowID}} vx_row_sel_{{rowId}}">
                     <img class="loader-row" ng-src="{{vxConfig.loaderGifSrc}}" />
                 </div>
             </div>
@@ -437,18 +436,18 @@
             <div ng-if="::header.columnIsDate != true && header.columnIsRowSelect != true && header.columnIsRowEdit != true && vxColSettings.inlineEditState[row[vxColSettings.primaryId]] == true && header.inlineEditOnColumnEnabled == true" vx-compile-clone-link="header.editDefn"></div>
             <div ng-if="::header.columnIsRowSelect == true">
                 <div class="vx-row-select">
-                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{::rowId}}" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}" />
+                    <input class="vx-row-select-toggle" type="checkbox" ng-model="vxColSettings.rowSelected[rowId]" ng-change="rowSelectionChanged(rowId)" ng-disabled="vxColSettings.vxRowSelectionDisable[rowId]" ng-attr-id="vx_row-sel_in{{::rowId}}" aria-labelledby="{{::vxConfig.selectRowID}} vx_row_sel_{{::rowId}}" />
                     <span class="offscreen" style="visibility:collapse;" ng-attr-id="vx_row_sel_{{rowId}}">{{rowId}}</span>
                 </div>
             </div>
             <div class="vx-row-edit-container" ng-if="::header.columnIsRowEdit == true">
-                <div class="vx-row-edit icon-container" tabindex="0" ax-key="editRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == false && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="vx_row_edit vx_row_sel_{{::rowId}}">
+                <div class="vx-row-edit icon-container" tabindex="0" ax-key="editRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == false && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="{{::vxConfig.editRowID}} vx_row_sel_{{::rowId}}">
                     <i class="icon icon-edit"></i>
                 </div>
-                <div class="vx-row-edit icon-container" ax-disabled="vxConfig.invalidRows[row[vxColSettings.primaryId]]" tabindex="0" ax-key="saveRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == true && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="vx_row_save vx_row_sel_{{::rowId}}">
+                <div class="vx-row-edit icon-container" ax-disabled="vxConfig.invalidRows[row[vxColSettings.primaryId]]" tabindex="0" ax-key="saveRow(rowId)" ng-show="vxColSettings.inlineEditState[rowId] == true && vxColSettings.saveInProgress[rowId] != true" role="button" aria-labelledby="{{::vxConfig.saveRowID}} vx_row_sel_{{::rowId}}">
                     <i class="icon icon-save"></i>
                 </div>
-                <div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[rowId] == true" role="button" aria-labelledby="vx_row_sel_row vx_row_sel_{{::rowId}}">
+                <div class="vx-row-edit icon-container loader" tabindex="0" ng-show="vxColSettings.saveInProgress[rowId] == true" role="button" aria-labelledby="{{::vxConfig.selectRowID}} vx_row_sel_{{::rowId}}">
                     <img class="loader-row" ng-src="{{::vxConfig.loaderGifSrc}}" />
                 </div>
             </div>

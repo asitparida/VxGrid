@@ -589,18 +589,11 @@
 
     .vxTable {
 
-        .vxBody .vx-row-select,
-        .vxHead .vx-row-select {
+        .vxBody .vx-row-select {
             text-align: center;
 
             input[type="checkbox"] {
                 cursor: pointer;
-                will-change: auto;
-                -moz-transform: translateZ(0);
-                -ms-transform: translateZ(0);
-                -o-transform: translateZ(0);
-                -webkit-transform: translateZ(0);
-                transform: translateZ(0);
                 outline-color: transparent;
                 outline-offset: 5px;
                 outline-style: dotted;
@@ -616,7 +609,15 @@
         }
 
         .vxHead .vx-row-select {
+            text-align: center;
+
             input[type="checkbox"] {
+                cursor: pointer;
+                outline-color: transparent;
+                outline-offset: 5px;
+                outline-style: dotted;
+                outline-width: thin;
+
                 &:focus, &:active {
                     outline-color: #fff;
                     outline-offset: 5px;
@@ -1033,10 +1034,10 @@
             padding: 0 0 15px 0;
             width: 100%;
             font-family: inherit;
-            overflow-x:auto;
+            overflow-x: auto;
 
-            .vxSettingsBodyContainer{
-                min-width:1000px;
+            .vxSettingsBodyContainer {
+                min-width: 1000px;
             }
         }
 

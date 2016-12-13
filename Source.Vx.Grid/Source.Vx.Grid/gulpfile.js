@@ -129,7 +129,7 @@ var banner = ['/**',
 
 var pkg = {
     name: 'VX-GRID',
-    version: '1.4.8',
+    version: '1.4.9',
     license: 'MIT',
     git: 'https://github.com/asitparida/vxgrid'
 }

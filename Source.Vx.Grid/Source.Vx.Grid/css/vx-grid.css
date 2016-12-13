@@ -418,35 +418,33 @@
   .vx-grid-related .icon.icon-add {
     background-position-y: -173px; }
 
-.vx-grid-related .vxTable .vxBody .vx-row-select,
-.vx-grid-related .vxTable .vxHead .vx-row-select {
+.vx-grid-related .vxTable .vxBody .vx-row-select {
   text-align: center; }
-  .vx-grid-related .vxTable .vxBody .vx-row-select input[type="checkbox"],
-  .vx-grid-related .vxTable .vxHead .vx-row-select input[type="checkbox"] {
+  .vx-grid-related .vxTable .vxBody .vx-row-select input[type="checkbox"] {
     cursor: pointer;
-    will-change: auto;
-    -moz-transform: translateZ(0);
-    -ms-transform: translateZ(0);
-    -o-transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
     outline-color: transparent;
     outline-offset: 5px;
     outline-style: dotted;
     outline-width: thin; }
-    .vx-grid-related .vxTable .vxBody .vx-row-select input[type="checkbox"]:focus, .vx-grid-related .vxTable .vxBody .vx-row-select input[type="checkbox"]:active,
-    .vx-grid-related .vxTable .vxHead .vx-row-select input[type="checkbox"]:focus,
-    .vx-grid-related .vxTable .vxHead .vx-row-select input[type="checkbox"]:active {
+    .vx-grid-related .vxTable .vxBody .vx-row-select input[type="checkbox"]:focus, .vx-grid-related .vxTable .vxBody .vx-row-select input[type="checkbox"]:active {
       outline-color: #000;
       outline-offset: 5px;
       outline-style: dotted;
       outline-width: thin; }
 
-.vx-grid-related .vxTable .vxHead .vx-row-select input[type="checkbox"]:focus, .vx-grid-related .vxTable .vxHead .vx-row-select input[type="checkbox"]:active {
-  outline-color: #fff;
-  outline-offset: 5px;
-  outline-style: dotted;
-  outline-width: thin; }
+.vx-grid-related .vxTable .vxHead .vx-row-select {
+  text-align: center; }
+  .vx-grid-related .vxTable .vxHead .vx-row-select input[type="checkbox"] {
+    cursor: pointer;
+    outline-color: transparent;
+    outline-offset: 5px;
+    outline-style: dotted;
+    outline-width: thin; }
+    .vx-grid-related .vxTable .vxHead .vx-row-select input[type="checkbox"]:focus, .vx-grid-related .vxTable .vxHead .vx-row-select input[type="checkbox"]:active {
+      outline-color: #fff;
+      outline-offset: 5px;
+      outline-style: dotted;
+      outline-width: thin; }
 
 .vx-grid-related .vxTable .vxHead .vxHeadRow th.ddEnabled {
   padding: 0; }

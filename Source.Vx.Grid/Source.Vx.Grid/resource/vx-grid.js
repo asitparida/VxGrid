@@ -335,7 +335,7 @@
                         { prop: 'jsonEditorEnabled', defValue: false },
                         { prop: 'allRowsSelectionEnabled', defValue: false },
                         { prop: 'sortPredicate', defValue: $scope.vxColSettings.primaryId },
-                        { prop: 'sortPredicateFn', defValue: $scope.vxColSettings.primaryId },
+                        { prop: 'sortPredicateFn', defValue: null },
                         { prop: 'reverseSortDirection', defValue: false },
                         { prop: 'emptyFill', defValue: '<span>No records to display ...</span>' },
                         { prop: 'caption', defValue: 'sample vx grid table caption' },
@@ -350,6 +350,11 @@
                         if ($scope.vxConfig[propDefn.prop] === 'undefined' || $scope.vxConfig[propDefn.prop] == null || $scope.vxConfig[propDefn.prop] == {})
                             $scope.vxConfig[propDefn.prop] = propDefn.defValue;
                     });
+                    if (typeof $scope.vxConfig['sortPredicate'] !== 'undefined' && typeof $scope.vxConfig['sortPredicate'] != null && typeof $scope.vxConfig['sortPredicate'] != {}) {
+                        if (typeof $scope.vxConfig['sortPredicateFn'] === 'undefined' || $scope.vxConfig['sortPredicateFn'] == null || $scope.vxConfig['sortPredicateFn'] == {}) {
+                            $scope.vxConfig['sortPredicateFn'] = $scope.vxConfig['sortPredicate'];
+                        }
+                    }                    
                     $scope.vxColSettings.vxRowClass = $scope.vxConfig['initialRowClasses'] || {};
                     // SETTING XS VIEW BASED PROPERTIES BASED ON WINDOW WIDTH
                     if ($scope.getWindowDimensions().w < 768) {
@@ -944,8 +949,12 @@
                     end = new Date();
                     if ($scope.vxConfig.hybrid == true) {
                         //$scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData;
-                        end = new Date();                        
-                        $scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData || [];
+                        end = new Date();
+                        if (typeof $scope.vxConfig['sortPredicateFn'] !== 'undefined' && $scope.vxConfig['sortPredicateFn'] != null && $scope.vxConfig['sortPredicateFn'] != {}) {
+                            $scope.vxConfig.vxFilteredData = _.sortBy($scope.vxConfig.vxData, $scope.vxConfig.sortPredicateFn) ||[];
+                        }
+                        else
+                            $scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData || [];
                         $timeout($scope.prepHybrid, 100);
                     }
                 }

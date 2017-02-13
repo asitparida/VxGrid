@@ -143,12 +143,12 @@ angular.module('vxSample')
         showGridStats: false,
         showGridOptions: true,
         latchExcess: 20,
-        data: self.sampling(20, 'Coho Vineyard 1111'),
+        data: self.sampling(100, 'Coho Vineyard 1111'),
         //data: [],
         jsonEditorEnabled: false,
         vxFilteredData: [],
         bindOnce: false,
-        hybrid: false,
+        hybrid: true,
         //initialRowClasses: self.sampleRowClasses,
         rowClassFn: randomRowFunction,
         hybridCellDefn: hybridCellDefn,
@@ -208,7 +208,7 @@ angular.module('vxSample')
             { id: 'timezone', columnName: 'Timezone', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
             { id: 'status', columnName: 'Status', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
             { id: 'mid', columnName: 'MID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false },
-            { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, dropDownEnabled: false, ddGroup: false, ddFilters: true, ddFiltersWithSearch: true, primary: true, hidden: false, widthLocked: true, orderLocked: false, visbilityLocked: true }
+            { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, dropDownEnabled: false, ddGroup: false, ddFilters: true, ddFiltersWithSearch: true, hidden: false, widthLocked: true, orderLocked: false, visbilityLocked: true }
         ]
     };
     self.secondSampleActive = false;
@@ -231,7 +231,7 @@ angular.module('vxSample')
     }
 
     function hybridCellDefn(row, col) {
-        var tmpl = '<span ng-attr-sam="{{vxConfig.hybrid}}">VX_DATA_POINT</span>';
+        var tmpl = '<span>VX_DATA_POINT</span>';
         if (col.id == 'category')
             tmpl = tmpl.replace('VX_DATA_POINT', row[col.id].name || '');
         if (col.id == 'link') {

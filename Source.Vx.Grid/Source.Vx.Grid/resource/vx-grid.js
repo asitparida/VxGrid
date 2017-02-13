@@ -254,7 +254,7 @@
                         /* PRIMARY COLUMN DOES NOT EXISTS */
                         _.each($scope.vxConfig.vxData, function (row, index) { row[primaryId] = index });
                     }
-                    
+
                     /* GENERATE VX INSTANCE ID AND SEND BACK*/
                     $scope.config.id = $scope.vxConfig.id = typeof $scope.vxConfig.id === 'undefined' ? _.uniqueId('_vxUID_') : $scope.vxConfig.id;
                     $scope.vxConfig.editRowID = $scope.vxConfig.id + '_edit_row';
@@ -354,7 +354,7 @@
                         if (typeof $scope.vxConfig['sortPredicateFn'] === 'undefined' || $scope.vxConfig['sortPredicateFn'] == null || $scope.vxConfig['sortPredicateFn'] == {}) {
                             $scope.vxConfig['sortPredicateFn'] = $scope.vxConfig['sortPredicate'];
                         }
-                    }                    
+                    }
                     $scope.vxColSettings.vxRowClass = $scope.vxConfig['initialRowClasses'] || {};
                     // SETTING XS VIEW BASED PROPERTIES BASED ON WINDOW WIDTH
                     if ($scope.getWindowDimensions().w < 768) {
@@ -505,7 +505,7 @@
                     //}
                     w.bind('resize', function () {
                         $scope.$apply();
-                    });                  
+                    });
 
                     /// <summary>CONFIG EXTENSION TO GET CURRENT STATE OF DIFFERENT COUNTS</summary>
                     /// <returns type="OBJECT" />
@@ -829,7 +829,7 @@
                     $scope.debPep = _.debounce($scope.prepForScrollInsertion, 10);
 
                     /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
-                    $scope.compileAppend = function (rowTmpl, id, flag) {                        
+                    $scope.compileAppend = function (rowTmpl, id, flag) {
                         _hybridContainer && _hybridContainer.append(rowTmpl);
                         if (flag) {
                             var _row = angular.element(document.getElementById(id));
@@ -944,6 +944,8 @@
                                 });
                             });
                         }
+                        $scope.showScrollDownArrow();
+                        $scope.showScrollUpArrow();
                     }
 
                     end = new Date();
@@ -951,7 +953,7 @@
                         //$scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData;
                         end = new Date();
                         if (typeof $scope.vxConfig['sortPredicateFn'] !== 'undefined' && $scope.vxConfig['sortPredicateFn'] != null && $scope.vxConfig['sortPredicateFn'] != {}) {
-                            $scope.vxConfig.vxFilteredData = _.sortBy($scope.vxConfig.vxData, $scope.vxConfig.sortPredicateFn) ||[];
+                            $scope.vxConfig.vxFilteredData = _.sortBy($scope.vxConfig.vxData, $scope.vxConfig.sortPredicateFn) || [];
                         }
                         else
                             $scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData || [];
@@ -2139,7 +2141,7 @@
                         }
                     });
                     modalInstance.result.then(function (data) {
-                        /* GET MODIFIED CHANGES FOPR CONFIG */                        
+                        /* GET MODIFIED CHANGES FOPR CONFIG */
                         data = $scope.calculateEffectiveWidths(data);
                         $scope.vxConfig.columnDefConfigs = data;
                         if ($scope.vxConfig.hybrid == true) {
@@ -2170,7 +2172,7 @@
                         col.effectiveWidth = Math.floor(col.effectiveWidth);
                         _totatWidth = _totatWidth + col.effectiveWidth;
                     });
-//                    console.log('calculateEffectiveWidths for grid' + $scope.vxConfig.id + ' called');
+                    //                    console.log('calculateEffectiveWidths for grid' + $scope.vxConfig.id + ' called');
                     return data;
                 }
 
@@ -2260,22 +2262,26 @@
 
                 /// <summary>GRID FUNCTION : SHOW SCROLL DOWN ARROW ICON WHEN CONDITION SATISFIED - SCROLL NEEDED</summary>
                 $scope.showScrollDownArrow = function () {
+                    var _id = 'scroll_down_' + $scope.vxConfig.id;
                     var scrollContainer = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
                     var tableContainer = $scope.selfEle.find('.scrollTableContainer table.vxTable');
+                    if (document.getElementById(_id)) document.getElementById(_id).style.display = "NONE";
                     if (typeof scrollContainer !== 'undefined' && typeof tableContainer !== 'undefined' && scrollContainer != null && tableContainer != null) {
                         if (tableContainer.height() > scrollContainer.height())
-                            return true;
+                            if (document.getElementById(_id)) document.getElementById(_id).style.display = "BLOCK";
                     }
                     return false;
                 }
 
                 /// <summary>GRID FUNCTION : SHOW SCROLL UP ARROW ICON WHEN CONDITION SATISFIED - SCROLL NEEDED</summary>
                 $scope.showScrollUpArrow = function () {
+                    var _id = 'scroll_up_' + $scope.vxConfig.id;
                     var scrollContainer = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
                     var tableContainer = $scope.selfEle.find('.scrollTableContainer table.vxTable');
+                    if (document.getElementById(_id)) document.getElementById(_id).style.display = "NONE";
                     if (typeof scrollContainer !== 'undefined' && typeof tableContainer !== 'undefined' && scrollContainer != null && tableContainer != null) {
                         if (tableContainer.height() > scrollContainer.height() && scrollContainer.scrollTop() > 48)
-                            return true;
+                            if (document.getElementById(_id)) document.getElementById(_id).style.display = "BLOCK";
                     }
                     return false;
                 }
@@ -2393,7 +2399,7 @@
                     else
                         $scope.config.vxData = angular.copy(n);
                     dt = new Date();
-                    delete $scope.vxConfig;                    
+                    delete $scope.vxConfig;
                     $scope.resetVxInstance();
                 });
 
@@ -2408,6 +2414,7 @@
                                 $scope.vxColSettings.activePage = 0;
                                 $scope.vxColSettings.vxPageStartPosition = 0;
                             }
+                            console.log('watch changes');
                         }
                     });
                 }

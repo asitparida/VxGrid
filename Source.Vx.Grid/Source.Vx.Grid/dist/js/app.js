@@ -1,4 +1,20 @@
-﻿angular.module('vxSample')
+﻿// Code goes here
+
+//document.addEventListener('DOMContentLoaded', function (e) {
+//    var butttons = document.querySelectorAll('button');
+//    for (var i = 0; i < butttons.length; i++) {
+//        var listener = (function ()
+//        {
+//            var index = i;
+//            return function () { alert(index) }
+//        })()
+//        butttons[i].addEventListener('click', listener)
+
+//    }
+//})
+
+
+angular.module('vxSample')
 .directive('sampleDatePicker', function () {
     return {
         scope: {
@@ -127,12 +143,12 @@
         showGridStats: false,
         showGridOptions: true,
         latchExcess: 20,
-        data: self.sampling(20, 'Coho Vineyard 1111'),
+        data: self.sampling(100, 'Coho Vineyard 1111'),
         //data: [],
         jsonEditorEnabled: false,
         vxFilteredData: [],
         bindOnce: false,
-        hybrid: false,
+        hybrid: true,
         //initialRowClasses: self.sampleRowClasses,
         rowClassFn: randomRowFunction,
         hybridCellDefn: hybridCellDefn,
@@ -144,7 +160,7 @@
         virtualization: false,
         pagination: false,
         pageLength: 100000,
-        sortPredicate: 'laborId',        
+        sortPredicate: 'laborId',
         reverseSortDirection: true,
         inlineAddRowEnabled: true,
         categories: self.categories,
@@ -186,13 +202,13 @@
             { id: 'customer', columnName: 'Customer', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, inlineEditOnColumnEnabled: true, hidden: false, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'engagement', columnName: 'Engagement', renderDefn: false, ddSort: true, ddGroup: true, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, hidden: false, locked: false, inlineEditOnColumnEnabled: true, editDefn: '<input vx-keep-watch="ngModel" class="vx-edit-input form-control" ng-model="VX_DATA_POINT" />' },
             { id: 'assignment', columnName: 'Assignment', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false },
-            { id: 'category', columnName: 'Category', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span>{{VX_DATA_POINT.name}}</span>", cellDefn: '<span>{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" ng-options="item.name for item in row.categories" ng-disabled="vxColSettings.inlineEditState[VX_ROW_POINT] == true" ng-model="row[\'category\']"></select>', inlineEditOnColumnEnabled: true, renderHybridCellDefn: true, hybridCompile: true, getFilterAriaLabel: function (filter) { return filter.name;} },
+            { id: 'category', columnName: 'Category', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, ddFiltersWithSearch: true, dropDownEnabled: true, filterCellDefn: "<span><span class=\"offscreen\">{{header.columnName}} filter </span>{{VX_DATA_POINT.name}}</span>", cellDefn: '<span>{{VX_DATA_POINT.name}}</span>', editDefn: '<select class="selectStyleSampleA" ng-options="item.name for item in row.categories" ng-disabled="vxColSettings.inlineEditState[VX_ROW_POINT] == true" ng-model="row[\'category\']"></select>', inlineEditOnColumnEnabled: true, renderHybridCellDefn: true, hybridCompile: true, getFilterAriaLabel: function (filter) { return filter.name; } },
             { id: 'userAlias', columnName: 'User', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, ddFiltersWithSearch: true, hidden: false, cellDefn: '<select class="selectStyleSampleA" ng-model="row.userAlias" ng-options="user for user in row.users" ng-disabled="vxColSettings.inlineEditState[VX_ROW_POINT] == true"><option value="">Select an option </option> </select>', ddFiltersWithSearch: true, customSortEnabled: true, customSortFn: customSortUserFn },
             { id: 'labor', columnName: 'Labor', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false, headTabIndex: -1 },
             { id: 'timezone', columnName: 'Timezone', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
             { id: 'status', columnName: 'Status', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: false, hidden: false },
             { id: 'mid', columnName: 'MID', renderDefn: false, ddSort: true, ddGroup: false, ddFilters: true, dropDownEnabled: true, hidden: false },
-            { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, dropDownEnabled: false, ddGroup: false, ddFilters: true, ddFiltersWithSearch: true, primary: true, hidden: false, widthLocked: true, orderLocked: false, visbilityLocked: true }
+            { id: 'laborId', columnName: 'Labor ID', renderDefn: false, ddSort: true, dropDownEnabled: false, ddGroup: false, ddFilters: true, ddFiltersWithSearch: true, hidden: false, widthLocked: true, orderLocked: false, visbilityLocked: true }
         ]
     };
     self.secondSampleActive = false;
@@ -215,7 +231,7 @@
     }
 
     function hybridCellDefn(row, col) {
-        var tmpl = '<span ng-attr-sam="{{vxConfig.hybrid}}">VX_DATA_POINT</span>';
+        var tmpl = '<span>VX_DATA_POINT</span>';
         if (col.id == 'category')
             tmpl = tmpl.replace('VX_DATA_POINT', row[col.id].name || '');
         if (col.id == 'link') {

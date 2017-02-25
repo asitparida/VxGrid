@@ -886,6 +886,9 @@
                                         _cellHolder = _cellHolder.replace('VX_CELL_SCOPE', 'row');
                                     else
                                         _cellHolder = _cellHolder.replace('VX_CELL_SCOPE', '');
+                                    if (typeof col.columnClassFn !== 'undefined' && typeof col.columnClassFn === 'function') {
+                                        _cellClass = col.columnClassFn(row);
+                                    }
                                     _cellHolder = _cellHolder.replace('VX_TD_CLASS', _cellClass);
                                     _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
                                     allCells = allCells + _cellHolder;

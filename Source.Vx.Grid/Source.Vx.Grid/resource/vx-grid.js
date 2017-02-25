@@ -143,6 +143,8 @@
         return s4() + s4() + "_" + s4();
     }
 
+    var _hybridScopes = [];
+
     window.requestAnimFrame = (function () {
         return window.requestAnimationFrame ||
           window.webkitRequestAnimationFrame ||
@@ -796,6 +798,13 @@
                         _hybridContainer = angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id));
                         _scrollContainer = angular.element(document.getElementById('_vxScrollContainer' + $scope.vxConfig.id));
                         _hybridContainer.empty();
+                        _.each(_hybridScopes, function(_hscope){
+                            if(_hscope.scope)
+                            {
+                                _hscope.scope.$destroy();
+                            }
+                        });
+                        _hybridScopes = [];
                         var _height = _scrollContainer.height();
                         var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
                         var _rows = _.first($scope.vxConfig.vxFilteredData, _initRowCount);
@@ -834,11 +843,17 @@
                     $scope.debPep = _.debounce($scope.prepForScrollInsertion, 10);
 
                     /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
-                    $scope.compileAppend = function (rowTmpl, id, flag) {
-                        _hybridContainer && _hybridContainer.append(rowTmpl);
+                    $scope.compileAppend = function (rowTmpl, _id, flag) {
                         if (flag) {
-                            var _row = angular.element(document.getElementById(id));
-                            $compile(_row.contents())($scope);
+                            var _scope = $scope.$new();
+                            var _compiledTmpl = $compile(rowTmpl);
+                            var _attachedScope = _compiledTmpl(_scope);
+                            _hybridContainer && _hybridContainer.append(_attachedScope);
+                            _hybridScopes.push({id: _id, scope: _scope});
+                        }
+                        else
+                        {
+                            _hybridContainer && _hybridContainer.append(rowTmpl);
                         }
                     }
 

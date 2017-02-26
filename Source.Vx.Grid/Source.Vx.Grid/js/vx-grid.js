@@ -1879,7 +1879,7 @@
                                 $(_element).prop('checked', false);
                             }
                         }
-                        var row = _.find($scope.vxConfig.vxData, function (r) { return r.type != 'groupRow' && r[$scope.vxColSettings.primaryId].localeCompare(pid) == 0 });
+                        var row = _.find($scope.vxConfig.vxData, function (r) { return r.type != 'groupRow' && r[$scope.vxColSettings.primaryId].toString().localeCompare(pid) == 0 });
                         if (typeof row !== 'undefined' && row != null) {
                             var result = { 'key': row[$scope.vxConfig.onSelectionReturnCol], 'value': $scope.vxColSettings.rowSelected[pid], '_pKey': pid };
                             $scope.emitArray.push(result);

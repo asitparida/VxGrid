@@ -143,6 +143,8 @@
         return s4() + s4() + "_" + s4();
     }
 
+    var _hybridScopes = [];
+
     window.requestAnimFrame = (function () {
         return window.requestAnimationFrame ||
           window.webkitRequestAnimationFrame ||
@@ -496,7 +498,7 @@
                     var vxWindowsWidthDeregister = $scope.$watch('getWindowDimensions()', function (newValue, oldValue) {
                         //if (newValue.w < 768)
                         //    $scope.vxColSettings.xsViewEnabled = true;
-                        //else
+                        //else                        
                         $scope.vxColSettings.xsViewEnabled = false;
                         $scope.vxConfig.columnDefConfigs = $scope.calculateEffectiveWidths($scope.vxConfig.columnDefConfigs);
                     }, true);
@@ -796,11 +798,19 @@
                         _hybridContainer = angular.element(document.getElementById('_vxHybrid' + $scope.vxConfig.id));
                         _scrollContainer = angular.element(document.getElementById('_vxScrollContainer' + $scope.vxConfig.id));
                         _hybridContainer.empty();
+                        _.each(_hybridScopes, function(_hscope){
+                            if(_hscope.scope)
+                            {
+                                _hscope.scope.$destroy();
+                            }
+                        });
+                        _hybridScopes = [];
                         var _height = _scrollContainer.height();
                         var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
                         var _rows = _.first($scope.vxConfig.vxFilteredData, _initRowCount);
-                        $scope.appendRows(_rows);
+                        $scope.appendRows(_rows);                        
                         _lastIndexCount = _lastIndexCount + _initRowCount;
+                        initCheckScrollUpDownArrow();                        
                         _scrollContainer.on('scroll', function () {
                             $scope.debPep();
                         });
@@ -820,8 +830,12 @@
                                 _lastIndexCount = _lastIndexCount + _initRowCount;
                                 $scope.appendRows(_rows);
                                 _scrollContainer.scrollTo(0, _scrollContainer.scrollTop() - 48);
-                            }
+                            }                            
+                            checkToScrollDownArrow();
                         }
+                        else {
+                            checkToScrollUpArrow()
+                        }                        
                         _lastScrollTop = _scrollContainer.scrollTop();
                     }
 
@@ -829,11 +843,17 @@
                     $scope.debPep = _.debounce($scope.prepForScrollInsertion, 10);
 
                     /// <summary>GRID FUNCTION : APPEND ROWS WHEN TOGGLING COMPILATION</summary>
-                    $scope.compileAppend = function (rowTmpl, id, flag) {
-                        _hybridContainer && _hybridContainer.append(rowTmpl);
+                    $scope.compileAppend = function (rowTmpl, _id, flag) {
                         if (flag) {
-                            var _row = angular.element(document.getElementById(id));
-                            $compile(_row.contents())($scope);
+                            var _scope = $scope.$new();
+                            var _compiledTmpl = $compile(rowTmpl);
+                            var _attachedScope = _compiledTmpl(_scope);
+                            _hybridContainer && _hybridContainer.append(_attachedScope);
+                            _hybridScopes.push({id: _id, scope: _scope});
+                        }
+                        else
+                        {
+                            _hybridContainer && _hybridContainer.append(rowTmpl);
                         }
                     }
 
@@ -881,6 +901,9 @@
                                         _cellHolder = _cellHolder.replace('VX_CELL_SCOPE', 'row');
                                     else
                                         _cellHolder = _cellHolder.replace('VX_CELL_SCOPE', '');
+                                    if (typeof col.columnClassFn !== 'undefined' && typeof col.columnClassFn === 'function') {
+                                        _cellClass = col.columnClassFn(row);
+                                    }
                                     _cellHolder = _cellHolder.replace('VX_TD_CLASS', _cellClass);
                                     _cellHolder = _cellHolder.replace('VX_CELL_CONTENT', _cellTmpl);
                                     allCells = allCells + _cellHolder;
@@ -943,9 +966,7 @@
                                     }
                                 });
                             });
-                        }
-                        $scope.showScrollDownArrow();
-                        $scope.showScrollUpArrow();
+                        }                        
                     }
 
                     end = new Date();
@@ -957,8 +978,8 @@
                         }
                         else
                             $scope.vxConfig.vxFilteredData = $scope.vxConfig.vxData || [];
-                        $timeout($scope.prepHybrid, 100);
-                    }
+                        $timeout($scope.prepHybrid, 100);                        
+                    }                    
                 }
 
                 /// <summary>GRID FUNCTION : START THE PROCEDURE TO EDIT AN ROW</summary>
@@ -2260,8 +2281,21 @@
                     }
                 }
 
+                function initCheckScrollUpDownArrow() {
+                    var _id = 'scroll_up_' + $scope.vxConfig.id;
+                    var _elem = document.getElementById(_id);
+                    if (_elem)
+                        _elem.style.display = "NONE";
+                    _id = 'scroll_down_' + $scope.vxConfig.id;
+                    _elem = document.getElementById(_id);
+                    if (_elem && $scope.vxConfig.noData == true)
+                        _elem.style.display = "NONE";
+                    else
+                        _elem.style.display = "BLOCK";
+                }
+
                 /// <summary>GRID FUNCTION : SHOW SCROLL DOWN ARROW ICON WHEN CONDITION SATISFIED - SCROLL NEEDED</summary>
-                $scope.showScrollDownArrow = function () {
+                function checkToScrollDownArrow() {
                     var _id = 'scroll_down_' + $scope.vxConfig.id;
                     var scrollContainer = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
                     var tableContainer = $scope.selfEle.find('.scrollTableContainer table.vxTable');
@@ -2269,21 +2303,23 @@
                     if (typeof scrollContainer !== 'undefined' && typeof tableContainer !== 'undefined' && scrollContainer != null && tableContainer != null) {
                         if (tableContainer.height() > scrollContainer.height())
                             if (document.getElementById(_id)) document.getElementById(_id).style.display = "BLOCK";
-                    }
-                    return false;
+                    }                    
                 }
 
                 /// <summary>GRID FUNCTION : SHOW SCROLL UP ARROW ICON WHEN CONDITION SATISFIED - SCROLL NEEDED</summary>
-                $scope.showScrollUpArrow = function () {
+                function checkToScrollUpArrow() {
                     var _id = 'scroll_up_' + $scope.vxConfig.id;
                     var scrollContainer = $scope.selfEle.find('.vxTableContainer.scrollTableContainer');
                     var tableContainer = $scope.selfEle.find('.scrollTableContainer table.vxTable');
-                    if (document.getElementById(_id)) document.getElementById(_id).style.display = "NONE";
+                    var _elem = document.getElementById(_id);                    
+                    if (_elem) _elem.style.display = "NONE";
                     if (typeof scrollContainer !== 'undefined' && typeof tableContainer !== 'undefined' && scrollContainer != null && tableContainer != null) {
-                        if (tableContainer.height() > scrollContainer.height() && scrollContainer.scrollTop() > 48)
-                            if (document.getElementById(_id)) document.getElementById(_id).style.display = "BLOCK";
-                    }
-                    return false;
+                        if (tableContainer.height() > scrollContainer.height() && scrollContainer.scrollTop() > 48) {                            
+                            var _elem = document.getElementById(_id);
+                            if (_elem)
+                                _elem.style.display = "BLOCK";
+                        }
+                    }                    
                 }
 
                 /// <summary>GRID FUNCTION : HANDLE CLICK EVENTS OUTSIDE A TARGET AREA</summary>

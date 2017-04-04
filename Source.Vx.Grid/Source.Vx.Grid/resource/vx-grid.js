@@ -807,7 +807,13 @@
                         _hybridScopes = [];
                         var _height = _scrollContainer.height();
                         var _initRowCount = Math.ceil(_height / _rowHeight) + _excess;
-                        var _rows = _.first($scope.vxConfig.vxFilteredData, _initRowCount);
+                        var _rows = [];
+                        if ($scope.vxConfig.pagination) {
+                            _initRowCount = _initRowCount > $scope.vxConfig.pageLength ? $scope.vxConfig.pageLength : _initRowCount;
+                            _rows = _.first(_.rest($scope.vxConfig.vxFilteredData, $scope.vxColSettings.vxPageStartPosition), _initRowCount);
+                        }
+                        else
+                            _rows = _.first($scope.vxConfig.vxFilteredData, _initRowCount);
                         $scope.appendRows(_rows);                        
                         _lastIndexCount = _lastIndexCount + _initRowCount;
                         initCheckScrollUpDownArrow();                        
@@ -823,9 +829,18 @@
                         if (_scrollContainer.scrollTop() > _lastScrollTop) {
                             if (diff < 0)
                                 diff = 0;
-                            if (diff < _rowHeight && _lastIndexCount < $scope.vxConfig.vxFilteredData.length) {
+                            if (diff < _rowHeight && _lastIndexCount < $scope.vxConfig.vxFilteredData.length
+                                && ($scope.vxConfig.pagination == true && _lastIndexCount < $scope.vxConfig.pageLength)) {
                                 var _initRowCount = _excess;
-                                var _restRows = _.rest($scope.vxConfig.vxFilteredData, _lastIndexCount);
+                                var _restRows = [];                             
+                                if ($scope.vxConfig.pagination == true && _lastIndexCount < $scope.vxConfig.pageLength) {
+                                    if (_initRowCount + _lastIndexCount > $scope.vxConfig.pageLength) {
+                                        _initRowCount = $scope.vxConfig.pageLength - _lastIndexCount;
+                                    }
+                                    _restRows = _.rest($scope.vxConfig.vxFilteredData, $scope.vxColSettings.vxPageStartPosition + _lastIndexCount);
+                                }
+                                else if($scope.vxConfig.pagination == false)
+                                    _restRows = _.rest($scope.vxConfig.vxFilteredData, _lastIndexCount);
                                 var _rows = _.first(_restRows, _initRowCount);
                                 _lastIndexCount = _lastIndexCount + _initRowCount;
                                 $scope.appendRows(_rows);
@@ -1254,9 +1269,13 @@
                 /// <summary>GRID FUNCTION : ACTIVATE A PARTICULAR PAGE OF THE GRID WHEN PAGINATION IS ENABLED</summary>
                 /// <param name="page" type="int">PAGE NUMBER WHICH NEEDS TO BE ACTIVATED</param>
                 $scope.activatePage = function (page) {
+                    var _oldPage = $scope.vxColSettings.activePage;
                     $scope.vxColSettings.activePage = page;
                     $scope.vxColSettings.vxPageStartPosition = (page > 0 ? page * $scope.vxConfig.pageLength : 0);
                     $scope.vxColSettings.allRowSelected = false;
+                    if (_oldPage != $scope.vxColSettings.activePage && $scope.vxConfig.hybrid) {
+                        $scope.resetHybridGrid();
+                    }
                 }
 
                 /// <summary>GRID FUNCTION : DEBOUNCE THE SEARCH SO AS TO THROTTLE SEARCHING IN GRID AND PREVENT CLASHING OF DIGEST CYCLES</summary>
@@ -1675,6 +1694,7 @@
                                 if ($scope.vxColSettings.rowSelected[pid] == false && toggleTo == true) {
                                     $scope.vxColSettings.rowSelected[pid] = true;
                                     $scope.vxColSettings.multiSelected.push(pid);
+                                    console.log($scope.vxColSettings.multiSelected);
                                     if ($scope.vxConfig.hybrid == true) {
                                         var _element = angular.element(document.getElementById('vx_row-sel_in_' + pid));
                                         if (typeof _element !== 'undefined' && _element != null && _element.length > 0) {
@@ -2440,7 +2460,7 @@
                 });
 
                 /// <summary>GRID WATCH : LISTEN TO CHANGES IN FILTERED DATA COLLECTION AN ACCODRIDNGLY RESET PAGES IF PAGINATION ENABLED</summary>
-                if ($scope.config.hybrid != true) {
+                if ($scope.config.hybrid != true || true) {
                     $scope.$watchCollection('vxConfig.vxFilteredData', function (n) {
                         if (n.length >= 0) {
                             /* PROCESS FOR PAGINATION IF VIRTUALIZATION IS FALSE */

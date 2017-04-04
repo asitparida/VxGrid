@@ -935,7 +935,8 @@
     vertical-align: top; }
 
 .vx-grid-related .vsTableStats {
-  padding: 0; }
+  padding: 0;
+  max-width: 350px; }
   .vx-grid-related .vsTableStats p {
     display: inline;
     margin: 0; }
